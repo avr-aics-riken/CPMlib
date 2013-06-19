@@ -177,7 +177,7 @@ cpm_Initialize_( int *ierr )
  */
 CPM_EXTERN
 void
-cpm_VoxelInit_( int *div, int *vox, REAL_TYPE *origin, REAL_TYPE *pitch
+cpm_VoxelInit_( int *div, int *vox, double *origin, double *pitch
               , int *maxVC, int *maxN, int *procGrpNo, int *ierr )
 {
   if( !div || !vox || !origin || !pitch || !maxVC || !maxN ||
@@ -216,7 +216,7 @@ cpm_VoxelInit_( int *div, int *vox, REAL_TYPE *origin, REAL_TYPE *pitch
  */
 CPM_EXTERN
 void
-cpm_VoxelInit_nodiv_( int *vox, REAL_TYPE *origin, REAL_TYPE *pitch
+cpm_VoxelInit_nodiv_( int *vox, double *origin, double *pitch
                     , int *maxVC, int *maxN, int *procGrpNo, int *ierr )
 {
   if( !vox || !origin || !pitch || !maxVC || !maxN ||
@@ -323,7 +323,7 @@ cpm_GetDivNum_( int *div, int *procGrpNo, int *ierr )
  */
 CPM_EXTERN
 void
-cpm_GetPitch_( REAL_TYPE *pch, int *procGrpNo, int *ierr )
+cpm_GetPitch_( double *pch, int *procGrpNo, int *ierr )
 {
   if( !procGrpNo || !pch || !ierr )
   {
@@ -331,7 +331,7 @@ cpm_GetPitch_( REAL_TYPE *pch, int *procGrpNo, int *ierr )
     return;
   }
 
-  pch[0] = pch[1] = pch[2] = REAL_TYPE(0);
+  pch[0] = pch[1] = pch[2] = 0.0;
 
   // インスタンス取得
   cpm_ParaManager *paraMngr = cpm_ParaManager::get_instance();
@@ -341,7 +341,7 @@ cpm_GetPitch_( REAL_TYPE *pch, int *procGrpNo, int *ierr )
     return;
   }
 
-  const REAL_TYPE *pp = paraMngr->GetPitch( *procGrpNo );
+  const double *pp = paraMngr->GetPitch( *procGrpNo );
   if( !pp )
   {
     *ierr = CPM_ERROR_GET_PITCH;
@@ -407,7 +407,7 @@ cpm_GetGlobalVoxelSize_( int *wsz, int *procGrpNo, int *ierr )
  */
 CPM_EXTERN
 void
-cpm_GetGlobalOrigin_( REAL_TYPE *worg, int *procGrpNo, int *ierr )
+cpm_GetGlobalOrigin_( double *worg, int *procGrpNo, int *ierr )
 {
   if( !procGrpNo || !worg || !ierr )
   {
@@ -415,7 +415,7 @@ cpm_GetGlobalOrigin_( REAL_TYPE *worg, int *procGrpNo, int *ierr )
     return;
   }
 
-  worg[0] = worg[1] = worg[2] = REAL_TYPE(0);
+  worg[0] = worg[1] = worg[2] = 0.0;
 
   // インスタンス取得
   cpm_ParaManager *paraMngr = cpm_ParaManager::get_instance();
@@ -425,7 +425,7 @@ cpm_GetGlobalOrigin_( REAL_TYPE *worg, int *procGrpNo, int *ierr )
     return;
   }
 
-  const REAL_TYPE *org = paraMngr->GetGlobalOrigin( *procGrpNo );
+  const double *org = paraMngr->GetGlobalOrigin( *procGrpNo );
   if( !org )
   {
     *ierr = CPM_ERROR_GET_GLOBALORIGIN;
@@ -449,7 +449,7 @@ cpm_GetGlobalOrigin_( REAL_TYPE *worg, int *procGrpNo, int *ierr )
  */
 CPM_EXTERN
 void
-cpm_GetGlobalRegion_( REAL_TYPE *wrgn, int *procGrpNo, int *ierr )
+cpm_GetGlobalRegion_( double *wrgn, int *procGrpNo, int *ierr )
 {
   if( !procGrpNo || !wrgn || !ierr )
   {
@@ -457,7 +457,7 @@ cpm_GetGlobalRegion_( REAL_TYPE *wrgn, int *procGrpNo, int *ierr )
     return;
   }
 
-  wrgn[0] = wrgn[1] = wrgn[2] = REAL_TYPE(0);
+  wrgn[0] = wrgn[1] = wrgn[2] = 0.0;
 
   // インスタンス取得
   cpm_ParaManager *paraMngr = cpm_ParaManager::get_instance();
@@ -467,7 +467,7 @@ cpm_GetGlobalRegion_( REAL_TYPE *wrgn, int *procGrpNo, int *ierr )
     return;
   }
 
-  const REAL_TYPE *rgn = paraMngr->GetGlobalRegion( *procGrpNo );
+  const double *rgn = paraMngr->GetGlobalRegion( *procGrpNo );
   if( !rgn )
   {
     *ierr = CPM_ERROR_GET_GLOBALREGION;
@@ -533,7 +533,7 @@ cpm_GetLocalVoxelSize_( int *lsz, int *procGrpNo, int *ierr )
  */
 CPM_EXTERN
 void
-cpm_GetLocalOrigin_( REAL_TYPE *lorg, int *procGrpNo, int *ierr )
+cpm_GetLocalOrigin_( double *lorg, int *procGrpNo, int *ierr )
 {
   if( !procGrpNo || !lorg || !ierr )
   {
@@ -541,7 +541,7 @@ cpm_GetLocalOrigin_( REAL_TYPE *lorg, int *procGrpNo, int *ierr )
     return;
   }
 
-  lorg[0] = lorg[1] = lorg[2] = REAL_TYPE(0);
+  lorg[0] = lorg[1] = lorg[2] = 0.0;
 
   // インスタンス取得
   cpm_ParaManager *paraMngr = cpm_ParaManager::get_instance();
@@ -551,7 +551,7 @@ cpm_GetLocalOrigin_( REAL_TYPE *lorg, int *procGrpNo, int *ierr )
     return;
   }
 
-  const REAL_TYPE *org = paraMngr->GetLocalOrigin( *procGrpNo );
+  const double *org = paraMngr->GetLocalOrigin( *procGrpNo );
   if( !org )
   {
     *ierr = CPM_ERROR_GET_LOCALORIGIN;
@@ -575,7 +575,7 @@ cpm_GetLocalOrigin_( REAL_TYPE *lorg, int *procGrpNo, int *ierr )
  */
 CPM_EXTERN
 void
-cpm_GetLocalRegion_( REAL_TYPE *lrgn, int *procGrpNo, int *ierr )
+cpm_GetLocalRegion_( double *lrgn, int *procGrpNo, int *ierr )
 {
   if( !procGrpNo || !lrgn || !ierr )
   {
@@ -583,7 +583,7 @@ cpm_GetLocalRegion_( REAL_TYPE *lrgn, int *procGrpNo, int *ierr )
     return;
   }
 
-  lrgn[0] = lrgn[1] = lrgn[2] = REAL_TYPE(0);
+  lrgn[0] = lrgn[1] = lrgn[2] = 0.0;
 
   // インスタンス取得
   cpm_ParaManager *paraMngr = cpm_ParaManager::get_instance();
@@ -593,7 +593,7 @@ cpm_GetLocalRegion_( REAL_TYPE *lrgn, int *procGrpNo, int *ierr )
     return;
   }
 
-  const REAL_TYPE *rgn = paraMngr->GetLocalOrigin( *procGrpNo );
+  const double *rgn = paraMngr->GetLocalOrigin( *procGrpNo );
   if( !rgn )
   {
     *ierr = CPM_ERROR_GET_LOCALREGION;

@@ -241,14 +241,14 @@ cpm_VoxelInfo::CreateLocalDomainInfo()
   }
 
   // ローカルの原点、ピッチ、空間サイズをセット
-  const REAL_TYPE *gorg = m_globalDomainInfo.GetOrigin();
-  const REAL_TYPE *gpch = m_globalDomainInfo.GetPitch();
-  REAL_TYPE org[3], pch[3], rgn[3];
+  const double *gorg = m_globalDomainInfo.GetOrigin();
+  const double *gpch = m_globalDomainInfo.GetPitch();
+  double org[3], pch[3], rgn[3];
   for( int n=0;n<3;n++ )
   {
     pch[n] = gpch[n];
-    org[n] = gorg[n] + REAL_TYPE(head[n]) * pch[n];
-    rgn[n] = REAL_TYPE(lvox[n]) * pch[n];
+    org[n] = gorg[n] + double(head[n]) * pch[n];
+    rgn[n] = double(lvox[n]) * pch[n];
   }
   m_localDomainInfo.SetOrigin(org);
   m_localDomainInfo.SetPitch (pch);
@@ -376,7 +376,7 @@ cpm_VoxelInfo::GetDivNum() const
 
 ////////////////////////////////////////////////////////////////////////////////
 // ピッチを取得
-const REAL_TYPE*
+const double*
 cpm_VoxelInfo::GetPitch() const
 {
   return m_globalDomainInfo.GetPitch();
@@ -392,7 +392,7 @@ cpm_VoxelInfo::GetGlobalVoxelSize() const
 
 ////////////////////////////////////////////////////////////////////////////////
 // 全体空間の原点を取得
-const REAL_TYPE*
+const double*
 cpm_VoxelInfo::GetGlobalOrigin() const
 {
   return m_globalDomainInfo.GetOrigin();
@@ -400,7 +400,7 @@ cpm_VoxelInfo::GetGlobalOrigin() const
 
 ////////////////////////////////////////////////////////////////////////////////
 // 全体空間サイズを取得
-const REAL_TYPE*
+const double*
 cpm_VoxelInfo::GetGlobalRegion() const
 {
   return m_globalDomainInfo.GetRegion();
@@ -416,7 +416,7 @@ cpm_VoxelInfo::GetLocalVoxelSize() const
 
 ////////////////////////////////////////////////////////////////////////////////
 // 自ランクの空間原点を取得
-const REAL_TYPE*
+const double*
 cpm_VoxelInfo::GetLocalOrigin() const
 {
   return m_localDomainInfo.GetOrigin();
@@ -424,7 +424,7 @@ cpm_VoxelInfo::GetLocalOrigin() const
 
 ////////////////////////////////////////////////////////////////////////////////
 // 自ランクの空間サイズを取得
-const REAL_TYPE*
+const double*
 cpm_VoxelInfo::GetLocalRegion() const
 {
   return m_localDomainInfo.GetRegion();

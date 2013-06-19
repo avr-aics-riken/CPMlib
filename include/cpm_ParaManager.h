@@ -145,7 +145,7 @@ public:
    *  @param[in] procGrpNo  領域分割を行うプロセスグループ番号
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
-  cpm_ErrorCode VoxelInit( int div[3], int vox[3], REAL_TYPE origin[3], REAL_TYPE region[3]
+  cpm_ErrorCode VoxelInit( int div[3], int vox[3], double origin[3], double region[3]
                          , size_t maxVC=1, size_t maxN=3, int procGrpNo=0 );
 
   /** 領域分割
@@ -160,7 +160,7 @@ public:
    *  @param[in] procGrpNo  領域分割を行うプロセスグループ番号
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
-  cpm_ErrorCode VoxelInit( int vox[3], REAL_TYPE origin[3], REAL_TYPE region[3]
+  cpm_ErrorCode VoxelInit( int vox[3], double origin[3], double region[3]
                          , size_t maxVC=1, size_t maxN=3, int procGrpNo=0 );
 
   /** プロセスグループの作成
@@ -195,7 +195,7 @@ public:
    *  @param[in] procGrpNo プロセスグループ番号(省略時=0)
    *  @return ピッチ実数配列のポインタ
    */
-  const REAL_TYPE* GetPitch( int procGrpNo=0 );
+  const double* GetPitch( int procGrpNo=0 );
 
   /** 全体ボクセル数を取得
    *  @param[in] procGrpNo プロセスグループ番号(省略時=0)
@@ -207,13 +207,13 @@ public:
    *  @param[in] procGrpNo プロセスグループ番号(省略時=0)
    *  @return 全体空間の原点実数配列のポインタ
    */
-  const REAL_TYPE* GetGlobalOrigin( int procGrpNo=0 );
+  const double* GetGlobalOrigin( int procGrpNo=0 );
 
   /** 全体空間サイズを取得
    *  @param[in] procGrpNo プロセスグループ番号(省略時=0)
    *  @return 全体空間サイズ実数配列のポインタ
    */
-  const REAL_TYPE* GetGlobalRegion( int procGrpNo=0 );
+  const double* GetGlobalRegion( int procGrpNo=0 );
 
   /** 自ランクのボクセル数を取得
    *  @param[in] procGrpNo プロセスグループ番号(省略時=0)
@@ -225,13 +225,13 @@ public:
    *  @param[in] procGrpNo プロセスグループ番号(省略時=0)
    *  @return 自ランクの空間原点実数配列のポインタ
    */
-  const REAL_TYPE* GetLocalOrigin( int procGrpNo=0 );
+  const double* GetLocalOrigin( int procGrpNo=0 );
 
   /** 自ランクの空間サイズを取得
    *  @param[in] procGrpNo プロセスグループ番号(省略時=0)
    *  @return 自ランクの空間サイズ実数配列のポインタ
    */
-  const REAL_TYPE* GetLocalRegion( int procGrpNo=0 );
+  const double* GetLocalRegion( int procGrpNo=0 );
 
   /** 自ランクの領域分割位置を取得
    *  @param[in] procGrpNo プロセスグループ番号(省略時=0)
@@ -241,26 +241,72 @@ public:
 
   /** 自ランクの始点VOXELの全体空間でのインデクスを取得
    *  - 全体空間の先頭インデクスを0としたC型のインデクス
+   *  @param[in] procGrpNo プロセスグループ番号(省略時=0)
    *  @return 自ランクの始点インデクス整数配列のポインタ
    */
   const int* GetVoxelHeadIndex( int procGrpNo=0 );
 
   /** 自ランクの終点VOXELの全体空間でのインデクスを取得
    *  - 全体空間の先頭インデクスを0としたC型のインデクス
+   *  @param[in] procGrpNo プロセスグループ番号(省略時=0)
    *  @return 自ランクの終点インデクス整数配列のポインタ
    */
   const int* GetVoxelTailIndex( int procGrpNo=0 );
 
   /** 自ランクの隣接ランク番号を取得
+   *  @param[in] procGrpNo プロセスグループ番号(省略時=0)
    *  @return 自ランクの隣接ランク番号整数配列のポインタ
    */
   const int* GetNeighborRankID( int procGrpNo=0 );
 
   /** 自ランクの周期境界の隣接ランク番号を取得
+   *  @param[in] procGrpNo プロセスグループ番号(省略時=0)
    *  @return 自ランクの周期境界の隣接ランク番号整数配列のポインタ
    */
   const int* GetPeriodicRankID( int procGrpNo=0 );
 
+  /** 指定idを含む全体ボクセル空間のインデクス範囲を取得
+   *  - 全体空間実セルのスタートインデクスを0としたときの，i,j,k各方向の
+   *    スタートインデクスと長さを取得する．
+   *  @param[in]  id        判定するid
+   *  @param[in]  array     判定対象の配列ポインタ
+   *  @param[in]  vc        仮想セル数
+   *  @param[out] ista      I方向範囲のスタートインデクス
+   *  @param[out] jsta      J方向範囲のスタートインデクス
+   *  @param[out] ksta      K方向範囲のスタートインデクス
+   *  @param[out] ilen      I方向範囲の長さ
+   *  @param[out] jlen      J方向範囲の長さ
+   *  @param[out] klen      K方向範囲の長さ
+   *  @param[in]  procGrpNo プロセスグループ番号(省略時=0)
+   *  @retval true  指定idを含むセルが存在した
+   *  @retval false 指定idを含むセルが存在しない
+   */
+  bool GetBndIndexExtGc( int id, int *array, int vc
+                       , int &ista, int &jsta, int &ksta, int &ilen, int &jlen, int &klen
+                       , int procGrpNo=0 );
+
+  /** 指定idを含む全体ボクセル空間のインデクス範囲を取得
+   *  - 全体空間実セルのスタートインデクスを0としたときの，i,j,k各方向の
+   *    スタートインデクスと長さを取得する．
+   *  @param[in]  id        判定するid
+   *  @param[in]  array     判定対象の配列ポインタ
+   *  @param[in]  imax      配列サイズ(I方向)
+   *  @param[in]  jmax      配列サイズ(J方向)
+   *  @param[in]  kmax      配列サイズ(K方向)
+   *  @param[in]  vc        仮想セル数
+   *  @param[out] ista      I方向範囲のスタートインデクス
+   *  @param[out] jsta      J方向範囲のスタートインデクス
+   *  @param[out] ksta      K方向範囲のスタートインデクス
+   *  @param[out] ilen      I方向範囲の長さ
+   *  @param[out] jlen      J方向範囲の長さ
+   *  @param[out] klen      K方向範囲の長さ
+   *  @param[in]  procGrpNo プロセスグループ番号(省略時=0)
+   *  @retval true  指定idを含むセルが存在した
+   *  @retval false 指定idを含むセルが存在しない
+   */
+  bool GetBndIndexExtGc( int id, int *array, int imax, int jmax, int kmax, int vc
+                       , int &ista, int &jsta, int &ksta, int &ilen, int &jlen, int &klen
+                       , int procGrpNo=0 );
 
 
 
@@ -304,6 +350,12 @@ public:
    *  @return ランク数
    */
   int GetNumRank( int procGrpNo=0 );
+
+  /** ホスト名の取得
+   *  - 自ランクのホスト名を取得
+   *  @return ホスト名
+   */
+  std::string GetHostName();
 
   /** MPIコミュニケータの取得
    *  - MPI_COMM_NULLが返ってきた場合は、
@@ -1578,13 +1630,6 @@ public:
   template<class T>
   void CopyArray( T *source, T *dist, size_t size );
 
-  /** 配列確保 REAL_TYPE(imax,jmax,kmax)
-   *  @param[in] vc        仮想セル数
-   *  @param[in] procGrpNo プロセスグループ番号
-   *  @return 配列ポインタ
-   */
-  REAL_TYPE* AllocRealS3D( int vc, int procGrpNo=0 );
-
   /** 配列確保 double(imax,jmax,kmax)
    *  @param[in] vc        仮想セル数
    *  @param[in] procGrpNo プロセスグループ番号
@@ -1605,13 +1650,6 @@ public:
    *  @return 配列ポインタ
    */
   int* AllocIntS3D( int vc, int procGrpNo=0 );
-
-  /** 配列確保 REAL_TYPE(imax,jmax,kmax,3)
-   *  @param[in] vc        仮想セル数
-   *  @param[in] procGrpNo プロセスグループ番号
-   *  @return 配列ポインタ
-   */
-  REAL_TYPE* AllocRealV3D( int vc, int procGrpNo=0 );
 
   /** 配列確保 double(imax,jmax,kmax,3)
    *  @param[in] vc        仮想セル数
@@ -1634,13 +1672,6 @@ public:
    */
   int* AllocIntV3D( int vc, int procGrpNo=0 );
 
-  /** 配列確保 REAL_TYPE(3,imax,jmax,kmax)
-   *  @param[in] vc        仮想セル数
-   *  @param[in] procGrpNo プロセスグループ番号
-   *  @return 配列ポインタ
-   */
-  REAL_TYPE* AllocRealV3DEx( int vc, int procGrpNo=0 );
-
   /** 配列確保 double(3,imax,jmax,kmax)
    *  @param[in] vc        仮想セル数
    *  @param[in] procGrpNo プロセスグループ番号
@@ -1662,13 +1693,6 @@ public:
    */
   int* AllocIntV3DEx( int vc, int procGrpNo=0 );
 
-  /** 配列確保 REAL_TYPE(imax,jmax,kmax,nmax)
-   *  @param[in] vc        仮想セル数
-   *  @param[in] procGrpNo プロセスグループ番号
-   *  @return 配列ポインタ
-   */
-  REAL_TYPE* AllocRealS4D( int nmax, int vc, int procGrpNo=0 );
-
   /** 配列確保 double(imax,jmax,kmax,nmax)
    *  @param[in] vc        仮想セル数
    *  @param[in] procGrpNo プロセスグループ番号
@@ -1689,13 +1713,6 @@ public:
    *  @return 配列ポインタ
    */
   int* AllocIntS4D( int nmax, int vc, int procGrpNo=0 );
-
-  /** 配列確保 REAL_TYPE(nmax,imax,jmax,kmax)
-   *  @param[in] vc        仮想セル数
-   *  @param[in] procGrpNo プロセスグループ番号
-   *  @return 配列ポインタ
-   */
-  REAL_TYPE* AllocRealS4DEx( int nmax, int vc, int procGrpNo=0 );
 
   /** 配列確保 double(nmax,imax,jmax,kmax)
    *  @param[in] vc        仮想セル数

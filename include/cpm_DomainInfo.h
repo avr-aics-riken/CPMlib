@@ -37,32 +37,32 @@ public:
   /** 原点のセット
    *  @param[in] org 原点情報
    */
-  void SetOrigin( REAL_TYPE org[3] ); 
+  void SetOrigin( double org[3] ); 
 
   /** 原点の取得
    *  @return 原点情報実数配列のポインタ
    */
-  const REAL_TYPE* GetOrigin() const;
+  const double* GetOrigin() const;
 
   /** ピッチのセット
    *  @param[in] pch ピッチ情報
    */
-  void SetPitch( REAL_TYPE pch[3] ); 
+  void SetPitch( double pch[3] ); 
 
   /** ピッチの取得
    *  @return ピッチ情報実数配列のポインタ
    */
-  const REAL_TYPE* GetPitch() const;
+  const double* GetPitch() const;
 
   /** 空間サイズのセット
    *  @param[in] rgn 空間サイズ情報
    */
-  void SetRegion( REAL_TYPE rgn[3] ); 
+  void SetRegion( double rgn[3] ); 
 
   /** 空間サイズの取得
    *  @return 空間サイズ情報実数配列のポインタ
    */
-  const REAL_TYPE* GetRegion() const;
+  const double* GetRegion() const;
 
   /** VOXEL数のセット
    *  @param[in] vox VOXEL数情報
@@ -90,10 +90,10 @@ public:
 
 
 private:
-  REAL_TYPE m_origin[3]; ///< 原点
-  REAL_TYPE m_region[3]; ///< 空間サイズ
-  REAL_TYPE m_pitch[3];  ///< ピッチ
-  int       m_voxNum[3]; ///< VOXEL数
+  double m_origin[3]; ///< 原点
+  double m_region[3]; ///< 空間サイズ
+  double m_pitch[3];  ///< ピッチ
+  int    m_voxNum[3]; ///< VOXEL数
 
 
 };

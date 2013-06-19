@@ -28,6 +28,7 @@
     real               :: rwork(7)
     integer            :: sz(3), head(0:2), nID(0:5)
     real               :: org(3), pch(3), rgn(3)
+    real*8             :: org8(3), rgn8(3)
 !CPM.e
 
 !CPM.s
@@ -133,7 +134,13 @@
     rgn(3) = pch(3) * sz(3)
 
     ! Voxel initialize
-    call cpm_VoxelInit_nodiv( sz, org, rgn, 1, 1, pg, ierr )
+    org8(1) = org(1)
+    org8(2) = org(2)
+    org8(3) = org(3)
+    rgn8(1) = rgn(1)
+    rgn8(2) = rgn(2)
+    rgn8(3) = rgn(3)
+    call cpm_VoxelInit_nodiv( sz, org8, rgn8, 1, 1, pg, ierr )
 
     ! get local voxel size, ead index, neighbor rank No.
     call cpm_GetLocalVoxelSize( sz, pg, ierr )
@@ -286,7 +293,7 @@
     integer                                 :: ierr
     real                                    :: er_buf
 !CPM.e
-    
+
     er = 0.0
     ddx=cf*dt/(dx*dx)
     ddy=cf*dt/(dy*dy)

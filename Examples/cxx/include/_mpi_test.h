@@ -4,6 +4,9 @@
     char fname[512];
     sprintf ( fname, "mpiTest_%04d.log", rank );
     std::ofstream ofs( fname );
+
+    std::string hname = paraMngr->GetHostName();
+    ofs << "hostname=" << hname << endl;
   
     // Broardcast
 #if 1
@@ -21,7 +24,7 @@
     {
       // process group 1
       int pg = 1;
-      REAL_TYPE buf = 0.0;
+      double buf = 0.0;
       int rank0 = paraMngr->GetMyRankID();
       int rank1 = paraMngr->GetMyRankID(pg);
       if( rank1==0 ) buf = 456.789;
@@ -127,8 +130,8 @@
       int pg = 1;
       int rank0 = paraMngr->GetMyRankID();
       int rank1 = paraMngr->GetMyRankID(pg);
-      REAL_TYPE sendbuf = (rank1+1) * 1e-2;
-      REAL_TYPE recvbuf = (rank1+1) * 1e-2;
+      double sendbuf = (rank1+1) * 1e-2;
+      double recvbuf = (rank1+1) * 1e-2;
       if( rank1==0 ) cout << endl << "***** Allreduce test pg[" << pg << "]" << endl;
       ofs << endl << "***** Allreduce test pg[" << pg << "]" << endl;
       ofs << " [" << rank0 << "/" << rank1 << "] before Allreduce(MAX) = " << sendbuf << endl;
@@ -167,8 +170,8 @@
       int rank0 = paraMngr->GetMyRankID();
       int nrank0 = paraMngr->GetNumRank();
       int rank1 = paraMngr->GetMyRankID(pg);
-      REAL_TYPE sendbuf = (rank1+1) * 1e-2;
-      REAL_TYPE *recvbuf = new REAL_TYPE[nrank0];
+      double sendbuf = (rank1+1) * 1e-2;
+      double *recvbuf = new double[nrank0];
       for( int i=0;i<nrank0;i++ ) recvbuf[i] = 0.0;
       if( rank1==0 ) cout << endl << "***** Allgather test pg[" << pg << "]" << endl;
       ofs << endl << "***** Allgather test pg[" << pg << "]" << endl;
@@ -256,8 +259,8 @@
         }
         int *recvbuf = new int[recvcnt+1];
         for( int i=0;i<recvcnt+1;i++ ) recvbuf[i] = 0;
-        if( rank==0 ) cout << endl << "***** Allgatherv test pg[" << 0 << "]" << endl;
-        ofs << endl << "***** Allgatherv test pg[" << 0 << "]" << endl;
+        if( rank==0 ) cout << endl << "***** Allgatherv test pg[" << pg << "]" << endl;
+        ofs << endl << "***** Allgatherv test pg[" << pg << "]" << endl;
         string strsend ="";
         for( int i=0;i<sendcnt;i++ )
         {
@@ -282,8 +285,53 @@
         delete [] recvcnts;
         delete [] recvbuf;
 
-        if( rank==0 ) cout << endl;
       }
+    }
+#endif
+
+    // GetBndIndexExtGc
+#if 1
+    {
+      // process group 0
+      int rank = paraMngr->GetMyRankID();
+      int np   = paraMngr->GetNumRank();
+      const int *sz = paraMngr->GetLocalVoxelSize();
+      int imax = sz[0];
+      int jmax = sz[1];
+      int kmax = sz[2];
+      int vc = 3;
+      int *mid = paraMngr->AllocIntS3D(vc);
+      for( int k=-vc;k<kmax+vc;k++ ){
+      for( int j=-vc;j<jmax+vc;j++ ){
+      for( int i=-vc;i<imax+vc;i++ ){
+        mid[_IDX_S3D(i,j,k,imax,jmax,kmax,vc)] = 0;
+      }}}
+
+      int id = 1;
+      int ii = imax/2;
+      int jj = jmax/2;
+      int kk = kmax/2;
+      mid[_IDX_S3D(ii,jj,kk,imax,jmax,kmax,vc)] = id;
+
+      if( rank==0 ) cout << endl << "***** GetBndIndexExtGc test pg[" << 0 << "]" << endl;
+      ofs << endl << "***** GetBndIndexExtGc test pg[" << 0 << "]" << endl;
+
+      const int *hidx = paraMngr->GetVoxelHeadIndex();
+
+      int ista, jsta, ksta, ilen, jlen, klen;
+      if( paraMngr->GetBndIndexExtGc( id, mid, imax, jmax, kmax, vc
+                                    , ista, jsta, ksta, ilen, jlen, klen ) )
+      {
+        ofs << "  set id(" << id << ") local  index = " << ii << ", " << jj << ", " << kk << endl;
+        ofs << "  set id(" << id << ") global index = " << ii+hidx[0] << ", " << jj+hidx[1] << ", " << kk+hidx[2] << endl;
+        ofs << "  GetBndIndexExtGc start index = "<< ista << ", " << jsta << ", " << ksta << endl;
+        ofs << "  GetBndIndexExtGc end   index = "<< ista+ilen-1 << ", " << jsta+jlen-1 << ", " << ksta+klen-1 << endl;
+        ofs << "  GetBndIndexExtGc len         = "<< ilen << ", " << jlen << ", " << klen << endl;
+      }
+
+      delete [] mid;
+
+      if( rank==0 ) cout << endl;
     }
 #endif
   }
@@ -383,7 +431,7 @@
     int vc  = 3;
     size_t nw = size_t(imax+2*vc) * size_t(jmax+2*vc) * size_t(kmax+2*vc);
 
-    REAL_TYPE *pp = paraMngr->AllocRealS3D(vc);
+    double *pp = paraMngr->AllocDoubleS3D(vc);
     for( int k=0-vc;k<kmax+vc;k++ ){
     for( int j=0-vc;j<jmax+vc;j++ ){
     for( int i=0-vc;i<imax+vc;i++ ){
@@ -457,7 +505,7 @@
     int vc  = 3;
     size_t nw = size_t(imax+2*vc) * size_t(jmax+2*vc) * size_t(kmax+2*vc) * size_t(nmax);
 
-    REAL_TYPE *pp = paraMngr->AllocRealV3D(vc);
+    double *pp = paraMngr->AllocDoubleV3D(vc);
     for( int n=0;n<nmax;n++ ){
     for( int k=0-vc;k<kmax+vc;k++ ){
     for( int j=0-vc;j<jmax+vc;j++ ){
@@ -532,7 +580,7 @@
     int vc  = 3;
     size_t nw = size_t(imax+2*vc) * size_t(jmax+2*vc) * size_t(kmax+2*vc) * size_t(nmax);
 
-    REAL_TYPE *pp = paraMngr->AllocRealS4D(nmax,vc);
+    double *pp = paraMngr->AllocDoubleS4D(nmax,vc);
     for( int n=0;n<nmax;n++ ){
     for( int k=0-vc;k<kmax+vc;k++ ){
     for( int j=0-vc;j<jmax+vc;j++ ){
@@ -607,7 +655,7 @@
     int vc  = 3;
     size_t nw = size_t(imax+2*vc) * size_t(jmax+2*vc) * size_t(kmax+2*vc) * size_t(nmax);
 
-    REAL_TYPE *pp = paraMngr->AllocRealV3DEx(vc);
+    double *pp = paraMngr->AllocDoubleV3DEx(vc);
     for( int k=0-vc;k<kmax+vc;k++ ){
     for( int j=0-vc;j<jmax+vc;j++ ){
     for( int i=0-vc;i<imax+vc;i++ ){
@@ -682,7 +730,7 @@
     int vc  = 3;
     size_t nw = size_t(imax+2*vc) * size_t(jmax+2*vc) * size_t(kmax+2*vc) * size_t(nmax);
 
-    REAL_TYPE *pp = paraMngr->AllocRealS4DEx(nmax,vc);
+    double *pp = paraMngr->AllocDoubleS4DEx(nmax,vc);
     for( int k=0-vc;k<kmax+vc;k++ ){
     for( int j=0-vc;j<jmax+vc;j++ ){
     for( int i=0-vc;i<imax+vc;i++ ){
@@ -719,7 +767,8 @@
     _PRINT_S4DEX(ofs,"before comm",nmax,imax,jmax,kmax,vc,n);
 
 #ifndef _NOWAIT_TEST_
-    paraMngr->BndCommS4DEx( pp, nmax, imax, jmax, kmax, vc, 2 );
+//    paraMngr->BndCommS4DEx( pp, nmax, imax, jmax, kmax, vc, 2 );
+    ofs << "err=" << paraMngr->BndCommS4DEx( pp, nmax, imax, jmax, kmax, vc, 2 ) << endl;
 #else
     MPI_Request req[12];
     paraMngr->BndCommS4DEx_nowait( pp, nmax, imax, jmax, kmax, vc, 2, req );

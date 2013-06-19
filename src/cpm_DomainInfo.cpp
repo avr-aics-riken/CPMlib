@@ -32,12 +32,11 @@ cpm_DomainInfo::~cpm_DomainInfo()
 void
 cpm_DomainInfo::clear()
 {
-  REAL_TYPE RZERO = REAL_TYPE(0);
   for( int i=0;i<3;i++ )
   {
-    m_origin[i] = RZERO;
-    m_region[i] = RZERO;
-    m_pitch[i]  = RZERO;
+    m_origin[i] = 0.0;
+    m_region[i] = 0.0;
+    m_pitch[i]  = 0.0;
     m_voxNum[i] = 0;
   }
 }
@@ -45,7 +44,7 @@ cpm_DomainInfo::clear()
 ////////////////////////////////////////////////////////////////////////////////
 // 原点のセット
 void
-cpm_DomainInfo::SetOrigin( REAL_TYPE org[3] )
+cpm_DomainInfo::SetOrigin( double org[3] )
 {
   m_origin[0] = org[0];
   m_origin[1] = org[1];
@@ -54,7 +53,7 @@ cpm_DomainInfo::SetOrigin( REAL_TYPE org[3] )
 
 ////////////////////////////////////////////////////////////////////////////////
 // 原点の取得
-const REAL_TYPE*
+const double*
 cpm_DomainInfo::GetOrigin() const
 {
   return m_origin;
@@ -63,7 +62,7 @@ cpm_DomainInfo::GetOrigin() const
 ////////////////////////////////////////////////////////////////////////////////
 // ピッチのセット
 void
-cpm_DomainInfo::SetPitch( REAL_TYPE pch[3] )
+cpm_DomainInfo::SetPitch( double pch[3] )
 {
   m_pitch[0] = pch[0];
   m_pitch[1] = pch[1];
@@ -72,7 +71,7 @@ cpm_DomainInfo::SetPitch( REAL_TYPE pch[3] )
 
 ////////////////////////////////////////////////////////////////////////////////
 // ピッチの取得
-const REAL_TYPE*
+const double*
 cpm_DomainInfo::GetPitch() const
 {
   return m_pitch;
@@ -81,7 +80,7 @@ cpm_DomainInfo::GetPitch() const
 ////////////////////////////////////////////////////////////////////////////////
 // 空間サイズのセット
 void
-cpm_DomainInfo::SetRegion( REAL_TYPE rgn[3] )
+cpm_DomainInfo::SetRegion( double rgn[3] )
 {
   m_region[0] = rgn[0];
   m_region[1] = rgn[1];
@@ -90,7 +89,7 @@ cpm_DomainInfo::SetRegion( REAL_TYPE rgn[3] )
 
 ////////////////////////////////////////////////////////////////////////////////
 // 空間サイズの取得
-const REAL_TYPE*
+const double*
 cpm_DomainInfo::GetRegion() const
 {
   return m_region;
@@ -118,9 +117,7 @@ cpm_DomainInfo::GetVoxNum() const
 // 領域情報のチェック
 cpm_ErrorCode cpm_DomainInfo::CheckData()
 {
-  REAL_TYPE RZERO = REAL_TYPE(0);
-
-  if( m_region[0] <= RZERO || m_region[1] <= RZERO || m_region[2] <= RZERO )
+  if( m_region[0] <= 0.0 || m_region[1] <= 0.0 || m_region[2] <= 0.0 )
   {
     return CPM_ERROR_INVALID_REGION;
   }

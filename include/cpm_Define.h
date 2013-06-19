@@ -16,30 +16,19 @@
 
 #include "mpi.h"
 
-#ifdef _REAL_IS_DOUBLE_
-  #define REAL_TYPE double
-#else
-  /** 実数型の指定
-   * - デフォルトでは、REAL_TYPE=float
-   * - コンパイル時オプション-D_REAL_IS_DOUBLE_を付与することで
-   *   REAL_TYPE=doubleになる
-   */
-  #define REAL_TYPE float
-#endif
-
 #if defined(_BUFSIZE_LONG_DOUBLE_)
   #define REAL_BUF_TYPE long double
-#elif defined(_BUFSIZE_DOUBLE_)
-  #define REAL_BUF_TYPE double
+#elif defined(_BUFSIZE_FLOAT_)
+  #define REAL_BUF_TYPE float
 #else
   /** 袖通信バッファの型指定
-   *  - デフォルトでは、REAL_BUF_TYPE=REAL_TYPE
-   *  - コンパイル時オプション-D_BUFSIZE_DOUBLE_を付与することで
-   *    REAL_BUF_TYPE=doubleになる
+   *  - デフォルトでは、REAL_BUF_TYPE=double
+   *  - コンパイル時オプション-D_BUFSIZE_FLOAT_を付与することで
+   *    REAL_BUF_TYPE=floatになる
    *  - コンパイル時オプション-D_BUFSIZE_LONG_DOUBLE_を付与することで
    *    REAL_BUF_TYPE=long doubleになる
    */
-  #define REAL_BUF_TYPE REAL_TYPE
+  #define REAL_BUF_TYPE double
 #endif
 
 
@@ -54,9 +43,9 @@
  *  @return 1次元インデクス
  */
 #define _IDX_S3D(_I,_J,_K,_NI,_NJ,_NK,_VC) \
-( size_t(_K+_VC) * size_t(_NI+2*_VC) * size_t(_NJ+2*_VC) \
-+ size_t(_J+_VC) * size_t(_NI+2*_VC) \
-+ size_t(_I+_VC) \
+( (long long)(_K+_VC) * (long long)(_NI+2*_VC) * (long long)(_NJ+2*_VC) \
++ (long long)(_J+_VC) * (long long)(_NI+2*_VC) \
++ (long long)(_I+_VC) \
 )
 
 /** 4次元インデクス(i,j,k,n) -> 1次元インデクス変換マクロ
@@ -71,7 +60,7 @@
  *  @return 1次元インデクス
  */
 #define _IDX_S4D(_I,_J,_K,_N,_NI,_NJ,_NK,_VC) \
-( size_t(_N) * size_t(_NI+2*_VC) * size_t(_NJ+2*_VC) * size_t(_NK+2*_VC) \
+( (long long)(_N) * (long long)(_NI+2*_VC) * (long long)(_NJ+2*_VC) * (long long)(_NK+2*_VC) \
 + _IDX_S3D(_I,_J,_K,_NI,_NJ,_NK,_VC) \
 )
 
@@ -100,8 +89,8 @@
  *  @return 1次元インデクス
  */
 #define _IDX_S4DEX(_N,_I,_J,_K,_NN,_NI,_NJ,_NK,_VC) \
-( size_t(_NN) * _IDX_S3D(_I,_J,_K,_NI,_NJ,_NK,_VC) \
-+ size_t(_N) )
+( (long long)(_NN) * _IDX_S3D(_I,_J,_K,_NI,_NJ,_NK,_VC) \
++ (long long)(_N) )
 
 /** 3次元インデクス(3,i,j,k) -> 1次元インデクス変換マクロ
  *  @param[in] _N  成分インデクス

@@ -54,12 +54,6 @@ int main( int argc, char **argv )
     {
       cout << "  " << i << " : " << ifname[i] << endl;
     }
-
-    //実数のサイズ
-    if( cpm_Base::RealIsDouble() )
-      cout << "REAL_TYPE=double" << endl;
-    else
-      cout << "REAL_TYPE=float" << endl;
   }
   _FLUSH(cout);
 

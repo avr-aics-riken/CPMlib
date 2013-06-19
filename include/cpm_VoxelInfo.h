@@ -72,7 +72,7 @@ private:
   /** ピッチを取得
    *  @return ピッチ実数配列のポインタ
    */
-  const REAL_TYPE* GetPitch() const;
+  const double* GetPitch() const;
 
   /** 全体ボクセル数を取得
    *  @return 全体ボクセル数整数配列のポインタ
@@ -82,12 +82,12 @@ private:
   /** 全体空間の原点を取得
    *  @return 全体空間の原点実数配列のポインタ
    */
-  const REAL_TYPE* GetGlobalOrigin() const;
+  const double* GetGlobalOrigin() const;
 
   /** 全体空間サイズを取得
    *  @return 全体空間サイズ実数配列のポインタ
    */
-  const REAL_TYPE* GetGlobalRegion() const;
+  const double* GetGlobalRegion() const;
 
   /** 自ランクのボクセル数を取得
    *  @return 自ランクのボクセル数整数配列のポインタ
@@ -97,12 +97,12 @@ private:
   /** 自ランクの空間原点を取得
    *  @return 自ランクの空間原点実数配列のポインタ
    */
-  const REAL_TYPE* GetLocalOrigin() const;
+  const double* GetLocalOrigin() const;
 
   /** 自ランクの空間サイズを取得
    *  @return 自ランクの空間サイズ実数配列のポインタ
    */
-  const REAL_TYPE* GetLocalRegion() const;
+  const double* GetLocalRegion() const;
 
   /** 自ランクの領域分割位置を取得
    *  @return 自ランクの領域分割位置整数配列のポインタ
@@ -128,6 +128,8 @@ private:
    *  @return 自ランクの周期境界の隣接ランク番号整数配列のポインタ
    */
   const int* GetPeriodicRankID() const;
+
+
 
 
 

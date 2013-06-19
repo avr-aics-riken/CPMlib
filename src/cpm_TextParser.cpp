@@ -19,14 +19,14 @@ cpm_TextParser::cpm_TextParser()
   : cpm_Base()
 {
   //インスタンス
-  m_tp = TextParser::get_instance();
+  m_tp = new TextParser();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // デストラクタ
 cpm_TextParser::~cpm_TextParser()
 {
-  if( m_tp ) m_tp->remove();
+  if( m_tp ) delete m_tp;
 }
 ////////////////////////////////////////////////////////////////////////////////
 // 読み込み

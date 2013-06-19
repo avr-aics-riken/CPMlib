@@ -14,6 +14,8 @@
 #include "stdlib.h"
 #include "cpm_ParaManager.h"
 
+#include <unistd.h> // for gethostname() of FX10/K
+
 ////////////////////////////////////////////////////////////////////////////////
 // MPI_Datatypeを取得
 MPI_Datatype
@@ -123,6 +125,17 @@ cpm_ParaManager::GetNumRank( int procGrpNo )
 
   // ランク数
   return nrank;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// ホスト名の取得
+std::string
+cpm_ParaManager::GetHostName()
+{
+  char name[512];
+  memset(name, 0x00, sizeof(char)*512);
+  if( gethostname(name, 512) != 0 ) return std::string("");
+  return std::string(name);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

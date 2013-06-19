@@ -10,7 +10,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.57)
-AC_INIT(CPMlib,1.0.2,,CPMlib)
+AC_INIT(CPMlib,1.0.6,,CPMlib)
 AM_INIT_AUTOMAKE()
 AC_CONFIG_SRCDIR([src/cpm_ParaManager.cpp])
 AM_CONFIG_HEADER([config.h])
@@ -34,7 +34,7 @@ AC_SUBST(CPM_DEVICE)
 #
 # compiler libs
 #
-AC_ARG_WITH(comp, [  --with-comp=(INTEL|FJ)      Specify Compiler.], , with_comp=none)
+AC_ARG_WITH(comp, [AC_HELP_STRING([--with-comp=(INTEL|FJ)],[Specify Compiler type])], , with_comp=none)
 AC_SUBST(COMPILER_LIBS)
 case "$with_comp" in
 "INTEL")
@@ -55,7 +55,7 @@ AC_SUBST(MPICH_CFLAGS)
 AC_SUBST(MPICH_LDFLAGS)
 AC_SUBST(MPICH_LIBS)
 AC_SUBST(MPICH_FCLIBS)
-AC_ARG_WITH(mpich, [  --with-mpich=dir            Specify MPICH install directory.], , with_mpich=none)
+AC_ARG_WITH(mpich, [AC_HELP_STRING([--with-mpich=dir],[Specify MPICH install directory])], , with_mpich=none)
 if test "$with_mpich" != "none" ; then
   MPICH_DIR=$with_mpich;
   MPICH_CFLAGS=-I$MPICH_DIR/include
@@ -67,7 +67,7 @@ fi
 # OpenMPI environment
 #
 if test "$with_mpich" = "none" ; then
-  AC_ARG_WITH( ompi, [  --with-ompi=dir             Specify OpenMPI install directory.], , with_ompi=none)
+  AC_ARG_WITH( ompi, [AC_HELP_STRING([--with-ompi=dir],[Specify OpenMPI install directory])], , with_ompi=none)
   if test "$with_ompi" != "none" ; then
     MPICH_DIR=$with_ompi;
     MPICH_CFLAGS=-I$MPICH_DIR/include
@@ -79,7 +79,7 @@ fi
 #
 # TextParser environment
 #
-AC_ARG_WITH(parser, [  --with-parser=dir           Specify TextParser install directory.], , with_parser=none)
+AC_ARG_WITH(parser, [AC_HELP_STRING([--with-parser=dir],[Specify TextParser install directory])], , with_parser=none)
 AC_SUBST(TP_DIR)
 AC_SUBST(TP_CFLAGS)
 AC_SUBST(TP_LDFLAGS)
@@ -97,12 +97,12 @@ else
 fi
 
 #
-# REAL environment
+# REAL environment for Fortran90
 #
-AC_ARG_WITH(real, [  --with-real=(float|double)  Specify REAL_TYPE size. [float]], , with_real=float)
+AC_ARG_WITH(f90real, [AC_HELP_STRING([--with-f90real=(4|8)],[Specify Fortran90 CPM_REAL size [4byte]])], , with_f90real=4)
 AC_SUBST(REALOPT)
 AC_SUBST(FREALOPT)
-if test "$with_real" = "double" ; then
+if test "$with_f90real" = "8" ; then
   REALOPT=-D_REAL_IS_DOUBLE_
   if test "$with_comp" = "INTEL" ; then
     FREALOPT="-r8"
@@ -141,10 +141,28 @@ elif test "$enable_mpi" = "ompi" ; then
   esac
 fi
 
+
 #
 # f90 example
 #
-AC_ARG_WITH(f90example, [  --with-f90example=(yes|no)  make f90 example.], , with_f90example=yes)
+AC_ARG_WITH(f90example, [AC_HELP_STRING([--with-f90example=(yes|no)],[make f90 example [yes]])], , with_f90example=yes)
+
+
+#
+# f90 compiler check
+#
+if test "_$FC" = "_"; then
+  if test "_$F90" = "_"; then
+    with_f90example="no"
+  else
+    FC=$F90
+  fi
+fi
+if test "_$FCFLAGS" = "_"; then
+  if test "_$F90FLAGS" != "_"; then
+    FCFLAGS=$F90FLAGS
+  fi
+fi
 
 #
 # CPM special flags

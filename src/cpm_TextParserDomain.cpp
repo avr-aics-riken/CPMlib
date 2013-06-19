@@ -106,11 +106,10 @@ cpm_TextParserDomain::ReadDomainInfo( cpm_GlobalDomainInfo* dInfo )
     return ret;
   }
 
-  REAL_TYPE RZERO  = REAL_TYPE(0);
-  REAL_TYPE org[3] = {RZERO,RZERO,RZERO}; bool borg = false;
-  int       vox[3] = {0,0,0};             bool bvox = false;
-  REAL_TYPE pch[3] = {RZERO,RZERO,RZERO}; bool bpch = false;
-  REAL_TYPE rgn[3] = {RZERO,RZERO,RZERO}; bool brgn = false;
+  double org[3] = {0.0,0.0,0.0}; bool borg = false;
+  int    vox[3] = {0,0,0};             bool bvox = false;
+  double pch[3] = {0.0,0.0,0.0}; bool bpch = false;
+  double rgn[3] = {0.0,0.0,0.0}; bool brgn = false;
   int       div[3] = {0,0,0};             bool bdiv = false;
 
   for( size_t i=0;i<labels.size();i++ )
@@ -196,24 +195,24 @@ cpm_TextParserDomain::ReadDomainInfo( cpm_GlobalDomainInfo* dInfo )
   //   G_voxが指定されていないときはエラー
   if( brgn )
   {
-    if( rgn[0] <= RZERO || rgn[0] <= RZERO || rgn[0] <= RZERO )
+    if( rgn[0] <= 0.0 || rgn[0] <= 0.0 || rgn[0] <= 0.0 )
     {
       return CPM_ERROR_TP_INVALID_G_RGN;
     }
     dInfo->SetRegion( rgn );
     if( bvox )
     {
-      for( int i=0;i<3;i++ ) pch[i] = rgn[i] / REAL_TYPE(vox[i]);
+      for( int i=0;i<3;i++ ) pch[i] = rgn[i] / double(vox[i]);
       dInfo->SetPitch( pch );
     }
   }
   else if( bpch && bvox)
   {
-    if( pch[0] <= RZERO || pch[0] <= RZERO || pch[0] <= RZERO )
+    if( pch[0] <= 0.0 || pch[0] <= 0.0 || pch[0] <= 0.0 )
     {
       return CPM_ERROR_TP_INVALID_G_PITCH;
     }
-    for( int i=0;i<3;i++ ) rgn[i] = pch[i] * REAL_TYPE(vox[i]);
+    for( int i=0;i<3;i++ ) rgn[i] = pch[i] * double(vox[i]);
     dInfo->SetPitch( pch );
     dInfo->SetRegion( rgn );
   }

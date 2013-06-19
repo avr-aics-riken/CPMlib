@@ -16,18 +16,6 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 // 配列確保
-REAL_TYPE*
-cpm_ParaManager::AllocRealS4D( int nmax, int vc, int procGrpNo )
-{
-  const int *sz = GetLocalVoxelSize( procGrpNo );
-  if( !sz ) return NULL;
-
-  size_t nw = size_t(sz[0]+2*vc) * size_t(sz[1]+2*vc) * size_t(sz[2]+2*vc) * size_t(nmax);
-  return new REAL_TYPE[nw];
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// 配列確保
 double*
 cpm_ParaManager::AllocDoubleS4D( int nmax, int vc, int procGrpNo )
 {
@@ -64,14 +52,6 @@ cpm_ParaManager::AllocIntS4D( int nmax, int vc, int procGrpNo )
 
 ////////////////////////////////////////////////////////////////////////////////
 // 配列確保
-REAL_TYPE*
-cpm_ParaManager::AllocRealS3D( int vc, int procGrpNo )
-{
-  return AllocRealS4D(1, vc, procGrpNo);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// 配列確保
 double*
 cpm_ParaManager::AllocDoubleS3D( int vc, int procGrpNo )
 {
@@ -92,14 +72,6 @@ int*
 cpm_ParaManager::AllocIntS3D( int vc, int procGrpNo )
 {
   return AllocIntS4D(1, vc, procGrpNo);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// 配列確保
-REAL_TYPE*
-cpm_ParaManager::AllocRealV3D( int vc, int procGrpNo )
-{
-  return AllocRealS4D(3, vc, procGrpNo);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -128,14 +100,6 @@ cpm_ParaManager::AllocIntV3D( int vc, int procGrpNo )
 
 ////////////////////////////////////////////////////////////////////////////////
 // 配列確保
-REAL_TYPE*
-cpm_ParaManager::AllocRealV3DEx( int vc, int procGrpNo )
-{
-  return AllocRealS4D(3, vc, procGrpNo);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// 配列確保
 double*
 cpm_ParaManager::AllocDoubleV3DEx( int vc, int procGrpNo )
 {
@@ -156,14 +120,6 @@ int*
 cpm_ParaManager::AllocIntV3DEx( int vc, int procGrpNo )
 {
   return AllocIntS4D(3, vc, procGrpNo);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// 配列確保
-REAL_TYPE*
-cpm_ParaManager::AllocRealS4DEx( int nmax, int vc, int procGrpNo )
-{
-  return AllocRealS4D(nmax, vc, procGrpNo);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

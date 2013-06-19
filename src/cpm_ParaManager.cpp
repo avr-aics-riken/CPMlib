@@ -288,16 +288,15 @@ cpm_ParaManager::VoxelInit( cpm_GlobalDomainInfo* domainInfo, size_t maxVC, size
 ////////////////////////////////////////////////////////////////////////////////
 // 領域分割(領域分割数を指定)
 cpm_ErrorCode
-cpm_ParaManager::VoxelInit( int div[3], int vox[3], REAL_TYPE origin[3], REAL_TYPE region[3]
+cpm_ParaManager::VoxelInit( int div[3], int vox[3], double origin[3], double region[3]
                           , size_t maxVC, size_t maxN, int procGrpNo )
 {
   // 入力値のチェック
-  REAL_TYPE RZERO = REAL_TYPE(0);
   if( vox[0] <= 0 || vox[1] <= 0 || vox[2] <= 0 )
   {
     return CPM_ERROR_INVALID_VOXELSIZE;
   }
-  if( region[0] <= RZERO || region[1] <= RZERO || region[2] <= RZERO )
+  if( region[0] <= 0.0 || region[1] <= 0.0 || region[2] <= 0.0 )
   {
     return CPM_ERROR_INVALID_REGION;
   }
@@ -318,10 +317,10 @@ cpm_ParaManager::VoxelInit( int div[3], int vox[3], REAL_TYPE origin[3], REAL_TY
   }
 
   //ピッチを計算
-  REAL_TYPE pitch[3];
+  double pitch[3];
   for( int i=0;i<3;i++ )
   {
-    pitch[i] = region[i] / REAL_TYPE(vox[i]);
+    pitch[i] = region[i] / double(vox[i]);
   }
 
   // DomainInfoを生成
@@ -339,7 +338,7 @@ cpm_ParaManager::VoxelInit( int div[3], int vox[3], REAL_TYPE origin[3], REAL_TY
 ////////////////////////////////////////////////////////////////////////////////
 // 領域分割(プロセスグループのランク数で自動領域分割)
 cpm_ErrorCode
-cpm_ParaManager::VoxelInit( int vox[3], REAL_TYPE origin[3], REAL_TYPE pitch[3]
+cpm_ParaManager::VoxelInit( int vox[3], double origin[3], double pitch[3]
                           , size_t maxVC, size_t maxN, int procGrpNo )
 {
   // 領域分割
@@ -379,6 +378,7 @@ cpm_ParaManager::DecideDivPattern( int divNum
   voxSizell[1] = voxSize[1];
   voxSizell[2] = voxSize[2];
 
+#if 0 //2012.08.03.mod.start
   bool flag = false;
   unsigned long long n;
   for(n=1; n<=divNumll; n++){
@@ -408,6 +408,40 @@ cpm_ParaManager::DecideDivPattern( int divNum
       }
     }
   }
+#else
+  bool flag = false;
+  unsigned long long i, j, k;
+  for(i=1; i<=divNumll; i++)
+  {
+    if( divNumll%i != 0 ) continue;
+    unsigned long long jmax = divNumll/i;
+    for(j=1; j<=jmax; j++)
+    {
+      if( (divNumll/i)%j != 0 ) continue;
+      unsigned long long kmax = divNumll/(i*j);
+      for(k=1; k<=kmax; k++)
+      {
+        if( (divNumll/(i*j))%k != 0 ) continue;
+        if( (voxSizell[2] / k) < 1 ) break;
+        if( i*j*k == divNumll){
+          unsigned long long commSize;
+          if( (commSize=CalcCommSize(i, j, k, voxSizell)) == 0 ) break;
+
+          if( !flag )
+          {
+            minCommSize = commSize;
+            flag = true;
+          }
+          else if( commSize < minCommSize )
+          {
+            divPttnll[0] = i; divPttnll[1] = j; divPttnll[2] = k;
+            minCommSize = commSize;
+          }
+        }
+      }
+    }
+  }
+#endif //2012.08.03.mod.end
 
   divPttn[0] = divPttnll[0];
   divPttn[1] = divPttnll[1];
@@ -530,7 +564,7 @@ cpm_ParaManager::GetDivNum( int procGrpNo )
 
 ////////////////////////////////////////////////////////////////////////////////
 // ピッチを取得
-const REAL_TYPE*
+const double*
 cpm_ParaManager::GetPitch( int procGrpNo )
 {
   //VOXEL空間マップを検索
@@ -554,7 +588,7 @@ cpm_ParaManager::GetGlobalVoxelSize( int procGrpNo )
 
 ////////////////////////////////////////////////////////////////////////////////
 // 全体空間の原点を取得
-const REAL_TYPE*
+const double*
 cpm_ParaManager::GetGlobalOrigin( int procGrpNo )
 {
   //VOXEL空間マップを検索
@@ -566,7 +600,7 @@ cpm_ParaManager::GetGlobalOrigin( int procGrpNo )
 
 ////////////////////////////////////////////////////////////////////////////////
 // 全体空間サイズを取得
-const REAL_TYPE*
+const double*
 cpm_ParaManager::GetGlobalRegion( int procGrpNo )
 {
   //VOXEL空間マップを検索
@@ -590,7 +624,7 @@ cpm_ParaManager::GetLocalVoxelSize( int procGrpNo )
 
 ////////////////////////////////////////////////////////////////////////////////
 // 自ランクの空間原点を取得
-const REAL_TYPE*
+const double*
 cpm_ParaManager::GetLocalOrigin( int procGrpNo )
 {
   //VOXEL空間マップを検索
@@ -602,7 +636,7 @@ cpm_ParaManager::GetLocalOrigin( int procGrpNo )
 
 ////////////////////////////////////////////////////////////////////////////////
 // 自ランクの空間サイズを取得
-const REAL_TYPE*
+const double*
 cpm_ParaManager::GetLocalRegion( int procGrpNo )
 {
   //VOXEL空間マップを検索
@@ -670,6 +704,98 @@ cpm_ParaManager::GetPeriodicRankID( int procGrpNo )
   if( !pVoxelInfo ) return NULL;
 
   return pVoxelInfo->GetPeriodicRankID();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// 指定idを含む全体ボクセル空間のインデクス範囲を取得
+bool
+cpm_ParaManager::GetBndIndexExtGc( int id, int *array, int vc
+                                 , int &ista, int &jsta, int &ksta
+                                 , int &ilen, int &jlen, int &klen
+                                 , int procGrpNo )
+{
+  //ローカルボクセル数
+  const int *sz = GetLocalVoxelSize(procGrpNo);
+  if( !sz ) return false;
+  int imax = sz[0];
+  int jmax = sz[1];
+  int kmax = sz[2];
+
+  // 共有関数
+  return GetBndIndexExtGc( id, array, vc
+                         , ista, jsta, ksta, ilen, jlen, klen, procGrpNo );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// 指定idを含む全体ボクセル空間のインデクス範囲を取得
+bool
+cpm_ParaManager::GetBndIndexExtGc( int id, int *array
+                               , int imax, int jmax, int kmax, int vc
+                               , int &ista, int &jsta, int &ksta
+                               , int &ilen, int &jlen, int &klen
+                               , int procGrpNo )
+{
+  // 全体ボクセルサイズ
+  const int *wsz = GetGlobalVoxelSize(procGrpNo);
+  if( !wsz ) return false;
+
+  // 自ランク内のid範囲を取得
+  int my_sta[3] = {wsz[0]+vc-1, wsz[1]+vc-1, wsz[2]+vc-1};
+  int my_end[3] = {-vc, -vc, -vc};
+  for( int k=-vc;k<kmax+vc;k++ ){
+  for( int j=-vc;j<jmax+vc;j++ ){
+  for( int i=-vc;i<imax+vc;i++ ){
+    long long idx = _IDX_S3D(i,j,k,imax,jmax,kmax,vc);
+    if( array[idx] == id )
+    {
+      if( i < my_sta[0] ) my_sta[0] = i;
+      if( j < my_sta[1] ) my_sta[1] = j;
+      if( k < my_sta[2] ) my_sta[2] = k;
+      if( i > my_end[0] ) my_end[0] = i;
+      if( j > my_end[1] ) my_end[1] = j;
+      if( k > my_end[2] ) my_end[2] = k;
+    }
+  }}}
+
+  // 取得した自ランク範囲を全体インデクスに変換
+  const int *hidx = GetVoxelHeadIndex(procGrpNo);
+  if( !hidx ) return false;
+  for( int i=0;i<3;i++ )
+  {
+    if( my_sta[i] > my_end[i] ) continue;
+    my_sta[i] += hidx[i];
+    my_end[i] += hidx[i];
+  }
+
+  // 全ランクのmin/maxを取得
+  int idxsta[3], idxend[3];
+  for( int i=0;i<3;i++ )
+  {
+    idxsta[i] = my_sta[i];
+    idxend[i] = my_end[i];
+  }
+  if( Allreduce( my_sta, idxsta, 3, MPI_MIN, procGrpNo ) != CPM_SUCCESS ) return false;
+  if( Allreduce( my_end, idxend, 3, MPI_MAX, procGrpNo ) != CPM_SUCCESS ) return false;
+
+  // 存在チェック
+  bool bCheck = true;
+  for( int i=0;i<3;i++ )
+  {
+    if( idxsta[i] > idxend[i] ) bCheck = false;
+  }
+
+  // 存在したとき、スタートインデクスと長さをセット
+  if( bCheck )
+  {
+    ista = idxsta[0];
+    jsta = idxsta[1];
+    ksta = idxsta[2];
+    ilen = idxend[0] - idxsta[0] + 1;
+    jlen = idxend[1] - idxsta[1] + 1;
+    klen = idxend[2] - idxsta[2] + 1;
+  }
+
+  return bCheck;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -802,10 +928,10 @@ cpm_ParaManager::printVoxelInfo(int myrank)
           std::cout << " *process group No [" << procGrpNo << "], rankNo[" << rankNo << "]" << std::endl;
 
           // 全体空間
-          const int       *gdiv = pV->GetDivNum();
-          const REAL_TYPE *gorg = pV->GetGlobalOrigin();
-          const REAL_TYPE *gpch = pV->GetPitch();
-          const REAL_TYPE *grgn = pV->GetGlobalRegion();
+          const int    *gdiv = pV->GetDivNum();
+          const double *gorg = pV->GetGlobalOrigin();
+          const double *gpch = pV->GetPitch();
+          const double *grgn = pV->GetGlobalRegion();
           const int       *gvox = pV->GetGlobalVoxelSize();
           std::cout << "  +----------------------------------" << std::endl;
           std::cout << "  global div = " << gdiv[0] << "," << gdiv[1] << "," << gdiv[2] << std::endl;
@@ -815,14 +941,14 @@ cpm_ParaManager::printVoxelInfo(int myrank)
           std::cout << "  global vox = " << gvox[0] << "," << gvox[1] << "," << gvox[2] << std::endl;
 
           // ローカル空間
-          const REAL_TYPE *lorg = pV->GetLocalOrigin();
-          const REAL_TYPE *lpch = pV->GetPitch();
-          const REAL_TYPE *lrgn = pV->GetLocalRegion();
-          const int       *lvox = pV->GetLocalVoxelSize();
-          const int       *lpos = pV->GetDivPos();
-          const int       *head = pV->GetVoxelHeadIndex();
-          const int       *neig = pV->GetNeighborRankID();
-          const int       *peri = pV->GetPeriodicRankID();
+          const double *lorg = pV->GetLocalOrigin();
+          const double *lpch = pV->GetPitch();
+          const double *lrgn = pV->GetLocalRegion();
+          const int    *lvox = pV->GetLocalVoxelSize();
+          const int    *lpos = pV->GetDivPos();
+          const int    *head = pV->GetVoxelHeadIndex();
+          const int    *neig = pV->GetNeighborRankID();
+          const int    *peri = pV->GetPeriodicRankID();
           std::cout << "  +----------------------------------" << std::endl;
           std::cout << "  local  org = " << lorg[0] << "," << lorg[1] << "," << lorg[2] << std::endl;
           std::cout << "  local  pch = " << lpch[0] << "," << lpch[1] << "," << lpch[2] << std::endl;
@@ -861,10 +987,10 @@ cpm_ParaManager::printVoxelInfo(int myrank)
       ofs << " *process group No [" << procGrpNo << "], rankNo[" << rankNo << "]" << std::endl;
 
       // 全体空間
-      const int       *gdiv = pV->GetDivNum();
-      const REAL_TYPE *gorg = pV->GetGlobalOrigin();
-      const REAL_TYPE *gpch = pV->GetPitch();
-      const REAL_TYPE *grgn = pV->GetGlobalRegion();
+      const int    *gdiv = pV->GetDivNum();
+      const double *gorg = pV->GetGlobalOrigin();
+      const double *gpch = pV->GetPitch();
+      const double *grgn = pV->GetGlobalRegion();
       const int       *gvox = pV->GetGlobalVoxelSize();
       ofs << "  +----------------------------------" << std::endl;
       ofs << "  global div = " << gdiv[0] << "," << gdiv[1] << "," << gdiv[2] << std::endl;
@@ -874,14 +1000,14 @@ cpm_ParaManager::printVoxelInfo(int myrank)
       ofs << "  global vox = " << gvox[0] << "," << gvox[1] << "," << gvox[2] << std::endl;
 
       // ローカル空間
-      const REAL_TYPE *lorg = pV->GetLocalOrigin();
-      const REAL_TYPE *lpch = pV->GetPitch();
-      const REAL_TYPE *lrgn = pV->GetLocalRegion();
-      const int       *lvox = pV->GetLocalVoxelSize();
-      const int       *lpos = pV->GetDivPos();
-      const int       *head = pV->GetVoxelHeadIndex();
-      const int       *neig = pV->GetNeighborRankID();
-      const int       *peri = pV->GetPeriodicRankID();
+      const double *lorg = pV->GetLocalOrigin();
+      const double *lpch = pV->GetPitch();
+      const double *lrgn = pV->GetLocalRegion();
+      const int    *lvox = pV->GetLocalVoxelSize();
+      const int    *lpos = pV->GetDivPos();
+      const int    *head = pV->GetVoxelHeadIndex();
+      const int    *neig = pV->GetNeighborRankID();
+      const int    *peri = pV->GetPeriodicRankID();
       ofs << "  +----------------------------------" << std::endl;
       ofs << "  local  org = " << lorg[0] << "," << lorg[1] << "," << lorg[2] << std::endl;
       ofs << "  local  pch = " << lpch[0] << "," << lpch[1] << "," << lpch[2] << std::endl;

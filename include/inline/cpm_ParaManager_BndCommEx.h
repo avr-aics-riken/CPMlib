@@ -514,6 +514,7 @@ cpm_ParaManager::packXEx( T *array, int nmax, int imax, int jmax, int kmax, int 
     for( int j=0-vc_comm;j<jmax+vc_comm;j++ ){
     for( int i=0;i<vc_comm;i++ ){
     for( int n=0;n<nmax;n++){
+//      sendm[_IDXFX(n,i,j,k,nmax,0,jmax,kmax,vc_comm)] = array[_IDX_S4DEX(n,i,j,k,nmax,imax,jmax,kmax,vc)];
       sendm[_IDXFX(n,i,j,k,nmax,0,jmax,kmax,vc_comm)] = array[_IDX_S4DEX(n,i,j,k,nmax,imax,jmax,kmax,vc)];
     }}}}
   }

@@ -84,7 +84,7 @@ public:
     return false;
   }
 
-  /** 実数型REAL_TYPEが倍精度かどうか確認
+  /** fortanの実数型（CPM_REAL）が倍精度かどうか確認
    *  @retval true  倍精度
    *  @retval false 単精度
    */
