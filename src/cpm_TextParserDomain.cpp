@@ -12,6 +12,7 @@
  * @date   2012/05/31
  */
 #include "cpm_TextParserDomain.h"
+#include "cpm_PathUtil.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // コンストラクタ
@@ -67,7 +68,7 @@ cpm_TextParserDomain::ReadMain( std::string filename, int &errorcode )
   }
 
   // SubdomainInfoの読み込み
-  if( (errorcode = ReadSubdomainInfo( dInfo )) != TP_NO_ERROR )
+  if( (errorcode = ReadSubdomainInfo( dInfo, filename )) != TP_NO_ERROR )
   {
     delete dInfo;
     return NULL;
@@ -241,7 +242,7 @@ cpm_TextParserDomain::ReadDomainInfo( cpm_GlobalDomainInfo* dInfo )
 ////////////////////////////////////////////////////////////////////////////////
 // SubdomainInfoの読み込み
 int
-cpm_TextParserDomain::ReadSubdomainInfo( cpm_GlobalDomainInfo* dInfo )
+cpm_TextParserDomain::ReadSubdomainInfo( cpm_GlobalDomainInfo* dInfo, std::string tpfname )
 {
   int ret;
 
@@ -293,6 +294,28 @@ cpm_TextParserDomain::ReadSubdomainInfo( cpm_GlobalDomainInfo* dInfo )
 #ifdef _DEBUG
       std::cout << "ActiveSubdomainInfo filename = " << filename << std::endl;
 #endif
+      break;
+    }
+  }
+
+  // ActiveSubdomainファイルの読み込み
+  if( bfname )
+  {
+    std::string fname = filename;
+    // 相対パスのとき、元のtpファイルからの相対パスとする
+    if( !CPM_PATH::cpmPath_isAbsolute( filename ) )
+    {
+      std::string dirName = CES::DirName(tpfname);
+      fname = CPM_PATH::cpmPath_concat( dirName, fname );
+#if 0
+      std::cout << filename << " is Absolute path" << std::endl;
+      std::cout << "dir name = " << dirName << std::endl;
+      std::cout << "fname = " << fname << std::endl;
+#endif
+    }
+    if( (ret = dInfo->ReadActiveSubdomainFile(fname)) != CPM_SUCCESS )
+    {
+      return ret;
     }
   }
 

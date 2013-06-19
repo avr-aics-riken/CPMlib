@@ -152,13 +152,9 @@ $ cat config_cpm.sh
 ./configure --prefix=$1 \
             --with-comp=INTEL \
             --with-ompi=/opt/openmpi \
-	    --with-parser=/usr/local/textparser \
+            --with-parser=/usr/local/textparser \
             --with-f90example=no \
             CXX=icpc \
             CXXFLAGS=-O3 \
-	    FC=ifort
-
-
-  
-
+            FC=ifort
 

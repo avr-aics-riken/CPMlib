@@ -17,6 +17,7 @@
 
 #include <vector>
 #include "cpm_Base.h"
+#include "cpm_EndianUtil.h"
 
 /** CPMの領域情報クラス */
 class cpm_DomainInfo : public cpm_Base
@@ -225,6 +226,33 @@ public:
    *  @return   終了コード(CPM_SUCCESS=正常終了)
    */
   cpm_ErrorCode CheckData( int nRank );
+
+  /** ActiveSubdomainファイルの読み込み
+   *  ActiveSubdomainファイルを読み込み、活性ドメイン情報を生成する
+   *  @param[in]  subDomainFile ActiveSubdomainファイル名
+   *  @return   終了コード(CPM_SUCCESS=正常終了)
+   */
+  cpm_ErrorCode ReadActiveSubdomainFile( std::string subDomainFile );
+
+  /** ActiveSubdomainファイルの読み込み(static関数)
+   *  ActiveSubdomainファイルを読み込み、活性ドメイン情報を生成する
+   *  @param[in]  subDomainFile ActiveSubdomainファイル名
+   *  @param[out] subDomainInfo 活性ドメイン情報
+   *  @param[out] div           ActiveSubdiomainファイル中の領域分割数
+   *  @return   終了コード(CPM_SUCCESS=正常終了)
+   */
+  static cpm_ErrorCode ReadActiveSubdomainFile( std::string subDomainFile
+                                              , std::vector<cpm_ActiveSubdomainInfo>& subDomainInfo
+                                              , int div[3] );
+
+  /** ActiveSubdomainファイルのエンディアンチェック
+   *  ActiveSubdomainファイルのエンディアンをチェック
+   *  @param[in]  ident               ActiveSubdomainファイルのIdentifier
+   *  @retval     CPM_ENDIAN::Match   一致
+   *  @retval     CPM_ENDIAN::UnMatch 不一致
+   *  @retval     CPM_ENDIAN::UnKnown フォーマットが異なる
+   */
+  static CPM_ENDIAN::EMatchType isMatchEndianSbdmMagick( int ident );
 
 private:
 

@@ -352,6 +352,147 @@ cpm_ErrorCode cpm_GlobalDomainInfo::CheckData( int nRank )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// ActiveSubdomainファイルのエンディアンチェック
+CPM_ENDIAN::EMatchType
+cpm_GlobalDomainInfo::isMatchEndianSbdmMagick( int ident )
+{
+  char magick_c[] = "SBDM";
+  int  magick_i=0;
+
+  // check match
+  magick_i = (magick_c[3]<<24) + (magick_c[2]<<16) + (magick_c[1]<<8) + magick_c[0];
+  if( magick_i == ident )
+  {
+    return CPM_ENDIAN::Match;
+  }
+
+  // check unmatch
+  magick_i = (magick_c[0]<<24) + (magick_c[1]<<16) + (magick_c[2]<<8) + magick_c[3];
+  if( magick_i == ident )
+  {
+    return CPM_ENDIAN::UnMatch;
+  }
+
+  // unknown format
+  return CPM_ENDIAN::UnKnown;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// ActiveSubdomainファイルの読み込み
+cpm_ErrorCode
+cpm_GlobalDomainInfo::ReadActiveSubdomainFile
+(
+  std::string subDomainFile
+)
+{
+  // 読み込み
+  int div[3];
+  cpm_ErrorCode ret = cpm_GlobalDomainInfo::ReadActiveSubdomainFile( subDomainFile, m_subDomainInfo, div );
+  if( ret != CPM_SUCCESS )
+  {
+    return ret;
+  }
+
+  // 領域分割数のチェック
+  if( m_divNum[0] > 0 && m_divNum[1] > 0 && m_divNum[2] > 0 )
+  {
+    if( div[0] != m_divNum[0] || div[0] != m_divNum[0] ||div[0] != m_divNum[0] )
+    {
+      return CPM_ERROR_MISMATCH_DIV_SUBDOMAIN;
+    }
+  }
+
+  return CPM_SUCCESS;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// ActiveSubdomainファイルの読み込み(static関数)
+cpm_ErrorCode
+cpm_GlobalDomainInfo::ReadActiveSubdomainFile
+(
+  std::string subDomainFile
+, std::vector<cpm_ActiveSubdomainInfo>& subDomainInfo
+, int div[3]
+)
+{
+  if( subDomainFile.empty() )
+  {
+    return CPM_ERROR_OPEN_SBDM;
+  }
+
+  // ファイルオープン
+  FILE *fp = fopen( subDomainFile.c_str(), "rb" );
+  if( !fp )
+  {
+    return CPM_ERROR_OPEN_SBDM;
+  }
+
+  // エンディアン識別子
+  int ident;
+  if( fread( &ident, sizeof(int), 1, fp ) != 1 )
+  {
+    fclose(fp);
+    return CPM_ERROR_READ_SBDM_HEADER;
+  }
+  CPM_ENDIAN::EMatchType endian = isMatchEndianSbdmMagick( ident );
+  if( endian == CPM_ENDIAN::UnKnown )
+  {
+    fclose(fp);
+    return CPM_ERROR_READ_SBDM_FORMAT;
+  }
+
+  // 領域分割数
+  if( fread( div, sizeof(int), 3, fp ) != 3 )
+  {
+    fclose(fp);
+    return CPM_ERROR_READ_SBDM_DIV;
+  }
+  if( endian == CPM_ENDIAN::UnMatch )
+  {
+    CPM_ENDIAN::BSWAPVEC(div,3);   
+  }
+
+  // contents
+  size_t nc = size_t(div[0]) * size_t(div[1]) * size_t(div[2]);
+  unsigned char *contents = new unsigned char[nc];
+  if( fread( contents, sizeof(unsigned char), nc, fp ) != nc )
+  {
+    delete [] contents;
+    fclose(fp);
+    return CPM_ERROR_READ_SBDM_CONTENTS;
+  }
+
+  // ファイルクローズ
+  fclose(fp);
+
+  size_t ptr = 0;
+  // 活性ドメイン情報の生成
+  for( int k=0;k<div[2];k++ ){
+  for( int j=0;j<div[1];j++ ){
+  for( int i=0;i<div[0];i++ ){
+    if( contents[ptr] == 0x01 )
+    {
+      int pos[3] = {i,j,k};
+      cpm_ActiveSubdomainInfo dom( pos );
+      subDomainInfo.push_back(dom);
+    }
+    ptr++;
+  }}}
+
+  // contentsのdelete
+  delete [] contents;
+
+  // 活性ドメインの数をチェック
+  if( subDomainInfo.size() == 0 )
+  {
+    return CPM_ERROR_SBDM_NUMDOMAIN_ZERO;
+  }
+
+  return CPM_SUCCESS;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 // コンストラクタ
 cpm_LocalDomainInfo::cpm_LocalDomainInfo()
   : cpm_DomainInfo(), cpm_ActiveSubdomainInfo()

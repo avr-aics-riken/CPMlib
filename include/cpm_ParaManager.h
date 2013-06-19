@@ -163,6 +163,44 @@ public:
   cpm_ErrorCode VoxelInit( int vox[3], double origin[3], double region[3]
                          , size_t maxVC=1, size_t maxN=3, int procGrpNo=0 );
 
+  /** 領域分割(ActiveSubdomain指定)
+   *  - 領域分割の各種情報を引数で渡して領域分割を行う
+   *  - ActiveSubdomainファイルで指定される領域分割位置のランクが活性ドメインになる
+   *  - I,J,K方向の領域分割数を指定するバージョン
+   *  - 指定の領域分割数とActiveSubdomainファイルで指定されている領域分割数が一致している必要がある
+   *  - ActiveSubdomain数と並列数が一致している必要がある
+   *  @param[in] div           領域分割数
+   *  @param[in] vox           空間全体のボクセル数
+   *  @param[in] origin        空間全体の原点
+   *  @param[in] region        空間全体のサイズ
+   *  @param[in] subDomainFile ActiveSubdomainファイル名
+   *  @param[in] maxVC         最大の袖数(袖通信用)
+   *  @param[in] maxN          最大の成分数(袖通信用)
+   *  @param[in] procGrpNo     領域分割を行うプロセスグループ番号
+   *  @return 終了コード(CPM_SUCCESS=正常終了)
+   */
+  cpm_ErrorCode VoxelInit_Subdomain( int div[3], int vox[3], double origin[3], double region[3]
+                                   , std::string subDomainFile
+                                   , size_t maxVC=1, size_t maxN=3, int procGrpNo=0 );
+
+  /** 領域分割(ActiveSubdomain指定)
+   *  - 領域分割の各種情報を引数で渡して領域分割を行う
+   *  - ActiveSubdomainファイルで指定される領域分割位置のランクが活性ドメインになる
+   *  - ActiveSubdomainファイルで指定されている領域分割数で領域分割を行う
+   *  - ActiveSubdomain数と並列数が一致している必要がある
+   *  @param[in] vox           空間全体のボクセル数
+   *  @param[in] origin        空間全体の原点
+   *  @param[in] region        空間全体のサイズ
+   *  @param[in] subDomainFile ActiveSubdomainファイル名
+   *  @param[in] maxVC         最大の袖数(袖通信用)
+   *  @param[in] maxN          最大の成分数(袖通信用)
+   *  @param[in] procGrpNo     領域分割を行うプロセスグループ番号
+   *  @return 終了コード(CPM_SUCCESS=正常終了)
+   */
+  cpm_ErrorCode VoxelInit_Subdomain( int vox[3], double origin[3], double region[3]
+                                   , std::string subDomainFile
+                                   , size_t maxVC=1, size_t maxN=3, int procGrpNo=0 );
+
   /** プロセスグループの作成
    *  - 指定されたプロセスリストを使用してプロセスグループを生成する
    *  @param[in]  nproc           使用するプロセスの数
@@ -308,6 +346,21 @@ public:
                        , int &ista, int &jsta, int &ksta, int &ilen, int &jlen, int &klen
                        , int procGrpNo=0 );
 
+  /** 自ランクの境界が外部境界かどうかを判定
+   *  @param[in] face      面方向
+   *  @param[in] procGrpNo プロセスグループ番号(省略時=0)
+   *  @retval    true      外部境界
+   *  @retval    false     外部境界でない
+   */
+  bool IsOuterBoundary( cpm_FaceFlag face, int procGrpNo=0 );
+
+  /** 自ランクの境界が内部境界(隣が不活性ドメイン)かどうかを判定
+   *  @param[in] face      面方向
+   *  @param[in] procGrpNo プロセスグループ番号(省略時=0)
+   *  @retval    true      内部境界
+   *  @retval    false     内部境界でない
+   */
+  bool IsInnerBoundary( cpm_FaceFlag face, int procGrpNo=0 );
 
 
 

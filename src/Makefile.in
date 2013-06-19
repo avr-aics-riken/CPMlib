@@ -242,7 +242,9 @@ cpmlib_include_HEADERS = \
     $(top_builddir)/include/cpm_TextParserDomain.h \
     $(top_builddir)/include/cpm_Version.h \
     $(top_builddir)/include/cpm_VoxelInfo.h \
-    $(top_builddir)/include/cpm_fparam.fi
+    $(top_builddir)/include/cpm_fparam.fi \
+    $(top_builddir)/include/cpm_EndianUtil.h \
+    $(top_builddir)/include/cpm_PathUtil.h
 
 cpmlib_inline_includedir = $(includedir)/inline
 cpmlib_inline_include_HEADERS = \

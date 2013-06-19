@@ -8,6 +8,29 @@
  */
 
 -----------------------------------------------------------------------------
+Version 1.0.8                 03 Apr. 2013
+buildid 20130403_1200
+(1)ActiveSubdomainファイル対応を追加
+  ・cpm_ParaManager::VoxelInit_Subdomain関数追加
+  ・cpm_GlobalDomainInfo::ReadActiveSubdomainFile関数追加
+  ・cpm_GlobalDomainInfo::isMatchEndianSbdmMagick関数追加
+  ・cpm_ParaManager::IsOuterBoundary関数追加
+  ・cpm_ParaManager::IsInnerBoundary関数追加
+  ・エラーコードを追加
+    cpm_Define.h
+    CPM_ERROR_OPEN_SBDM             =3012
+    CPM_ERROR_READ_SBDM_HEADER      =3013
+    CPM_ERROR_READ_SBDM_FORMAT      =3014
+    CPM_ERROR_READ_SBDM_DIV         =3015
+    CPM_ERROR_READ_SBDM_CONTENTS    =3016
+    CPM_ERROR_SBDM_NUMDOMAIN_ZERO   =3017
+    CPM_ERROR_MISMATCH_DIV_SUBDOMAIN=3018
+  ・エンディアンユーティリティヘッダーを追加
+    cpm_EndianUtil.h
+  ・ファイルパスユーティリティヘッダーを追加
+    cpm_PathUtil.h
+
+-----------------------------------------------------------------------------
 Version 1.0.6                 25 Aug. 2012
 buildid 20120825_1400
 (1)REAL_TYPEの廃止

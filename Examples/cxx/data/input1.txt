@@ -13,6 +13,6 @@
 
 "SubdomainInfo" //サブドメイン情報
 {
-  "filename" = "subdomain1.dat"      //サブドメイン情報ファイル名
+//  "filename" = "subdomain1.dat"      //サブドメイン情報ファイル名
 }
 

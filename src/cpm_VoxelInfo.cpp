@@ -470,3 +470,57 @@ cpm_VoxelInfo::GetPeriodicRankID() const
   return m_periodicRankID;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// 自ランクの境界が外部境界かどうかを判定
+bool
+cpm_VoxelInfo::IsOuterBoundary( cpm_FaceFlag face ) const
+{
+  // 隣のドメインが存在する
+  if( !IsRankNull(m_neighborRankID[face]) )
+  {
+    return false;
+  }
+
+  // 分割数とポジション
+  const int *div = GetDivNum();
+  const int *pos = GetDivPos();
+
+  // 分割数とポジションから外部境界かどうか判定
+  if( face == X_MINUS && pos[0] == 0        ) return true;
+  if( face == X_PLUS  && pos[0] == div[0]-1 ) return true;
+  if( face == Y_MINUS && pos[1] == 0        ) return true;
+  if( face == Y_PLUS  && pos[1] == div[1]-1 ) return true;
+  if( face == Z_MINUS && pos[2] == 0        ) return true;
+  if( face == Z_PLUS  && pos[2] == div[2]-1 ) return true;
+
+  // ここに到達した場合は内部境界
+  return false; 
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// 自ランクの境界が内部境界(隣が不活性ドメイン)かどうかを判定
+bool
+cpm_VoxelInfo::IsInnerBoundary( cpm_FaceFlag face ) const
+{
+  // 隣のドメインが存在する
+  if( !IsRankNull(m_neighborRankID[face]) )
+  {
+    return false;
+  }
+
+  // 分割数とポジション
+  const int *div = GetDivNum();
+  const int *pos = GetDivPos();
+
+  // 分割数とポジションから外部境界かどうか判定
+  if( face == X_MINUS && pos[0] == 0        ) return false;
+  if( face == X_PLUS  && pos[0] == div[0]-1 ) return false;
+  if( face == Y_MINUS && pos[1] == 0        ) return false;
+  if( face == Y_PLUS  && pos[1] == div[1]-1 ) return false;
+  if( face == Z_MINUS && pos[2] == 0        ) return false;
+  if( face == Z_PLUS  && pos[2] == div[2]-1 ) return false;
+
+  // ここに到達した場合は内部境界
+  return true;
+}
+

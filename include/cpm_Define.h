@@ -166,6 +166,13 @@ enum cpm_ErrorCode
 , CPM_ERROR_INVALID_VOXELSIZE     = 3009 ///< VOXEL数が不正
 , CPM_ERROR_INVALID_REGION        = 3010 ///< 全体空間サイズが不正
 , CPM_ERROR_INVALID_DIVNUM        = 3011 ///< 領域分割数が不正
+, CPM_ERROR_OPEN_SBDM             = 3012 ///< ActiveSubdomainファイルのオープンに失敗
+, CPM_ERROR_READ_SBDM_HEADER      = 3013 ///< ActiveSubdomainファイルのヘッダー読み込みに失敗
+, CPM_ERROR_READ_SBDM_FORMAT      = 3014 ///< ActiveSubdomainファイルのフォーマットエラー
+, CPM_ERROR_READ_SBDM_DIV         = 3015 ///< ActiveSubdomainファイルの領域分割数読み込みに失敗
+, CPM_ERROR_READ_SBDM_CONTENTS    = 3016 ///< ActiveSubdomainファイルのContents読み込みに失敗
+, CPM_ERROR_SBDM_NUMDOMAIN_ZERO   = 3017 ///< ActiveSubdomainファイルの活性ドメイン数が0
+, CPM_ERROR_MISMATCH_DIV_SUBDOMAIN = 3018 ///< 領域分割数がActiveSubdomainファイルと一致していない
 
 , CPM_ERROR_GET_INFO              = 4000 ///< 情報取得系関数でエラー
 , CPM_ERROR_GET_DIVNUM            = 4001 ///< 領域分割数の取得エラー

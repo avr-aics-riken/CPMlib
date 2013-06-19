@@ -58,10 +58,11 @@ private:
   int ReadDomainInfo( cpm_GlobalDomainInfo* dInfo );
 
   /** ActiveSubdomainInfoの読み込み
-   *  @param[inout] dInfo 領域情報
+   *  @param[inout] dInfo   領域情報
+   *  @param[in]    tpfname メインの領域分割情報ファイル名
    *  @return CPMエラーコード
    */
-  int ReadSubdomainInfo( cpm_GlobalDomainInfo* dInfo );
+  int ReadSubdomainInfo( cpm_GlobalDomainInfo* dInfo, std::string tpfname );
 
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -20,6 +20,8 @@ if test `uname` = "Darwin" ; then
       echo Snow_Leopard
     elif test `uname -r | cut -b 2` = "1" ; then
       echo Lion
+    elif test `uname -r | cut -b 2` = "2" ; then
+      echo Mountain_Lion
     fi
   elif test `uname -r | cut -b 1` = "9" ; then
     echo Leopard

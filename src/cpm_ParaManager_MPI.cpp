@@ -14,7 +14,9 @@
 #include "stdlib.h"
 #include "cpm_ParaManager.h"
 
+#if !defined(_WIN32) && !defined(WIN32)
 #include <unistd.h> // for gethostname() of FX10/K
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 // MPI_Datatypeを取得

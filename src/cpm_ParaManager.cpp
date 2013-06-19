@@ -347,6 +347,99 @@ cpm_ParaManager::VoxelInit( int vox[3], double origin[3], double pitch[3]
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// 領域分割(ActiveSubdomainファイル、領域分割数を指定)
+cpm_ErrorCode
+cpm_ParaManager::VoxelInit_Subdomain( int div[3], int vox[3], double origin[3], double region[3]
+                                    , std::string subDomainFile
+                                    , size_t maxVC, size_t maxN, int procGrpNo )
+{
+  // 入力値のチェック
+  if( vox[0] <= 0 || vox[1] <= 0 || vox[2] <= 0 )
+  {
+    return CPM_ERROR_INVALID_VOXELSIZE;
+  }
+  if( region[0] <= 0.0 || region[1] <= 0.0 || region[2] <= 0.0 )
+  {
+    return CPM_ERROR_INVALID_REGION;
+  }
+
+  // DomainInfoを生成
+  cpm_GlobalDomainInfo dInfo;
+
+  // ActiveSubdomainファイルを読み込み
+  int divSubdomain[3] = {0,0,0};
+  std::vector<cpm_ActiveSubdomainInfo> subDomainInfo;
+  cpm_ErrorCode ret = cpm_GlobalDomainInfo::ReadActiveSubdomainFile
+               (         subDomainFile, subDomainInfo, divSubdomain );
+  if( ret != CPM_SUCCESS )
+  {
+    return ret;
+  }
+
+  // ActiveSubdomain数
+  int ndom = subDomainInfo.size();
+
+  // ランク数
+  int nrank = GetNumRank( procGrpNo );
+  if( nrank != ndom )
+  {
+    return CPM_ERROR_MISMATCH_NP_SUBDOMAIN;
+  }
+
+  // 領域分割数
+  if( div[0]<=0 || div[1]<=0 || div[2]<=0 )
+  {
+    // 領域分割数=ActiveSubdomainファイルの領域分割数
+    div[0] = divSubdomain[0];
+    div[1] = divSubdomain[1];
+    div[2] = divSubdomain[2];
+  }
+  else
+  {
+    if( div[0] != divSubdomain[0] ||
+        div[1] != divSubdomain[1] ||
+        div[2] != divSubdomain[2] )
+    {
+      return CPM_ERROR_MISMATCH_DIV_SUBDOMAIN;
+    }
+  }
+
+  //ピッチを計算
+  double pitch[3];
+  for( int i=0;i<3;i++ )
+  {
+    pitch[i] = region[i] / double(vox[i]);
+  }
+
+  // DomainInfoに値をセット
+  dInfo.SetOrigin( origin );
+  dInfo.SetPitch ( pitch );
+  dInfo.SetRegion( region );
+  dInfo.SetVoxNum( vox );
+  dInfo.SetDivNum( div );
+  for( size_t i=0;i<subDomainInfo.size();i++ )
+  {
+    dInfo.AddSubdomain(subDomainInfo[i]);
+  }
+
+  // 共通の処理
+  return VoxelInit( &dInfo, maxVC, maxN, procGrpNo );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// 領域分割(ActiveSubdomainファイルを指定)
+cpm_ErrorCode
+cpm_ParaManager::VoxelInit_Subdomain( int vox[3], double origin[3], double pitch[3]
+                                    , std::string subDomainFile
+                                    , size_t maxVC, size_t maxN, int procGrpNo )
+{
+  // 領域分割
+  int div[3] = {0,0,0};
+  return VoxelInit_Subdomain( div, vox, origin, pitch, subDomainFile
+                            , maxVC, maxN, procGrpNo );
+}
+
+////////////////////////////////////////////////////////////////////////////////
 // 並列プロセス数からI,J,K方向の分割数を取得する
 cpm_ErrorCode
 cpm_ParaManager::DecideDivPattern( int divNum
@@ -796,6 +889,32 @@ cpm_ParaManager::GetBndIndexExtGc( int id, int *array
   }
 
   return bCheck;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// 自ランクの境界が外部境界かどうかを判定
+bool
+cpm_ParaManager::IsOuterBoundary( cpm_FaceFlag face, int procGrpNo )
+{
+  // VOXEL空間マップを検索
+  const cpm_VoxelInfo *pVoxelInfo = FindVoxelInfo( procGrpNo );
+  if( !pVoxelInfo ) return false;
+
+  // VoxelInfo
+  return pVoxelInfo->IsOuterBoundary(face);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// 自ランクの境界が内部境界(隣が不活性ドメイン)かどうかを判定
+bool
+cpm_ParaManager::IsInnerBoundary( cpm_FaceFlag face, int procGrpNo )
+{
+  // VOXEL空間マップを検索
+  const cpm_VoxelInfo *pVoxelInfo = FindVoxelInfo( procGrpNo );
+  if( !pVoxelInfo ) return false;
+
+  // VoxelInfo
+  return pVoxelInfo->IsInnerBoundary(face);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -9,7 +9,7 @@
 SUBDIRS = @MAKE_SUB_DIRS@
 
 bin_SCRIPTS=cpm-config
-EXTRA_DIST = cpm-config.in cpm-uname
+EXTRA_DIST = cpm-config.in cpm-uname config_cpm.sh src/Makefile_spec
 
 clean-local:
 	find ./ -name *.obj | xargs rm -f

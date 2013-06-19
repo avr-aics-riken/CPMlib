@@ -11,6 +11,7 @@ AR = ar rv
 RANLIB = ranlib
 MPICXX = mpixlcxx_r
 MPI_DIR = 
+TP_DIR=/hogehoge/textparser-1.1-dev_a/textparser
 
 TARGET = libcpmlib.a
 
@@ -32,7 +33,7 @@ OBJS=$(SRCS:.cpp=.o)
 CXXFLAGS = -O3 -qarch=450d -qtune=450 \
            -I$(MPI_DIR) \
            -I../include \
-           -I/hogehoge/textparser-1.1-dev_a/textparser/include
+           -I$(TP_DIR)/include
 
 FFLAGS = -I../include
 

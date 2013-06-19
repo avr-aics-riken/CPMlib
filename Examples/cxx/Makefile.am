@@ -17,7 +17,10 @@ exampleCXX_SOURCES = \
     README \
     ./data/input1.txt \
     ./data/input2.txt \
-    ./data/run.sh
+    ./data/run.sh \
+    ./data_subdomain/input.txt \
+    ./data_subdomain/subdomain.dat \
+    ./data_subdomain/run.sh
 
 exampleCXX_CXXFLAGS = \
     -I$(top_builddir)/include \

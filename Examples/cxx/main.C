@@ -1,13 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <fstream>
 
 #include "cpm_ParaManager.h"
 #include "cpm_TextParserDomain.h"
 
-#ifdef _DEBUG
+//#ifdef _DEBUG
   #include "include/_debug.h"
-#endif
+//#endif
 
 using namespace std;
 
@@ -81,10 +82,6 @@ int main( int argc, char **argv )
     //リストに追加
     domainInfo.push_back(dInfo);
 
-#ifdef _DEBUG
-    printDomainInfo(dInfo);
-    _FLUSH(cout);
-#endif
   }
 
   // 領域分割
@@ -98,6 +95,10 @@ int main( int argc, char **argv )
         cerr << "VoxelInit error : " << ret << endl;
         return ret;
       }
+//#ifdef _DEBUG
+      printDomainInfo(domainInfo[i], paraMngr);
+      _FLUSH(cout);
+//#endif
     }
     else
     {

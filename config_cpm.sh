@@ -19,3 +19,4 @@
             CXX=icpc \
             CXXFLAGS=-O3 \
 	    FC=ifort
+

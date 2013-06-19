@@ -10,7 +10,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.57)
-AC_INIT(CPMlib,1.0.6,,CPMlib)
+AC_INIT(CPMlib,1.0.8,,CPMlib)
 AM_INIT_AUTOMAKE()
 AC_CONFIG_SRCDIR([src/cpm_ParaManager.cpp])
 AM_CONFIG_HEADER([config.h])
@@ -127,7 +127,7 @@ elif test "$enable_mpi" = "mpich" ; then
   MPICH_LIBS="-lmpich"
   MPICH_FCLIBS="$MPICH_LIBS"" -lfmpich"
   case "$CPM_DEVICE" in
-  "Lion"|"Snow_Leopard"|"Leopard"|"Tiger_Intel"|"Tiger_PPC"|"Panther")
+  "Lion"|"Snow_Leopard"|"Leopard"|"Tiger_Intel"|"Tiger_PPC"|"Panther"|"Mountain_Lion")
 #    MPICH_LIBS="$MPICH_LIBS"" -lpmpich"
     ;;
   esac
@@ -135,7 +135,7 @@ elif test "$enable_mpi" = "ompi" ; then
   MPICH_LIBS="-lmpi"
   MPICH_FCLIBS="$MPICH_LIBS"" -lmpi_f77 -lmpi_f90"
   case "$CPM_DEVICE" in
-  "Lion"|"Snow_Leopard"|"Leopard"|"Tiger_Intel"|"Tiger_PPC"|"Panther")
+  "Lion"|"Snow_Leopard"|"Leopard"|"Tiger_Intel"|"Tiger_PPC"|"Panther"|"Mountain_Lion")
 #    MPICH_LIBS="$MPICH_LIBS"" -lmpi_cxx"
     ;;
   esac

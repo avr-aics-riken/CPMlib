@@ -129,7 +129,19 @@ private:
    */
   const int* GetPeriodicRankID() const;
 
+  /** 自ランクの境界が外部境界かどうかを判定
+   *  @param[in] face  面方向
+   *  @retval    true  外部境界
+   *  @retval    false 外部境界でない
+   */
+  bool IsOuterBoundary( cpm_FaceFlag face ) const;
 
+  /** 自ランクの境界が内部境界(隣が不活性ドメイン)かどうかを判定
+   *  @param[in] face  面方向
+   *  @retval    true  内部境界
+   *  @retval    false 内部境界でない
+   */
+  bool IsInnerBoundary( cpm_FaceFlag face ) const;
 
 
 
