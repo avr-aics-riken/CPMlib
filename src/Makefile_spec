@@ -1,5 +1,14 @@
 #! /bin/sh
 
+###################################################################
+#
+# CPMlib - Cartesian Partition Manager Library
+#
+# Copyright (C) 2012-2013 Institute of Industrial Science, The University of Tokyo.
+# All right reserved.
+#
+##################################################################
+
 # Copy 'cpm_Version.h' to include directory.
 # If you don't have the file, do configure on other environment and copy generated one.
 #
@@ -11,7 +20,7 @@ AR = ar rv
 RANLIB = ranlib
 MPICXX = mpixlcxx_r
 MPI_DIR = 
-TP_DIR=/hogehoge/textparser-1.1-dev_a/textparser
+TP_DIR=/hogehoge/textparser-1.2/textparser
 
 TARGET = libcpmlib.a
 

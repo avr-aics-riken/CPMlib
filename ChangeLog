@@ -1,11 +1,15 @@
 /*
  * CPMlib - Cartesian Partition Manager Library
  *
- * Copyright (C) 2012 All rights reserved.
- *
- * Institute of Industrial Science, The University of Tokyo.
+ * Copyright (C) 2012-2013 Institute of Industrial Science, The University of Tokyo.
+ * All rights reserved.
  *
  */
+
+-----------------------------------------------------------------------------
+Version 1.0.9                 02 May  2013
+(1) LISENCEファイルの追加
+(2) マニュアルの修正
 
 -----------------------------------------------------------------------------
 Version 1.0.8                 03 Apr. 2013

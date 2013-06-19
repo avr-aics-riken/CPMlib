@@ -1,11 +1,12 @@
 /*
  * CPMlib - Cartesian Partition Manager Library
  *
- * Copyright (C) 2012 All rights reserved.
+ * Copyright (C) 2012-2013 Institute of Industrial Science, The University of Tokyo.
+ * All rights reserved.
  *
- * Institute of Industrial Science, The University of Tokyo.
  *
+ * Contributors : Kenji Ono (keno@iis.u-tokyo.ac.jp)
+ *                Yasuhiro Kawashima
  */
 
-構造格子空間の領域分割情報管理クラスライブラリ
 

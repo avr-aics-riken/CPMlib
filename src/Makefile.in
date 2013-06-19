@@ -213,11 +213,14 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 
 ###
-###########################################
-# CPM - Cartesian Partition Manager       #
-#                                         #
-# Copyright (C) 2012 University of Tokyo. #
-###########################################
+###################################################################
+#
+# CPMlib - Cartesian Partition Manager Library
+# 
+# Copyright (C) 2012-2013 Institute of Industrial Science, The University of Tokyo.
+# All right reserved.
+#
+##################################################################
 ###
 lib_LIBRARIES = libcpmlib.a
 libcpmlib_a_CXXFLAGS = @MPICH_CFLAGS@ @TP_CFLAGS@ @REALOPT@ -I$(top_builddir)/include

@@ -1,9 +1,12 @@
 ###
-###########################################
-# CPM - Cartesian Partition Manager       #
-#                                         #
-# Copyright (C) 2012 University of Tokyo. #
-###########################################
+###################################################################
+#
+# CPMlib - Cartesian Partition Manager Library
+# 
+# Copyright (C) 2012-2013 Institute of Industrial Science, The University of Tokyo.
+# All right reserved.
+#
+##################################################################
 ###
 noinst_PROGRAMS=exampleCXX
 

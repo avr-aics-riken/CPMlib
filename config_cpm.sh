@@ -2,6 +2,15 @@
 #
 # at .bashrc
 #
+###################################################################
+#
+# CPMlib - Cartesian Partition Manager Library
+#
+# Copyright (C) 2012-2013 Institute of Industrial Science, The University of Tokyo.
+# All right reserved.
+#
+##################################################################
+#
 # Compiler options:
 #
 #   --with-comp=INTEL|FJ;      If compiler does not fall under the category, this option is blank.
