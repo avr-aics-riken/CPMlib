@@ -1,22 +1,26 @@
 ###
-###################################################################
+###################################################################################
 #
 # CPMlib - Cartesian Partition Manager Library
 # 
 # Copyright (C) 2012-2013 Institute of Industrial Science, The University of Tokyo.
 # All right reserved.
 #
-##################################################################
+###################################################################################
 ###
 
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.57)
-AC_INIT(CPMlib,1.0.8,,CPMlib)
+AC_INIT([CPMlib],[1.0.9],[keno@riken.jp],[CPMlib])
 AM_INIT_AUTOMAKE()
 AC_CONFIG_SRCDIR([src/cpm_ParaManager.cpp])
 AM_CONFIG_HEADER([config.h])
+
+# revision No.
+CPM_REVISION="20130622_1300"
+AC_SUBST(CPM_REVISION)
 
 #
 # default prefix setting
@@ -210,7 +214,9 @@ AC_PROG_RANLIB
 #
 AC_HEADER_STDC
 AC_CHECK_HEADERS([stdlib.h \
+                  string.h \
                   sys/time.h\
+                  unistd.h \
                  ])
 
 #
@@ -225,7 +231,11 @@ AC_HEADER_TIME
 #
 # Checks for library functions.
 #
-AC_CHECK_FUNCS([gettimeofday memset])
+AC_CHECK_FUNCS([gethostname \
+                gettimeofday \
+                memset \
+                strdup \
+               ])
 
 AC_CONFIG_FILES([Makefile \
                  src/Makefile \

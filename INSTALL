@@ -6,126 +6,113 @@
  *
  */
 
-１. configureを用いてライブラリのインストールを行なう方法
 
-  以下の手順でライブラリのインストールを行ないます．
+Prerequisite
+============
+- MPI library
+- Text parsing library
 
-    > ./configure [OPTION]
-    > make
-    > make install
 
-  configure実行時のOPTIONは必要に応じて以下を指定してください．
 
-  OPTION:
-    --prefix=INSTALL_DIR
-      ライブラリをインストールするディレクトリをINSTALL_DIRに指定します．
-      デフォルトは/usr/local/sphereです．
+How to compile
+==============
 
-    --with-mpich=MPICH_PATH
-      MPICH ライブラリがインストールされている場合にはMPICH_PATHにインス
-      トール先を指定します．
-      --with-mpichオプションと--with-ompiオプションのいずれかを必ず指定
-      してください．同時に指定した場合，--with-mpichオプションが有効に
-      なります．ただし，コンパイラにmpic++等のmpi環境のラッパーコマンドを
-      指定する場合は, 本オプションを指定する必要はありません．
+1. with configure
 
-    --with-ompi=OPENMPI_PATH
-      OpenMPIライブラリがインストールされている場合にはOPENMPI_PATHに
-      インストール先を指定します．
-      --with-mpichオプションと--with-ompiオプションのいずれかを必ず指定
-      してください．同時に指定した場合，--with-mpichオプションが有効に
-      なります．ただし，コンパイラにmpic++等のmpi環境のラッパーコマンドを
-      指定する場合は, 本オプションを指定する必要はありません．
+$ ./configure [options]
+$ make
+# make install
 
-    --with-parser=TEXTPARSER_PATH
-      TextParserライブラリがインストールされているパスをOPENMPI_PATHに
-      指定します．
-      --with-parserオプションは必ず指定してください．
 
-    --with-f90real=(4|8)
-      Fortran90のデフォルトreal kindを示すCPM_REALデータ型が，単精度
-      （real*4），倍精度（real*8）のどちらかを選択します．このオプションが
-      指定されなかった場合，CPM_REALデータ型は単精度（real*4）になります．
+Configure options:
 
-    --with-comp=(INTEL|FJ)
-      使用するコンパイラを指定します．インテルコンパイラを使用する場合
-      には"INTEL"，富士通コンパイラを使用する場合には"FJ"を指定してく
-      ださい．本オプションはプロジェクトツールでプログラムをコンパイル
-      する際にリンクするライブラリの情報を得るために必要なオプションで
-      す．
+ --prefix=INSTALL_DIR
+    Specify a directory to be installed. The default directory is /usr/local/CPMlib.
 
-    CXX=CXX_COMPILER
-      C++コンパイラをCXX_COMPILERに指定します．
+ --with-mpich=MPICH_DIR
+    If you will use a MPICH library, specify the directory that MPICH library is installed.
+    Either --with-mpich of --with-ompi option will be required except. If the wrapper compiler,
+    e.g., mpic++ or mpicxx is used to compile, both options can be eliminated.
 
-    CXXFLAGS=CXX_OPTIONS
-      C++コンパイラでのコンパイル時に付加するオプションをCXX_OPTIONSに
-      指定します．
+ --with-ompi=OPENMPI_DIR
+    If you will use an OpenMPI library, specify the directory path of OpenMPI.
 
-    CC=C_COMPILER
-      CコンパイラをC_COMPILERに指定します．（注１）
+ --with-comp=(INTEL|FJ)
+    If Intel compiler is used, choose INTEL, and if Fujitsu compiler, specify FJ. This option 
+    is mandatory when using both compilers.
 
-    CFLAGS=C_OPTIONS
-      Cコンパイラでのコンパイル時に付加するオプションをC_OPTIONSに指定
-      します．（注１）
+ --with-pm=PMLIB_DIR
+    Specify the directory path that Performance Monitor library is installed. This option is 
+    required if only you need a performance report.
 
-    FC=FORTRAN_COMPILER
-      FortranコンパイラをFORTRAN_COMPILERに指定します．（注１）
+ --with-parser=TEXTPARSER_PATH
+    Specify the directory path that is installed TextParser library.
 
-    FCFLAGS=FORTRAN_OPTIONS
-      Fortranコンパイラでのコンパイル時に付加するオプションを
-      FORTRAN_OPTIONSに指定します．（注１）
+ --with-f90real=(4|8)
+    Specify the REAL_TYPE macro by selecting 4(float) or 8(double). If this option is omitted,
+    float type will be used.
 
-    F90=FORTRAN90_COMPILER
-      Fortran90コンパイラをFORTRAN90_COMPILERに指定します．（注１）
+ --with-f90example=(yes|no)
+    Specify building f90 example. The default is yes and is required to specify F90, F90FLAGS and LDFLAGS.
 
-    F90FLAGS=FORTRAN90_OPTIONS
-      Fortran90コンパイラでのコンパイル時に付加するオプションを
-      FORTRAN90_OPTIONSに指定します．（注１）
+ --host=hostname
+    Specify in case of cross-compilation.
 
-    LDFLAGS=LD_OPTIONS
-      Fortranライブラリのパスを指定します．（注１）
 
-    （注１）
-    このオプションはCPMライブラリのコンパイルにはなんら影響を与えません．
-    （CPMライブラリのコンパイルにはC++コンパイラを使用しているため）
+ CC=C_COMPILER
+    Specify a C compiler. *
 
-  configureの例を以下に示します．
+ CFLAGS=C_OPTIONS
+    Specify compiler options. *
 
-    > ./configure --prefix=/usr/local/sphere \
-                  --with-mpich=/usr/local/mpich \
-                  --with-parser=/usr/local/textparser \
-                  --with-comp=INTEL \
-                  CXX=/opt/intel/parallel_studio_xe_2011/bin/icpc \
-                  CXXFLAGS=-O3 \
-                  F90=/opt/intel/parallel_studio_xe_2011/bin/ifort \
-                  F90FLAGS=-O3 \
-                  LDFLAGS=-L/opt/intel/parallel_studio_xe_2011/lib/intel64
+ CXX=CXX_COMPILER
+    Specify a C++ compiler, e.g., g++, icpc, xlc++ or others.
 
-  上記では以下の項目を設定しています．
+ CXXFLAGS=CXX_OPTIONS
+    Specify compiler options.
 
-    ・--prefix=/usr/local/sphere
-      インストールディレクトリは/usr/local/sphere
-    ・--with-mpich=/usr/local/mpich
-      MPICHがセットアップされているディレクトリは/usr/local/mpich
-    ・--with-parser
-      TextParserがセットアップされているディレクトリは/usr/local/textparser
-    ・--with-comp=INTEL
-      INTELコンパイラを使用する
-    ・CXX=/opt/intel/parallel_studio_xe_2011/bin/icpc
-      C++コンパイラは/opt/intel/parallel_studio_xe_2011/bin/icpcを使う
-    ・CXXFLAGS=-O3
-      C++のコンパイルオプションは"-O3"
-    ・F90=/opt/intel/parallel_studio_xe_2011/bin/ifort
-      Fortran90コンパイラは/opt/intel/parallel_studio_xe_2011/bin/ifortを使う
-    ・F90FLAGS=-O3
-      Fortran90コンパイラのオプションは"-O3"
-    ・LDFLAGS=-L/opt/intel/parallel_studio_xe_2011/lib/intel64
-      Fortranライブラリのパスを指定
+ FC=FORTRAN90_COMPILER
+    Specify a fortran compiler. *
 
-   （設定項目に空白を含む場合は""で囲ってください）
+ FCFLAGS=FORTRAN_OPTIONS
+    Specify compiler options. *
 
-  ここで--with-f90realオプションが設定されていないため，CPM_REALデータ型は
-  単精度（real*4）に設定されます．
+ F90=FORTRAN90_COMPILER
+    Specify a fortran90 compiler. *
+
+ F90FLAGS=FORTRAN90_OPTIONS
+    Specify compiler options. *
+
+ LDFLAGS=LD_OPTIONS
+    Specify directory path for Fortran libraries. *
+
+ * Mark means that this option does not affect any because CPMlib itself is compiled by C++.
+
+
+
+Here is a example for Intel compiler and MPICH.
+
+$.configure --with-pm=/usr/local/CPMlib \
+            --with-mpich=/usr/local/mpich \
+            --with-parser=/usr/local/TextParser \
+            --with-comp=INTEL \
+            CXX=/opt/intel/composerxe/bin/icpc \
+            CXXFLAGS=-O3 \
+            F90=/opt/intel/composerxe/bin/ifort \
+            F90FLAGS=-O3 \
+            LDFLAGS=-L/opt/intel/composerxe/lib/intel64
+
+
+Following example is for K-computer.
+
+$./configure --prefix=$1 \
+	     --with-pm=/hogehoge \
+             --with-comp=FJ \
+             --with-log=enable \
+             --host=sparc64-unknown-linux-gnu \
+             CXX=mpiFCCpx \
+             CXXFLAGS=-Kfast \
+	     FC=
 
 
 
@@ -153,7 +140,7 @@ $ cat config_cpm.sh
 ./configure --prefix=$1 \
             --with-comp=INTEL \
             --with-ompi=/opt/openmpi \
-            --with-parser=/usr/local/textparser \
+            --with-parser=/usr/local/TextParser \
             --with-f90example=no \
             CXX=icpc \
             CXXFLAGS=-O3 \
@@ -161,6 +148,8 @@ $ cat config_cpm.sh
 
 
 
-3. Manual installation
+3. Hand compile
 
-  find ~/src/Makefile_spec file and edit environemnt variables, then make.
+If a provided configure does not work, use Makefile_hand to build this library. At first,
+edit a make_setting file to tell your machine environment.
+

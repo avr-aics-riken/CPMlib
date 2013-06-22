@@ -2,14 +2,14 @@
 #
 # at .bashrc
 #
-###################################################################
+###################################################################################
 #
 # CPMlib - Cartesian Partition Manager Library
 #
 # Copyright (C) 2012-2013 Institute of Industrial Science, The University of Tokyo.
 # All right reserved.
 #
-##################################################################
+###################################################################################
 #
 # Compiler options:
 #
@@ -23,9 +23,11 @@
 ./configure --prefix=$1 \
             --with-comp=INTEL \
             --with-ompi=/opt/openmpi \
-	    --with-parser=/usr/local/textparser \
-            --with-f90example=no \
+            --with-parser=/usr/local/TextParser \
+            --with-f90example=yes \
             CXX=icpc \
             CXXFLAGS=-O3 \
-	    FC=ifort
+            F90=ifort \
+            F90FLAGS=-O3 \
+            LDFLAGS=-L/opt/intel/composerxe/lib/intel64
 

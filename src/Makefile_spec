@@ -1,13 +1,13 @@
 #! /bin/sh
 
-###################################################################
+###################################################################################
 #
 # CPMlib - Cartesian Partition Manager Library
-#
+# 
 # Copyright (C) 2012-2013 Institute of Industrial Science, The University of Tokyo.
 # All right reserved.
 #
-##################################################################
+###################################################################################
 
 # Copy 'cpm_Version.h' to include directory.
 # If you don't have the file, do configure on other environment and copy generated one.

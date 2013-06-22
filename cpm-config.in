@@ -43,7 +43,12 @@ while test $# -gt 0; do
 
     case "$1" in
     --version)
-      echo @VERSION@
+cat <<EOF
+CPMlib - Cartesian Partition Manager Library @VERSION@ @CPM_REVISION@
+Copyright (C) 2012-2013 Institute of Industrial Science, The University of Tokyo.
+All rights reserved.
+
+EOF
       exit 0
       ;;
 
