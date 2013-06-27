@@ -90,29 +90,44 @@ Configure options:
 
 
 
-Here is a example for Intel compiler and MPICH.
+Here is examples.
 
-$.configure --with-pm=/usr/local/CPMlib \
-            --with-mpich=/usr/local/mpich \
-            --with-parser=/usr/local/TextParser \
-            --with-comp=INTEL \
-            CXX=/opt/intel/composerxe/bin/icpc \
-            CXXFLAGS=-O3 \
-            F90=/opt/intel/composerxe/bin/ifort \
-            F90FLAGS=-O3 \
-            LDFLAGS=-L/opt/intel/composerxe/lib/intel64
+## for Intel compiler and MPICH.
+
+  $ ./configure --with-pm=/usr/local/PMlib \
+                --with-mpich=/usr/local/mpich \
+                --with-parser=/usr/local/TextParser \
+                --with-comp=INTEL \
+                CXX=icpc \
+                CXXFLAGS=-O3 \
+                F90=ifort \
+                F90FLAGS=-O3 \
+                LDFLAGS=-L/opt/intel/composerxe/lib/intel64
 
 
-Following example is for K-computer.
+## for Intel compiler and OpenMPI.
 
-$./configure --prefix=$1 \
-	     --with-pm=/hogehoge \
-             --with-comp=FJ \
-             --with-log=enable \
-             --host=sparc64-unknown-linux-gnu \
-             CXX=mpiFCCpx \
-             CXXFLAGS=-Kfast \
-	     FC=
+  $ ./configure --with-pm=/usr/local/PMlib \
+                --with-ompi=/opt/openmpi \
+                --with-parser=/usr/local/TextParser \
+                --with-comp=INTEL \
+                CXX=icpc \
+                CXXFLAGS=-O3 \
+                F90=ifort \
+                F90FLAGS=-O3 \
+                LDFLAGS=-L/opt/intel/composerxe/lib/intel64
+
+
+## for K-computer.
+
+  $ ./configure --prefix=$1 \
+                --with-pm=/hogehoge \
+                --with-comp=FJ \
+                --with-log=enable \
+                --host=sparc64-unknown-linux-gnu \
+                CXX=mpiFCCpx \
+                CXXFLAGS=-Kfast \
+	        FC=
 
 
 
@@ -130,21 +145,27 @@ $ cat config_cpm.sh
 #
 # Compiler options:
 #
-#   --with-comp=INTEL|FJ;      If compiler does not fall under the category, this option is blank.
-#   --with-ompi=/hoge;         In case of using wrapper compiler, this option may be omitted.
-#   --with-f90real=4|8;        Specify real type in fortran
-#   --with-f90example=yes|no;  Specify compilation of fortran sample included. 
-#   --host=hostname;           Specify in case of cross-compilation.
+#   --with-comp=INTEL|FJ       This option is mandatory if either compiler is specified.
+#   --with-ompi=/hoge          In case of using wrapper compiler, this option may be omitted.
+#   --with-pm=/foo             Specify the directory that the PMlib is installed.
+#   --with-f90real=4|8         Specify real type in fortran
+#   --with-f90example=yes|no   Specify compilation of fortran sample included. 
+#   --host=hostname            Specify in case of cross-compilation.
+#
+# Usage : ./config_cpm.sh install_directory
 #
 #
 ./configure --prefix=$1 \
             --with-comp=INTEL \
             --with-ompi=/opt/openmpi \
             --with-parser=/usr/local/TextParser \
-            --with-f90example=no \
+            --with-pm=/usr/local/PMlib \
+            --with-f90example=yes \
             CXX=icpc \
             CXXFLAGS=-O3 \
-            FC=ifort
+            F90=ifort \
+            F90FLAGS=-O3 \
+            LDFLAGS=-L/opt/intel/composerxe/lib/intel64
 
 
 

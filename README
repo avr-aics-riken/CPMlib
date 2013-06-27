@@ -14,12 +14,6 @@ simulators. This library provides functions such as the management of partitione
 by domain decomposition method and wrapper functions for neighbor and global communications.
 
 
-Prerequisite
-============
-- MPI library
-- Text parsing library
-
-
 
 Ingredients
 ===========

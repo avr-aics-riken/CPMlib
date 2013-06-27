@@ -11,10 +11,19 @@ RELEASE
 =======
 
 -----------------------------------------------------------------------------
+Version 1.0.10  2013-06-27
+
+- Add PMlib option to configure.
+- Correction of manual.
+- Correction of TextParser archive name -lTP.
+- Correction of cpm-config.
+- Correction of config_cpm.sh
+- Change archive name to libCPM.a
+
+-----------------------------------------------------------------------------
 Version 1.0.9  2013-05-02
 
-- Add a LISENCE file.
-
+- Add a LICENSE file.
 - Modification of User's guide.
 
 -----------------------------------------------------------------------------
@@ -43,7 +52,6 @@ Version 1.0.8  2013-04-03
 Version 1.0.6  2012-08-25
 
 - Abolition of using REAL_TYPE
-
 - Correction by change of TextParser API.
 
 
@@ -57,7 +65,6 @@ Version 1.0.5  2012-08-04
 Version 1.0.4  2012-07-09
 
 - Correction of cpm-uname shell script.
-
 - Add description for Fortran90 compiler at configure (in User's guide).
 
 
@@ -65,11 +72,8 @@ Version 1.0.4  2012-07-09
 Version 1.0.3  2012-07-03
 
 - Add GetHostName()
-
 - Add GetBndIndexExtGc()
-
 - Add figures for the description of index and original point (in User's guide).
-
 - Add description for CPM Op，CPM Datatype (in User's guide).
 
 
@@ -77,9 +81,7 @@ Version 1.0.3  2012-07-03
 Version 1.0.2  2012-06-27
 
 - Add description of asynchronous communication (in User's guide).
-
 - Modification of file format for partitioning information.
-
 - Change specification of cpm_ParaManager::VoxelInit.
 
 

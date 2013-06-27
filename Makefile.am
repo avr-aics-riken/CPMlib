@@ -12,7 +12,8 @@
 SUBDIRS = @MAKE_SUB_DIRS@
 
 bin_SCRIPTS=cpm-config
-EXTRA_DIST = cpm-config.in cpm-uname config_cpm.sh src/Makefile_spec LICENSE
+EXTRA_DIST = cpm-config.in cpm-uname config_cpm.sh src/Makefile_spec LICENSE \
+             doc/doxygen/Doxyfile doc/doxygen/makepdf.sh
 dist_data_DATA = AUTHORS COPYING ChangeLog README LICENSE NEWS
 
 clean-local:

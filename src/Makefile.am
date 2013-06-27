@@ -8,11 +8,11 @@
 #
 ###################################################################################
 ###
-lib_LIBRARIES = libcpmlib.a
+lib_LIBRARIES = libCPM.a
 
-libcpmlib_a_CXXFLAGS = @MPICH_CFLAGS@ @TP_CFLAGS@ @REALOPT@ -I$(top_builddir)/include
+libCPM_a_CXXFLAGS = @MPICH_CFLAGS@ @TP_CFLAGS@ @PM_CFLAGS@ @REALOPT@ -I$(top_builddir)/include
 
-libcpmlib_a_SOURCES = \
+libCPM_a_SOURCES = \
     cpm_DomainInfo.cpp \
     cpm_VoxelInfo.cpp \
     cpm_ParaManager.cpp \
@@ -22,8 +22,8 @@ libcpmlib_a_SOURCES = \
     cpm_TextParser.cpp \
     cpm_TextParserDomain.cpp
 
-cpmlib_includedir = $(includedir)
-cpmlib_include_HEADERS = \
+CPM_includedir = $(includedir)
+CPM_include_HEADERS = \
     $(top_builddir)/include/cpm_Base.h \
     $(top_builddir)/include/cpm_Define.h \
     $(top_builddir)/include/cpm_DomainInfo.h \
@@ -37,8 +37,8 @@ cpmlib_include_HEADERS = \
     $(top_builddir)/include/cpm_EndianUtil.h \
     $(top_builddir)/include/cpm_PathUtil.h
 
-cpmlib_inline_includedir = $(includedir)/inline
-cpmlib_inline_include_HEADERS = \
+CPM_inline_includedir = $(includedir)/inline
+CPM_inline_include_HEADERS = \
     $(top_builddir)/include/inline/cpm_ParaManager_BndComm.h \
     $(top_builddir)/include/inline/cpm_ParaManager_BndCommEx.h \
     $(top_builddir)/include/inline/cpm_ParaManager_inline.h

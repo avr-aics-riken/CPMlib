@@ -233,6 +233,10 @@ PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
+PM_CFLAGS = @PM_CFLAGS@
+PM_DIR = @PM_DIR@
+PM_LDFLAGS = @PM_LDFLAGS@
+PM_LIBS = @PM_LIBS@
 RANLIB = @RANLIB@
 REALOPT = @REALOPT@
 SET_MAKE = @SET_MAKE@
@@ -289,7 +293,9 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 SUBDIRS = @MAKE_SUB_DIRS@
 bin_SCRIPTS = cpm-config
-EXTRA_DIST = cpm-config.in cpm-uname config_cpm.sh src/Makefile_spec LICENSE
+EXTRA_DIST = cpm-config.in cpm-uname config_cpm.sh src/Makefile_spec LICENSE \
+             doc/doxygen/Doxyfile doc/doxygen/makepdf.sh
+
 dist_data_DATA = AUTHORS COPYING ChangeLog README LICENSE NEWS
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
