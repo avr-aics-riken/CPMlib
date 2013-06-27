@@ -8,6 +8,16 @@
 
 
 -----------------------------------------------------------------------------
+Version 1.0.11    2013-06-27
+   - Change configure.ac
+     - TP_CFLAGS=`$TP_DIR/bin/tp-config --cflags`
+     - TP_LDFLAGS=`$TP_DIR/bin/tp-config --libs`
+     - remove TP_LIBS from configure.ac & cpm-config.in
+     - PM_CFLAGS=`$PM_DIR/bin/pm-config --cflags`
+     - PM_LDFLAGS=`$PM_DIR/bin/pm-config --libs`
+     - remove PM_LIBS from configure.ac & cpm-config.in
+
+-----------------------------------------------------------------------------
 Version 1.0.10    2013-06-27
 (1) PMlibの指定を追加
 (2) マニュアルの修正

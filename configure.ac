@@ -13,13 +13,13 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.57)
-AC_INIT([CPMlib],[1.0.10],[keno@riken.jp],[CPMlib])
+AC_INIT([CPMlib],[1.0.11],[keno@riken.jp],[CPMlib])
 AM_INIT_AUTOMAKE()
 AC_CONFIG_SRCDIR([src/cpm_ParaManager.cpp])
 AM_CONFIG_HEADER([config.h])
 
 # revision No.
-CPM_REVISION="20130627_1300"
+CPM_REVISION="20130627_2300"
 AC_SUBST(CPM_REVISION)
 
 #
@@ -93,9 +93,8 @@ AC_SUBST(TP_LDFLAGS)
 AC_SUBST(TP_LIBS)
 if test "$with_parser" != "none" ; then
   TP_DIR=$with_parser;
-  TP_CFLAGS=-I$TP_DIR/include
-  TP_LDFLAGS=-L$TP_DIR/lib
-  TP_LIBS=-lTP
+  TP_CFLAGS=`$TP_DIR/bin/tp-config --cflags`
+  TP_LDFLAGS=`$TP_DIR/bin/tp-config --libs`
 else
   echo "  Error: TextParser library is not specified."
   echo "         Specify --with-parser option."
@@ -155,12 +154,11 @@ AC_SUBST(PM_DIR)
 AC_SUBST(PM_CFLAGS)
 AC_ARG_WITH(pm, [AC_HELP_STRING([--with-pm=dir],[Specify PMlib install directory])], , with_pm=none)
 AC_SUBST(PM_LDFLAGS)
-AC_SUBST(PM_LIBS)
+
 if test "$with_pm" != "none" ; then
   PM_DIR=$with_pm;
-  PM_CFLAGS=-I$PM_DIR/include
-  PM_LDFLAGS=-L$PM_DIR/lib
-  PM_LIBS=-lPM
+  PM_CFLAGS=`$PM_DIR/bin/pm-config --cflags`
+  PM_LDFLAGS=`$PM_DIR/bin/pm-config --libs`
 else
   echo "  Error: PM library is not specified."
   echo "         Specify --with-pm option."
