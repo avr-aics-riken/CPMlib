@@ -6,8 +6,24 @@
     std::ofstream ofs( fname );
 
     std::string hname = paraMngr->GetHostName();
-    ofs << "hostname=" << hname << endl;
+    ofs << "hostname=" << hname << endl << endl;;
   
+    ofs << "G_voxel =" << paraMngr->GetGlobalVoxelSize()[0] << ","
+    << paraMngr->GetGlobalVoxelSize()[1] << ","
+    << paraMngr->GetGlobalVoxelSize()[2] << endl;
+    ofs << "G_region=" << paraMngr->GetGlobalRegion()[0] << ","
+    << paraMngr->GetGlobalRegion()[1] << ","
+    << paraMngr->GetGlobalRegion()[2] << endl;
+    ofs << "G_pitch =" << paraMngr->GetPitch()[0] << ","
+    << paraMngr->GetPitch()[1] << ","
+    << paraMngr->GetPitch()[2] << endl;
+    ofs << "G_div   =" << paraMngr->GetDivNum()[0] << ","
+    << paraMngr->GetDivNum()[1] << ","
+    << paraMngr->GetDivNum()[2] << endl;
+    ofs << "L_voxel =" << paraMngr->GetLocalVoxelSize()[0] << ","
+    << paraMngr->GetLocalVoxelSize()[1] << ","
+    << paraMngr->GetLocalVoxelSize()[2] << endl;
+    
     // Broardcast
 #if 1
     {

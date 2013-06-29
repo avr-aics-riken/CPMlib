@@ -62,7 +62,8 @@ CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 PROGRAMS = $(noinst_PROGRAMS)
-am_exampleCXX_OBJECTS = exampleCXX-main.$(OBJEXT)
+am_exampleCXX_OBJECTS = exampleCXX-main.$(OBJEXT) \
+	exampleCXX-user_TPdomain.$(OBJEXT)
 exampleCXX_OBJECTS = $(am_exampleCXX_OBJECTS)
 exampleCXX_DEPENDENCIES =
 exampleCXX_LINK = $(CXXLD) $(exampleCXX_CXXFLAGS) $(CXXFLAGS) \
@@ -213,6 +214,8 @@ DISTCLEANFILES = *~
 CLEANFILES = data/*.log
 exampleCXX_SOURCES = \
     main.C \
+    user_TPdomain.h \
+    user_TPdomain.C \
     ./include/_debug.h \
     ./include/_mpi_test.h \
     README \
@@ -285,6 +288,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/exampleCXX-main.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/exampleCXX-user_TPdomain.Po@am__quote@
 
 .C.o:
 @am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -313,6 +317,20 @@ exampleCXX-main.obj: main.C
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='main.C' object='exampleCXX-main.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(exampleCXX_CXXFLAGS) $(CXXFLAGS) -c -o exampleCXX-main.obj `if test -f 'main.C'; then $(CYGPATH_W) 'main.C'; else $(CYGPATH_W) '$(srcdir)/main.C'; fi`
+
+exampleCXX-user_TPdomain.o: user_TPdomain.C
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(exampleCXX_CXXFLAGS) $(CXXFLAGS) -MT exampleCXX-user_TPdomain.o -MD -MP -MF $(DEPDIR)/exampleCXX-user_TPdomain.Tpo -c -o exampleCXX-user_TPdomain.o `test -f 'user_TPdomain.C' || echo '$(srcdir)/'`user_TPdomain.C
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/exampleCXX-user_TPdomain.Tpo $(DEPDIR)/exampleCXX-user_TPdomain.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='user_TPdomain.C' object='exampleCXX-user_TPdomain.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(exampleCXX_CXXFLAGS) $(CXXFLAGS) -c -o exampleCXX-user_TPdomain.o `test -f 'user_TPdomain.C' || echo '$(srcdir)/'`user_TPdomain.C
+
+exampleCXX-user_TPdomain.obj: user_TPdomain.C
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(exampleCXX_CXXFLAGS) $(CXXFLAGS) -MT exampleCXX-user_TPdomain.obj -MD -MP -MF $(DEPDIR)/exampleCXX-user_TPdomain.Tpo -c -o exampleCXX-user_TPdomain.obj `if test -f 'user_TPdomain.C'; then $(CYGPATH_W) 'user_TPdomain.C'; else $(CYGPATH_W) '$(srcdir)/user_TPdomain.C'; fi`
+@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/exampleCXX-user_TPdomain.Tpo $(DEPDIR)/exampleCXX-user_TPdomain.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='user_TPdomain.C' object='exampleCXX-user_TPdomain.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(exampleCXX_CXXFLAGS) $(CXXFLAGS) -c -o exampleCXX-user_TPdomain.obj `if test -f 'user_TPdomain.C'; then $(CYGPATH_W) 'user_TPdomain.C'; else $(CYGPATH_W) '$(srcdir)/user_TPdomain.C'; fi`
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \

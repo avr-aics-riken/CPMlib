@@ -180,6 +180,7 @@ cpm_TextParserDomain::ReadDomainInfo( cpm_GlobalDomainInfo* dInfo )
   else
     return CPM_ERROR_TP_INVALID_G_ORG;
 
+#if 0
   // G_voxelをセット(オプション)
   if( bvox )
   {
@@ -222,7 +223,16 @@ cpm_TextParserDomain::ReadDomainInfo( cpm_GlobalDomainInfo* dInfo )
   {
     return CPM_ERROR_TP_INVALID_G_RGN;
   }
-
+#else
+  if( (ret = DecideGregion( bvox, vox, brgn, rgn, bpch, pch )) != CPM_SUCCESS )
+  {
+    return ret;
+  }
+  dInfo->SetVoxNum( vox );
+  dInfo->SetRegion( rgn );
+  dInfo->SetPitch( pch );
+#endif
+  
   // G_divをセット(オプション)
   if( bdiv )
   {
@@ -326,6 +336,59 @@ cpm_TextParserDomain::ReadSubdomainInfo( cpm_GlobalDomainInfo* dInfo, std::strin
     return ret;
   }
 
+  return CPM_SUCCESS;
+}
+
+// G_voxel,G_region,G_pitchからサイズを確定する
+int
+cpm_TextParserDomain::DecideGregion( bool bvox, int    vox[3]
+                                    , bool brgn, double rgn[3]
+                                    , bool bpch, double pch[3] )
+{
+  // G_region、G_pitchをセット(G_region優先)
+  // regionが必ず決定するように指定されている必要がある
+  // 1.G_regionが指定されているとき
+  //   G_voxが指定されていればpitchを自動計算
+  // 2.G_regionが指定されておらずG_pitchが指定されているとき
+  //   G_voxが指定されていればregionを自動計算
+  //   G_voxが指定されていないときはエラー
+  
+  // G_voxelをセット(オプション)
+  if( bvox )
+  {
+    if( vox[0] <= 0 || vox[1] <= 0 || vox[2] <= 0 )
+      return CPM_ERROR_TP_INVALID_G_VOXEL;
+  }
+  // G_voxelは必須
+  else
+  {
+    return CPM_ERROR_TP_INVALID_G_VOXEL;
+  }
+  
+  // G_region優先
+  if( brgn )
+  {
+    if( rgn[0] <= 0.0 || rgn[0] <= 0.0 || rgn[0] <= 0.0 )
+    {
+      return CPM_ERROR_TP_INVALID_G_RGN;
+    }
+    for( int i=0;i<3;i++ ) pch[i] = rgn[i] / double(vox[i]);
+  }
+  // G_regionの記述が無く、G_pitchが記述されている
+  else if( bpch )
+  {
+    if( pch[0] <= 0.0 || pch[0] <= 0.0 || pch[0] <= 0.0 )
+    {
+      return CPM_ERROR_TP_INVALID_G_PITCH;
+    }
+    for( int i=0;i<3;i++ ) rgn[i] = pch[i] * double(vox[i]);
+  }
+  // G_regionもG_pitchも記述無し
+  else
+  {
+    return CPM_ERROR_TP_INVALID_G_RGN;
+  }
+  
   return CPM_SUCCESS;
 }
 

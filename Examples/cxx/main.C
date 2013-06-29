@@ -12,7 +12,7 @@
 #include <fstream>
 
 #include "cpm_ParaManager.h"
-#include "cpm_TextParserDomain.h"
+#include "user_TPdomain.h"
 
 //#ifdef _DEBUG
   #include "include/_debug.h"
@@ -71,7 +71,7 @@ int main( int argc, char **argv )
   for( int i=0;i<ifname.size();i++ )
   {
     // 領域分割情報の読み込み
-    cpm_GlobalDomainInfo *dInfo = cpm_TextParserDomain::Read(ifname[i],ret);
+    cpm_GlobalDomainInfo *dInfo = TPdomain::Read(ifname[i],ret);
     if( !dInfo && ret == TP_NO_ERROR )
     {
       delete dInfo;

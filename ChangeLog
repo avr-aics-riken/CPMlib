@@ -12,6 +12,12 @@ UPDATE HISTORY
 
 
 -----------------------------------------------------------------------------
+Version 1.0.13  2013-06-29
+ - Introduce a function to decide the number of division size of a computational
+   domain. This method is pure virtual function.
+   virtual int DecideGregion();
+
+-----------------------------------------------------------------------------
 Version 1.0.12  2013-06-29
 
  - Update README, NEWS, ChangeLog, LICENSE, INSTALL, configure.ac

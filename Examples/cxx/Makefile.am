@@ -15,6 +15,8 @@ CLEANFILES=data/*.log
 
 exampleCXX_SOURCES = \
     main.C \
+    user_TPdomain.h \
+    user_TPdomain.C \
     ./include/_debug.h \
     ./include/_mpi_test.h \
     README \
