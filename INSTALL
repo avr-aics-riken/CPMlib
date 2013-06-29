@@ -30,30 +30,32 @@ Configure options:
     Specify a directory to be installed. The default directory is /usr/local/CPMlib.
 
  --with-mpich=MPICH_DIR
-    If you will use a MPICH library, specify the directory that MPICH library is installed.
-    Either --with-mpich of --with-ompi option will be required except. If the wrapper compiler,
-    e.g., mpic++ or mpicxx is used to compile, both options can be eliminated.
+    If you will use a MPICH library, specify the directory that MPICH library is
+    installed. Either --with-mpich of --with-ompi option will be required except. 
+    If the wrapper compiler, e.g., mpic++ or mpicxx is used to compile, both options 
+    can be eliminated.
 
  --with-ompi=OPENMPI_DIR
     If you will use an OpenMPI library, specify the directory path of OpenMPI.
 
  --with-comp=(INTEL|FJ)
-    If Intel compiler is used, choose INTEL, and if Fujitsu compiler, specify FJ. This option 
-    is mandatory when using both compilers.
+    If Intel compiler is used, choose INTEL, and if Fujitsu compiler, specify FJ. 
+    This option is mandatory when using both compilers.
 
  --with-pm=PMLIB_DIR
-    Specify the directory path that Performance Monitor library is installed. This option is 
-    required if only you need a performance report.
+    Specify the directory path that Performance Monitor library is installed. This 
+    option is required if only you need a performance report.
 
  --with-parser=TEXTPARSER_PATH
     Specify the directory path that is installed TextParser library.
 
  --with-f90real=(4|8)
-    Specify the REAL_TYPE macro by selecting 4(float) or 8(double). If this option is omitted,
-    float type will be used.
+    Specify the REAL_TYPE macro by selecting 4(float) or 8(double). If this option is 
+    omitted, float type will be used.
 
  --with-f90example=(yes|no)
-    Specify building f90 example. The default is yes and is required to specify F90, F90FLAGS and LDFLAGS.
+    Specify building f90 example. The default is yes and is required to specify F90, 
+    F90FLAGS and LDFLAGS.
 
  --host=hostname
     Specify in case of cross-compilation.
@@ -86,7 +88,8 @@ Configure options:
  LDFLAGS=LD_OPTIONS
     Specify directory path for Fortran libraries. *
 
- * Mark means that this option does not affect any because CPMlib itself is compiled by C++.
+ * Mark means that this option does not affect any because CPMlib itself is compiled 
+   by C++.
 
 
 

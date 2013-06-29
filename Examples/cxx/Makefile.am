@@ -36,8 +36,7 @@ exampleCXX_LDADD = \
     @CPM_LIBS@ \
     @MPICH_LDFLAGS@ \
     @MPICH_LIBS@ \
-    @TP_LDFLAGS@ \
-    @TP_LIBS@
+    @TP_LDFLAGS@
 
 dist_noinst_DATA=
 

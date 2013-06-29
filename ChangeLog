@@ -7,40 +7,54 @@
  */
 
 
------------------------------------------------------------------------------
-Version 1.0.11    2013-06-27
-   - Change configure.ac
-     - TP_CFLAGS=`$TP_DIR/bin/tp-config --cflags`
-     - TP_LDFLAGS=`$TP_DIR/bin/tp-config --libs`
-     - remove TP_LIBS from configure.ac & cpm-config.in
-     - PM_CFLAGS=`$PM_DIR/bin/pm-config --cflags`
-     - PM_LDFLAGS=`$PM_DIR/bin/pm-config --libs`
-     - remove PM_LIBS from configure.ac & cpm-config.in
+UPDATE HISTORY
+==============
+
 
 -----------------------------------------------------------------------------
-Version 1.0.10    2013-06-27
-(1) PMlibの指定を追加
-(2) マニュアルの修正
-(3) TextParserのアーカイブ名変更 -lTP
-(4) cpm-configの修正
-(5) config_cpm.shの修正
-(6) アーカイブ名をlibCPM.aに変更
+Version 1.0.12  2013-06-29
+
+ - Update README, NEWS, ChangeLog, LICENSE, INSTALL, configure.ac
+
 
 -----------------------------------------------------------------------------
-Version 1.0.9    2013-05-02
-(1) LICENSEファイルの追加
-(2) マニュアルの修正
+Version 1.0.11  2013-06-27
+
+ - Change configure.ac
+  - TP_CFLAGS=`$TP_DIR/bin/tp-config --cflags`
+  - TP_LDFLAGS=`$TP_DIR/bin/tp-config --libs`
+  - remove TP_LIBS from configure.ac & cpm-config.in
+  - PM_CFLAGS=`$PM_DIR/bin/pm-config --cflags`
+  - PM_LDFLAGS=`$PM_DIR/bin/pm-config --libs`
+  - remove PM_LIBS from configure.ac & cpm-config.in
 
 -----------------------------------------------------------------------------
-Version 1.0.8    2013-04-03
-buildid 20130403_1200
-(1)ActiveSubdomainファイル対応を追加
-  ・cpm_ParaManager::VoxelInit_Subdomain関数追加
-  ・cpm_GlobalDomainInfo::ReadActiveSubdomainFile関数追加
-  ・cpm_GlobalDomainInfo::isMatchEndianSbdmMagick関数追加
-  ・cpm_ParaManager::IsOuterBoundary関数追加
-  ・cpm_ParaManager::IsInnerBoundary関数追加
-  ・エラーコードを追加
+Version 1.0.10  2013-06-27
+
+ - Add PMlib option to configure.
+ - Correction of manual.
+ - Correction of TextParser archive name -lTP.
+ - Correction of cpm-config.
+ - Correction of config_cpm.sh
+ - Change archive name to libCPM.a
+
+-----------------------------------------------------------------------------
+Version 1.0.9  2013-05-02
+
+ - Add a LICENSE file.
+ - Modification of User's guide.
+
+-----------------------------------------------------------------------------
+Version 1.0.8  2013-04-03
+
+ - Introduce a function of ActiveSubdomain. Following functions are added.
+   cpm_ParaManager::VoxelInit_Subdomain関数追加
+   cpm_GlobalDomainInfo::ReadActiveSubdomainFile()
+   cpm_GlobalDomainInfo::isMatchEndianSbdmMagick()
+   cpm_ParaManager::IsOuterBoundary()
+   cpm_ParaManager::IsInnerBoundary()
+
+ - Introduction of error codes.
     cpm_Define.h
     CPM_ERROR_OPEN_SBDM             =3012
     CPM_ERROR_READ_SBDM_HEADER      =3013
@@ -49,77 +63,56 @@ buildid 20130403_1200
     CPM_ERROR_READ_SBDM_CONTENTS    =3016
     CPM_ERROR_SBDM_NUMDOMAIN_ZERO   =3017
     CPM_ERROR_MISMATCH_DIV_SUBDOMAIN=3018
-  ・エンディアンユーティリティヘッダーを追加
+
+ - Add endian utility.
     cpm_EndianUtil.h
-  ・ファイルパスユーティリティヘッダーを追加
+
+ - Add file path utility.
     cpm_PathUtil.h
 
------------------------------------------------------------------------------
-Version 1.0.6    2012-08-25
-buildid 20120825_1400
-(1)REAL_TYPEの廃止
-(2)TextParserのシングルトンから通常のインスタンスへの変更に伴う修正
 
 -----------------------------------------------------------------------------
-Version 1.0.5    2012-08-04
-buildid 20120804_0900
-自動分割数の決定アルゴリズムについて，冗長な処理を修正．
+Version 1.0.6  2012-08-25
+
+ - Abolition of using REAL_TYPE
+ - Correction by change of TextParser API.
+
 
 -----------------------------------------------------------------------------
-Version 1.0.4    2012-07-09
-buildid 20120709_0900
-(1)cpm-unameシェルスクリプトの修正
-	configure時に自動的に呼ばれるcpm-unameシェルスクリプトについて，
-	MacOSXの場合にSnow LeopardとLionの識別を行えるように修正．
-(2)configure時のFortran90コンパイラコマンド指定に関する追記（マニュアル）
-	FC，FCFLAGS環境変数を使用する旨を記述．
-	  また，Fortran90 コンパイラコマンド，コンパイルオプションとして指定するFC
-	  及びFCFLAGS環境変数は，configureシェルスクリプト内で別の環境変数に渡して
-	  いますので，F90，F90FLAGS環境変数を用いた指定はしないでください．
+Version 1.0.5  2012-08-04
+
+ - Improve redundant code to automatically decide the number of division for a whole
+  computational domain.
 
 -----------------------------------------------------------------------------
-Version 1.0.3    2012-07-03
-buildid 20120703_0900
-(1)GetHostNameメソッドの追加
-	自ランクのホスト名を取得するGetHostName 関数をcpm_ParaManager クラスに追加．
-(2)GetBndIndexExtGcメソッドの追加
-	指定idを含む全体ボクセル空間のインデクス範囲を取得するGetBndIndexExtGc関数を
-	cpm_ParaManager クラスに追加．
-(3)インデクスと原点座標に関する図追加（マニュアル）
-	ユーザーマニュアルにインデクスと原点座標に関する説明図を追加．
-(4)CPM Op，CPM Datatype 列挙型に関する補足を追記（マニュアル）
-	ユーザーマニュアルにCPM Op，CPM Datatype 列挙型に関する補足を追加．
-	・CPM Datatype，CPM Op 列挙型
-	  CPM Datatype，CPM Op 列挙型は，cpm Define.h で定義されていますが，
-	  これらの列挙型はFortran90 インターフェイスメソッド内で使用されるため，
-	  ユーザーがC++コード内で直接使用することはありません．
+Version 1.0.4  2012-07-09
+
+ - Correction of cpm-uname shell script.
+ - Add description for Fortran90 compiler at configure (in User's guide).
+
 
 -----------------------------------------------------------------------------
-Version 1.0.2    2012-06-27
-buildid 20120627_0900
-(1)非同期通信に関する注記のマニュアルへの追記
-	※袖通信メソッドは通信用の送受信バッファを共有しているため，非同期版の袖通信
-	  メソッドを使用する場合，その非同期通信中に他の袖通信メソッド（内部境界，
-	  周期境界，同期，非同期版の全て）を呼び出すと，通信結果が保証されません．
-	  なお，袖通信以外の通信メソッドは袖通信用の共有バッファを使用しないため，
-	  非同期袖通信中であっても使用することができます．
-(2)領域分割情報ファイルフォーマット修正
-	・G_org -> G_originに名称変更
-	・G_origin，G_regionを必須項目とし，それ以外の項目はオプションとする．
-	・ActiveSubDomainsは別ファイルからの読み込みに変更．
-	  ファイル名を指定可能とし，指定が無い場合は全サブドメインを活性サブドメインとする．
-(3)cpm_ParaManager::VoxelInitの仕様変更
-	(2)の変更に伴い，VoxelInit関数の仕様を変更
-	・サブドメイン情報のbcidを廃止
-	・G_regionを必須とした事から，VoxelInitメソッドの引数pitchをregionに変更．
-	・活性サブドメイン情報配列が空のとき，全ランクを活性サブドメインとする．
-	※1.0.2では全サブドメインを活性サブドメインとして扱う．
+Version 1.0.3  2012-07-03
+
+ - Add GetHostName()
+ - Add GetBndIndexExtGc()
+ - Add figures for the description of index and original point (in User's guide).
+ - Add description for CPM Op，CPM Datatype (in User's guide).
+
 
 -----------------------------------------------------------------------------
-Version 1.0.1    2012-06-25
-buildid 20120625_0900
-・X_MINUS,...,Z_PLUSの順番を変更
-	変更前
+Version 1.0.2  2012-06-27
+
+ - Add description of asynchronous communication (in User's guide).
+ - Modification of file format for partitioning information.
+ - Change specification of cpm_ParaManager::VoxelInit.
+
+
+-----------------------------------------------------------------------------
+Version 1.0.1  2012-06-25
+
+ - Change order of Macro;
+  before
 	  enum cpm_FaceFlag
 	  {
 	    X_MINUS = 0  ///< -X face
@@ -129,7 +122,7 @@ buildid 20120625_0900
 	  , Y_PLUS  = 4  ///< +Y face
 	  , Z_PLUS  = 5  ///< +Z face
 	  };
-	変更後
+  after
 	  enum cpm_FaceFlag
 	  {
 	    X_MINUS = 0  ///< -X face
@@ -140,8 +133,8 @@ buildid 20120625_0900
 	  , Z_PLUS  = 5  ///< +Z face
 	  };
 
------------------------------------------------------------------------------
-Version 1.0.0    2012-06-18
-buildid 20120618_0900
-・バージョン1.0.0リリース
 
+-----------------------------------------------------------------------------
+Version 1.0.0  2012-06-18
+
+ - Initial release.

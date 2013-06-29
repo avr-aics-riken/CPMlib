@@ -10,8 +10,9 @@ Overview of CPMlib
 ==================
 
 CPMlib is a C++ class library to efficiently assist the development of unsteady physical 
-simulators. This library provides functions such as the management of partitioned subdomains 
-by domain decomposition method and wrapper functions for neighbor and global communications.
+simulators. This library provides functions such as the management of partitioned 
+subdomains by domain decomposition method and wrapper functions for neighbor and global 
+communications.
 
 
 
