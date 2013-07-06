@@ -26,8 +26,23 @@ $ make
 
 Configure options:
 
+ --host=hostname
+    Specify in case of cross-compilation.
+
  --prefix=INSTALL_DIR
     Specify a directory to be installed. The default directory is /usr/local/CPMlib.
+
+ --with-comp=(INTEL|FJ)
+    If Intel compiler is used, choose INTEL, and if Fujitsu compiler, specify FJ. 
+    This option is mandatory when using both compilers.
+
+ --with-f90example=(yes|no)
+    Specify building f90 example. The default is yes and is required to specify F90, 
+    F90FLAGS and LDFLAGS.
+
+ --with-f90real=(4|8)
+    Specify the REAL_TYPE macro by selecting 4(float) or 8(double). If this option is 
+    omitted, float type will be used.
 
  --with-mpich=MPICH_DIR
     If you will use a MPICH library, specify the directory that MPICH library is
@@ -38,27 +53,12 @@ Configure options:
  --with-ompi=OPENMPI_DIR
     If you will use an OpenMPI library, specify the directory path of OpenMPI.
 
- --with-comp=(INTEL|FJ)
-    If Intel compiler is used, choose INTEL, and if Fujitsu compiler, specify FJ. 
-    This option is mandatory when using both compilers.
+ --with-parser=TEXTPARSER_PATH
+    Specify the directory path that is installed TextParser library.
 
  --with-pm=PMLIB_DIR
     Specify the directory path that Performance Monitor library is installed. This 
     option is required if only you need a performance report.
-
- --with-parser=TEXTPARSER_PATH
-    Specify the directory path that is installed TextParser library.
-
- --with-f90real=(4|8)
-    Specify the REAL_TYPE macro by selecting 4(float) or 8(double). If this option is 
-    omitted, float type will be used.
-
- --with-f90example=(yes|no)
-    Specify building f90 example. The default is yes and is required to specify F90, 
-    F90FLAGS and LDFLAGS.
-
- --host=hostname
-    Specify in case of cross-compilation.
 
 
  CC=C_COMPILER
@@ -95,20 +95,19 @@ Configure options:
 
 Here is examples.
 
-## for Intel compiler and MPICH.
+# for OpenMPI compiled by Intel compiler and using wrapper compiler
 
   $ ./configure --with-pm=/usr/local/PMlib \
-                --with-mpich=/usr/local/mpich \
                 --with-parser=/usr/local/TextParser \
                 --with-comp=INTEL \
-                CXX=icpc \
+                --with-f90example=yes \
+                CXX=mpicxx \
                 CXXFLAGS=-O3 \
-                F90=ifort \
-                F90FLAGS=-O3 \
-                LDFLAGS=-L/opt/intel/composerxe/lib/intel64
+                F90=mpif90 \
+                F90FLAGS=-O3
 
 
-## for Intel compiler and OpenMPI.
+# for Intel compiler and OpenMPI.
 
   $ ./configure --with-pm=/usr/local/PMlib \
                 --with-ompi=/opt/openmpi \
@@ -121,7 +120,19 @@ Here is examples.
                 LDFLAGS=-L/opt/intel/composerxe/lib/intel64
 
 
-## for K-computer.
+# for GNU compiler and MPICH.
+
+  $ ./configure --with-pm=/usr/local/PMlib \
+                --with-mpich=/usr/local/mpich \
+                --with-parser=/usr/local/TextParser \
+                CXX=g++ \
+                CXXFLAGS=-O3 \
+                F90=gfortran \
+                F90FLAGS=-O3 \
+                LDFLAGS=-lgfortran
+
+
+# for K-computer.
 
   $ ./configure --prefix=$1 \
                 --with-pm=/hogehoge \
@@ -149,7 +160,8 @@ $ cat config_cpm.sh
 # Compiler options:
 #
 #   --with-comp=INTEL|FJ       This option is mandatory if either compiler is specified.
-#   --with-ompi=/hoge          In case of using wrapper compiler, this option may be omitted.
+#   --with-ompi=/hoge          In case of using wrapper compiler, this option may be 
+#                              omitted.
 #   --with-pm=/foo             Specify the directory that the PMlib is installed.
 #   --with-f90real=4|8         Specify real type in fortran
 #   --with-f90example=yes|no   Specify compilation of fortran sample included. 

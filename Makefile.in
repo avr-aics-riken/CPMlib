@@ -181,10 +181,8 @@ AWK = @AWK@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
-COMPILER_LIBS = @COMPILER_LIBS@
 CPM_CFLAGS = @CPM_CFLAGS@
 CPM_CXX = @CPM_CXX@
-CPM_DEVICE = @CPM_DEVICE@
 CPM_FC = @CPM_FC@
 CPM_FC_LD = @CPM_FC_LD@
 CPM_LDFLAGS = @CPM_LDFLAGS@
@@ -241,6 +239,7 @@ REALOPT = @REALOPT@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
+TGT_DEVICE = @TGT_DEVICE@
 TP_CFLAGS = @TP_CFLAGS@
 TP_DIR = @TP_DIR@
 TP_LDFLAGS = @TP_LDFLAGS@
@@ -292,7 +291,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 SUBDIRS = @MAKE_SUB_DIRS@
 bin_SCRIPTS = cpm-config
-EXTRA_DIST = cpm-config.in cpm-uname config_cpm.sh src/Makefile_spec LICENSE \
+EXTRA_DIST = cpm-config.in chk-uname config_cpm.sh src/Makefile_spec LICENSE \
              doc/doxygen/Doxyfile doc/doxygen/makepdf.sh
 
 dist_data_DATA = AUTHORS COPYING ChangeLog README LICENSE NEWS

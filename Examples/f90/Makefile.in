@@ -68,6 +68,8 @@ mconvp_LDADD = $(LDADD)
 am_mconvp_CPM_OBJECTS = mconvp_CPM-mconvp_CPM.$(OBJEXT)
 mconvp_CPM_OBJECTS = $(am_mconvp_CPM_OBJECTS)
 mconvp_CPM_DEPENDENCIES =
+mconvp_CPM_LINK = $(FCLD) $(mconvp_CPM_FCFLAGS) $(FCFLAGS) \
+	$(AM_LDFLAGS) $(LDFLAGS) -o $@
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 FCCOMPILE = $(FC) $(AM_FCFLAGS) $(FCFLAGS)
 FCLD = $(FC)
@@ -93,10 +95,8 @@ AWK = @AWK@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
-COMPILER_LIBS = @COMPILER_LIBS@
 CPM_CFLAGS = @CPM_CFLAGS@
 CPM_CXX = @CPM_CXX@
-CPM_DEVICE = @CPM_DEVICE@
 CPM_FC = @CPM_FC@
 CPM_FC_LD = @CPM_FC_LD@
 CPM_LDFLAGS = @CPM_LDFLAGS@
@@ -153,6 +153,7 @@ REALOPT = @REALOPT@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
+TGT_DEVICE = @TGT_DEVICE@
 TP_CFLAGS = @TP_CFLAGS@
 TP_DIR = @TP_DIR@
 TP_LDFLAGS = @TP_LDFLAGS@
@@ -220,9 +221,9 @@ mconvp_CPM_FCFLAGS = \
     @MPICH_CFLAGS@ \
     @FREALOPT@
 
-mconvp_CPM_LINK = @CPM_FC_LD@ $(FCFLAGS) \
-  $(AM_LDFLAGS) $(LDFLAGS) -o $@
 
+#mconvp_CPM_LINK = @CPM_FC_LD@ $(FCFLAGS) \
+#  $(AM_LDFLAGS) $(LDFLAGS) -o $@
 mconvp_CPM_LDADD = \
     -L$(top_builddir)/src \
     @CPM_LIBS@ \
