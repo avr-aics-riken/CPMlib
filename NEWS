@@ -11,7 +11,7 @@ RELEASE
 =======
 
 --------------------------
-Version 1.1.0   2013-07-06
+Version 1.1.0   2013-07-12
 
  - Edit configure.ac for a wrapper compiler, change install option
 
