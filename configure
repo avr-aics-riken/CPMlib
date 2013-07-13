@@ -2854,7 +2854,7 @@ ac_config_headers="$ac_config_headers config.h"
 #
 # revision No.
 #
-CPM_REVISION="20130713_1000"
+CPM_REVISION="20130713_1300"
 
 
 

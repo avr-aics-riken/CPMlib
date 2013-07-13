@@ -14,6 +14,7 @@ RELEASE
 Version 1.1.1   2013-07-13
 
  - Update configure.ac for link issue for GNU compiler
+ - Update include/cpm_Version.h.in and cpm_Base.h
 
 --------------------------
 Version 1.1.0   2013-07-12

@@ -18,7 +18,7 @@
 #define CPM_VERSION_NO  "1.1.1"
 
 /** CPMライブラリのリビジョン */
-#define CPM_REVISION    "20130629_1200"
+#define CPM_REVISION    "20130713_1300"
 
 #endif /* _CPM_VERSION_H_ */
 

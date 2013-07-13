@@ -191,8 +191,7 @@ public:
   CPM_INLINE
   static void VersionInfo( std::ostream &ofs )
   {
-    ofs << std::endl
-        << " CPM - Cartesian Partition Manager " << std::endl
+    ofs << " CPM - Cartesian Partition Manager    Version "
         << " version " << CPM_VERSION_NO << std::endl
         << std::endl;
   }
