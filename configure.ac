@@ -13,7 +13,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.57)
-AC_INIT([CPMlib],[1.1.0],[keno@iis.u-tokyo.ac.jp],[CPMlib])
+AC_INIT([CPMlib],[1.1.1],[keno@iis.u-tokyo.ac.jp],[CPMlib])
 AM_INIT_AUTOMAKE()
 AC_CONFIG_SRCDIR([src/cpm_ParaManager.cpp])
 AM_CONFIG_HEADER([config.h])
@@ -21,7 +21,7 @@ AM_CONFIG_HEADER([config.h])
 #
 # revision No.
 #
-CPM_REVISION="20130706_1700"
+CPM_REVISION="20130713_1000"
 AC_SUBST(CPM_REVISION)
 
 
@@ -156,7 +156,7 @@ elif test "$enable_mpi" = "mpich" ; then
     ;;
   esac
 elif test "$enable_mpi" = "ompi" ; then
-  MPICH_LIBS="-lmpi"
+  MPICH_LIBS="-lmpi -lmpi_cxx"
   MPICH_FCLIBS="$MPICH_LIBS"" -lmpi_f77 -lmpi_f90"
   case "$TGT_DEVICE" in
   "Lion"|"Snow_Leopard"|"Leopard"|"Tiger_Intel"|"Tiger_PPC"|"Panther"|"Mountain_Lion")
@@ -263,7 +263,7 @@ AC_SUBST(CPM_FC_LD)
 
 if test "$with_comp" = "FJ"; then
   CPM_FC_LD="$CXX"" --linkfortran"
-else
+elif test "$with_comp" = "INTEL" ; then
   CPM_LIBS="$CPM_LIBS"" -lstdc++ -lifport -lifcore"
 fi
 #CPM_LIBS="$CPM_LIBS"" -lstdc++"

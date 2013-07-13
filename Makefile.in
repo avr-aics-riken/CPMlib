@@ -291,6 +291,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 SUBDIRS = @MAKE_SUB_DIRS@
 bin_SCRIPTS = cpm-config
+CLEANFILES = $(bin_SCRIPTS)
 EXTRA_DIST = cpm-config.in chk-uname config_cpm.sh src/Makefile_spec LICENSE \
              doc/doxygen/Doxyfile doc/doxygen/makepdf.sh
 
@@ -756,6 +757,7 @@ install-strip:
 mostlyclean-generic:
 
 clean-generic:
+	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
 
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)

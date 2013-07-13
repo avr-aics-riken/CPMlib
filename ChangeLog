@@ -11,11 +11,17 @@ REVISION HISTORY
 ================
 
 ------------------
+2013-07-13
+
+    r15 update configure.ac [ver 1.1.1]
+        - modify link for compiling with OpenMPI 1.6 or later, which requires -lmpi_cxx
+        - modify with-comp option if FJ else >> if FJ elif INTEL
+
+------------------
 2013-07-12
 
     r14 update INSTALL
         - modify example of configure for K
-
 
 ------------------
 2013-07-06

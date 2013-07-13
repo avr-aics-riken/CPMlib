@@ -11,6 +11,11 @@ RELEASE
 =======
 
 --------------------------
+Version 1.1.1   2013-07-13
+
+ - Update configure.ac for link issue for GNU compiler
+
+--------------------------
 Version 1.1.0   2013-07-12
 
  - Edit configure.ac for a wrapper compiler, change install option

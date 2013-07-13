@@ -71,7 +71,7 @@ EOF
       ;;
 
     --cflags)
-      echo @CPM_CFLAGS@ @MPICH_CFLAGS@ @TP_CFLAGS@ @PM_CFLAGS@ @REALOPT@
+      echo @CPM_CFLAGS@ @MPICH_CFLAGS@ @REALOPT@
       ;;
 
     --fcflags)
@@ -79,11 +79,11 @@ EOF
       ;;
 
     --libs)
-      echo @CPM_LDFLAGS@ @CPM_LIBS@ @MPICH_LDFLAGS@ @MPICH_LIBS@ @TP_LDFLAGS@ @PM_LDFLAGS@
+      echo @CPM_LDFLAGS@ @CPM_LIBS@ @MPICH_LDFLAGS@ @MPICH_LIBS@
       ;;
 
     --fclibs)
-      echo @CPM_LDFLAGS@ @CPM_LIBS@ @MPICH_LDFLAGS@ @MPICH_FCLIBS@ @TP_LDFLAGS@ @PM_LDFLAGS@
+      echo @CPM_LDFLAGS@ @CPM_LIBS@ @MPICH_LDFLAGS@ @MPICH_FCLIBS@
       ;;
 
     *)
