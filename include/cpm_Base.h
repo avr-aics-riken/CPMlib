@@ -176,25 +176,6 @@ public:
     return str;
   }
 
-  /** バージョンを出力する
-   *  @param ofs 出力ストリーム
-   */
-  CPM_INLINE
-  static void VersionInfo()
-  {
-    VersionInfo( std::cout );
-  }
-
-  /** バージョンを出力する
-   *  @param ofs 出力ストリーム
-   */
-  CPM_INLINE
-  static void VersionInfo( std::ostream &ofs )
-  {
-    ofs << " CPM - Cartesian Partition Manager    Version "
-        << " version " << CPM_VERSION_NO << std::endl
-        << std::endl;
-  }
 
   /** 文字列の比較
    *  @param[in] str1       文字列1
@@ -236,6 +217,15 @@ public:
     return cpm_strCompare(s1,s2,ignorecase);
   }
 
+  
+  /** バージョンを情報を返す
+   */
+  static std::string getVersionInfo()
+  {
+    std::string str(CPM_VERSION_NO);
+    return str;
+  }
+  
 protected:
   /** コンストラクタ */
   cpm_Base(){};

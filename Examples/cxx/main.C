@@ -43,7 +43,8 @@ int main( int argc, char **argv )
 
   if( paraMngr->GetMyRankID() == 0 )
   {
-    cpm_Base::VersionInfo();
+    cout << "CPMlib Version " << 
+    cpm_Base::getVersionInfo() << endl;
   }
 
   // 入力ファイルリスト

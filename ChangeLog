@@ -10,6 +10,13 @@
 REVISION HISTORY
 ================
 
+
+------------------
+2013-07-20
+
+ r17 void VersionInfo() >> std::string getVersionInfo() [ver 1.1.2]
+   - Also change Examples/cxx/main()
+
 ------------------
 2013-07-13
 
