@@ -13,7 +13,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.57)
-AC_INIT([CPMlib],[1.1.3],[keno@iis.u-tokyo.ac.jp],[CPMlib])
+AC_INIT([CPMlib],[1.1.4],[keno@iis.u-tokyo.ac.jp],[CPMlib])
 AM_INIT_AUTOMAKE()
 AC_CONFIG_SRCDIR([src/cpm_ParaManager.cpp])
 AM_CONFIG_HEADER([config.h])
@@ -21,7 +21,7 @@ AM_CONFIG_HEADER([config.h])
 #
 # revision No.
 #
-CPM_REVISION="20131002_1530"
+CPM_REVISION="20131002_1630"
 AC_SUBST(CPM_REVISION)
 
 
@@ -264,9 +264,9 @@ AC_SUBST(CPM_FC_LD)
 if test "$with_comp" = "FJ"; then
   CPM_FC_LD="$CXX"" --linkfortran"
 elif test "$with_comp" = "INTEL" ; then
-  CPM_LIBS="$CPM_LIBS"" -lstdc++ -lifport -lifcore"
+  CPM_LIBS="$CPM_LIBS"" -lstdc++"
 fi
-#CPM_LIBS="$CPM_LIBS"" -lstdc++"
+#CPM_LIBS="$CPM_LIBS"" -lstdc++ -lifport -lifcore"
 
 
 #

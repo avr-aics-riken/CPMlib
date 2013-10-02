@@ -13,6 +13,9 @@ REVISION HISTORY
 ------------------
 2013-10-02
 
+ r19 modify configure.ac for CPM special flag [ver 1.1.4]
+   - CPM_LIBS="$CPM_LIBS"" -lstdc++"
+   
  r18 modify for intel mpi [ver 1.1.3]
    - include mpi.h before stdio.h to suppress error message #error "SEEK_SET is #defined but must not be for the C++ binding of MPI"
  
