@@ -6,12 +6,11 @@
  *
  */
 
+#include "cpm_ParaManager.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <fstream>
-
-#include "cpm_ParaManager.h"
 #include "cpm_TextParserDomain.h"
 
 //#ifdef _DEBUG

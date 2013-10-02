@@ -11,6 +11,11 @@ RELEASE
 =======
 
 ------------------
+Version 1.1.3   2013-10-02
+
+ - modify for intel mpi
+ 
+------------------
 Version 1.1.2   2013-07-20
 
  - change VersionInfo()

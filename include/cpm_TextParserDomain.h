@@ -18,6 +18,7 @@
 
 #include "cpm_TextParser.h"
 #include "cpm_DomainInfo.h"
+#include <string.h> // for strdup
 
 /** CPMの領域情報テキストパーサークラス */
 class cpm_TextParserDomain : public cpm_TextParser

@@ -16,13 +16,14 @@
 #ifndef _CPM_PARAMANAGER_H_
 #define _CPM_PARAMANAGER_H_
 
+#include "cpm_Base.h"
 #include <map>
 #include <vector>
 #include <typeinfo>
-#include "cpm_Base.h"
 #include "cpm_DomainInfo.h"
 #include "cpm_VoxelInfo.h"
 #include "cpm_ObjList.h"
+#include <string.h> // for memset()
 
 /** プロセスグループ毎のVOXEL空間情報管理マップ */
 typedef std::map<int, cpm_VoxelInfo*> VoxelInfoMap;
