@@ -11,6 +11,11 @@ REVISION HISTORY
 ================
 
 ------------------
+2013-10-30
+
+ r20 update chk-uname [ver 1.1.5]
+
+------------------
 2013-10-02
 
  r19 modify configure.ac for CPM special flag [ver 1.1.4]

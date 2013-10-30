@@ -13,7 +13,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.57)
-AC_INIT([CPMlib],[1.1.4],[keno@iis.u-tokyo.ac.jp],[CPMlib])
+AC_INIT([CPMlib],[1.1.5],[keno@iis.u-tokyo.ac.jp],[CPMlib])
 AM_INIT_AUTOMAKE()
 AC_CONFIG_SRCDIR([src/cpm_ParaManager.cpp])
 AM_CONFIG_HEADER([config.h])
@@ -21,7 +21,7 @@ AM_CONFIG_HEADER([config.h])
 #
 # revision No.
 #
-CPM_REVISION="20131002_1630"
+CPM_REVISION="20131030_1730"
 AC_SUBST(CPM_REVISION)
 
 
@@ -151,16 +151,14 @@ elif test "$enable_mpi" = "mpich" ; then
   MPICH_LIBS="-lmpich"
   MPICH_FCLIBS="$MPICH_LIBS"" -lfmpich"
   case "$TGT_DEVICE" in
-  "Lion"|"Snow_Leopard"|"Leopard"|"Tiger_Intel"|"Tiger_PPC"|"Panther"|"Mountain_Lion")
-#    MPICH_LIBS="$MPICH_LIBS"" -lpmpich"
+  "Lion"|"Snow_Leopard"|"Leopard"|"Mountain_Lion"|"Marvericks")
     ;;
   esac
 elif test "$enable_mpi" = "ompi" ; then
   MPICH_LIBS="-lmpi -lmpi_cxx"
   MPICH_FCLIBS="$MPICH_LIBS"" -lmpi_f77 -lmpi_f90"
   case "$TGT_DEVICE" in
-  "Lion"|"Snow_Leopard"|"Leopard"|"Tiger_Intel"|"Tiger_PPC"|"Panther"|"Mountain_Lion")
-#    MPICH_LIBS="$MPICH_LIBS"" -lmpi_cxx"
+  "Lion"|"Snow_Leopard"|"Leopard"|"Mountain_Lion"|"Marvericks")
     ;;
   esac
 fi

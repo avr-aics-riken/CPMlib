@@ -2,7 +2,7 @@
 
 ###################################################################
 #
-# keno@riken.jp
+# keno@riken.jp 2013-10-30
 #
 ##################################################################
 
@@ -29,6 +29,8 @@ if test `uname` = "Darwin" ; then
       echo Lion
     elif test `uname -r | cut -b 2` = "2" ; then
       echo Mountain_Lion
+    elif test `uname -r | cut -b 2` = "3" ; then
+      echo Mavericks
     fi
   elif test `uname -r | cut -b 1` = "9" ; then
     echo Leopard

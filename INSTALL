@@ -135,7 +135,9 @@ Here is examples.
                 --with-f90example=no \
                 --host=sparc64-unknown-linux-gnu \
                 CXX=mpiFCCpx \
-                CXXFLAGS=-Kfast
+                CXXFLAGS=-Kfast \
+                F90=mpifrtpx \
+                F90FLAGS=-Kfast
 
 
 
