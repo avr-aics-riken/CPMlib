@@ -3,7 +3,7 @@
 #
 # CPMlib - Cartesian Partition Manager Library
 # 
-# Copyright (C) 2012-2013 Institute of Industrial Science, The University of Tokyo.
+# Copyright (C) 2012-2014 Institute of Industrial Science, The University of Tokyo.
 # All right reserved.
 #
 ###################################################################################
@@ -13,7 +13,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.57)
-AC_INIT([CPMlib],[1.1.5],[keno@iis.u-tokyo.ac.jp],[CPMlib])
+AC_INIT([CPMlib],[1.1.6],[keno@iis.u-tokyo.ac.jp],[CPMlib])
 AM_INIT_AUTOMAKE()
 AC_CONFIG_SRCDIR([src/cpm_ParaManager.cpp])
 AM_CONFIG_HEADER([config.h])
@@ -21,7 +21,7 @@ AM_CONFIG_HEADER([config.h])
 #
 # revision No.
 #
-CPM_REVISION="20131030_1730"
+CPM_REVISION="20140211_2000"
 AC_SUBST(CPM_REVISION)
 
 
@@ -30,7 +30,7 @@ AC_SUBST(CPM_REVISION)
 # default prefix setting
 #
 AC_PREFIX_DEFAULT([/usr/local/CPMlib])
-if test "$prefix" = "NONE" ; then
+if test x"$prefix" = x"NONE" ; then
   CPM_INST_DIR=/usr/local/CPMlib
 else
   CPM_INST_DIR="$prefix"
@@ -39,17 +39,9 @@ fi
 
 
 #
-# platform
-#
-TGT_DEVICE="$($SHELL ./chk-uname)"
-AC_SUBST(TGT_DEVICE)
-
-
-
-#
 # compiler
 #
-AC_ARG_WITH(comp, [AC_HELP_STRING([--with-comp=(INTEL|FJ)],[Specify Compiler type])], , with_comp=none)
+AC_ARG_WITH(comp, [AC_HELP_STRING([--with-comp=(INTEL|FJ|GNU)],[Specify Compiler type])], , with_comp=none)
 
 
 
@@ -60,12 +52,14 @@ AC_ARG_WITH(f90real, [AC_HELP_STRING([--with-f90real=(4|8)],[Specify Fortran90 C
 AC_SUBST(REALOPT)
 AC_SUBST(FREALOPT)
 
-if test "$with_f90real" = "8" ; then
+if test x"$with_f90real" = x"8" ; then
   REALOPT=-D_REAL_IS_DOUBLE_
-  if test "$with_comp" = "INTEL" ; then
+  if test x"$with_comp" = x"INTEL" ; then
     FREALOPT="-r8"
-  elif test "$with_comp" = "FJ" ; then
+  elif test x"$with_comp" = x"FJ" ; then
     FREALOPT="-CcdRR8"
+  elif test x"$with_comp" = x"GNU" ; then
+    FREALOPT="-fdefault-real-8"
   fi
 else
   REALOPT=
@@ -91,8 +85,11 @@ case "$CPM_CXX" in
   mpiCC)    enable_mpi="wrappermpi" ;;
   mpic++)   enable_mpi="wrappermpi" ;;
   mpiFCCpx) enable_mpi="wrappermpi" ;;
+  CC)       enable_mpi="wrappermpi" ;;
 esac
 
+# mpiFCCpx ; Fujitsu  FX
+# CC       ; NERSC Hopper
 
 
 #
@@ -109,11 +106,11 @@ AC_SUBST(MPICH_FCLIBS)
 # if wrapper compiler is specified, skip this part
 #
 
-if test "$enable_mpi" = "none" ; then
+if test x"$enable_mpi" = x"none" ; then
 
 # MPICH
   AC_ARG_WITH(mpich, [AC_HELP_STRING([--with-mpich=dir],[Specify MPICH install directory])], , with_mpich=none)
-  if test "$with_mpich" != "none" ; then
+  if test x"$with_mpich" != x"none" ; then
     MPICH_DIR=$with_mpich;
     MPICH_CFLAGS=-I$MPICH_DIR/include
     MPICH_LDFLAGS=-L$MPICH_DIR/lib
@@ -121,10 +118,10 @@ if test "$enable_mpi" = "none" ; then
   fi
 
 # OpenMPI // mpichが指定されておらず，かつ，ompが指定されていれば変数をセット
-  if test "$with_mpich" = "none" ; then
+  if test x"$with_mpich" = x"none" ; then
     AC_ARG_WITH(ompi, [AC_HELP_STRING([--with-ompi=dir],[Specify OpenMPI install directory])], , with_ompi=none)
 
-    if test "$with_ompi" != "none" ; then
+    if test x"$with_ompi" != x"none" ; then
       MPICH_DIR=$with_ompi;
       MPICH_CFLAGS=-I$MPICH_DIR/include
       MPICH_LDFLAGS=-L$MPICH_DIR/lib
@@ -140,33 +137,25 @@ fi
 # MPI Library for fortran
 #
 
-if test "$with_comp" = "FJ" ; then
+if test x"$with_comp" = x"FJ" ; then
   MPICH_LIBS=""
   case "$host" in
   sparc*)
     MPICH_FCLIBS="$MPICH_LIBS"" -lmpi_f77 -lmpi_f90"
     ;;
   esac
-elif test "$enable_mpi" = "mpich" ; then
+elif test x"$enable_mpi" = x"mpich" ; then
   MPICH_LIBS="-lmpich"
   MPICH_FCLIBS="$MPICH_LIBS"" -lfmpich"
-  case "$TGT_DEVICE" in
-  "Lion"|"Snow_Leopard"|"Leopard"|"Mountain_Lion"|"Marvericks")
-    ;;
-  esac
-elif test "$enable_mpi" = "ompi" ; then
+elif test x"$enable_mpi" = x"ompi" ; then
   MPICH_LIBS="-lmpi -lmpi_cxx"
   MPICH_FCLIBS="$MPICH_LIBS"" -lmpi_f77 -lmpi_f90"
-  case "$TGT_DEVICE" in
-  "Lion"|"Snow_Leopard"|"Leopard"|"Mountain_Lion"|"Marvericks")
-    ;;
-  esac
 fi
 
 
 # warning. if a wrapper compiler is used, "enable_mpi" is empty, but parallel.
 #
-if test "$enable_mpi" = "none" ; then
+if test x"$enable_mpi" = x"none" ; then
   echo "  Warning: Neither MPICH nor OpenMPI library is not specified."
   echo "           If compilation error occurs about MPI, specify --with-mpich or --with-ompi option."
 fi
@@ -182,15 +171,15 @@ AC_ARG_WITH(f90example, [AC_HELP_STRING([--with-f90example=(yes|no)],[make f90 e
 #
 # f90 compiler check
 #
-if test "_$FC" = "_"; then
-  if test "_$F90" = "_"; then
+if test x"_$FC" = x"_"; then
+  if test x"_$F90" = x"_"; then
     with_f90example="no"
   else
     FC=$F90
   fi
 fi
-if test "_$FCFLAGS" = "_"; then
-  if test "_$F90FLAGS" != "_"; then
+if test x"_$FCFLAGS" = x"_"; then
+  if test x"_$F90FLAGS" != x"_"; then
     FCFLAGS=$F90FLAGS
   fi
 fi
@@ -205,7 +194,7 @@ AC_SUBST(TP_DIR)
 AC_SUBST(TP_CFLAGS)
 AC_SUBST(TP_LDFLAGS)
 AC_SUBST(TP_LIBS)
-if test "$with_parser" != "none" ; then
+if test x"$with_parser" != x"none" ; then
   TP_DIR=$with_parser;
   TP_CFLAGS=`$TP_DIR/bin/tp-config --cflags`
   TP_LDFLAGS=`$TP_DIR/bin/tp-config --libs`
@@ -225,7 +214,7 @@ AC_SUBST(PM_CFLAGS)
 AC_ARG_WITH(pm, [AC_HELP_STRING([--with-pm=dir],[Specify PMlib install directory])], , with_pm=none)
 AC_SUBST(PM_LDFLAGS)
 
-if test "$with_pm" != "none" ; then
+if test x"$with_pm" != x"none" ; then
   PM_DIR=$with_pm;
   PM_CFLAGS=`$PM_DIR/bin/pm-config --cflags`
   PM_LDFLAGS=`$PM_DIR/bin/pm-config --libs`
@@ -259,12 +248,14 @@ AC_SUBST(CPM_FC)
 CPM_FC_LD="$FC"
 AC_SUBST(CPM_FC_LD)
 
-if test "$with_comp" = "FJ"; then
+
+if test x"$with_comp" = x"FJ"; then
   CPM_FC_LD="$CXX"" --linkfortran"
-elif test "$with_comp" = "INTEL" ; then
+elif test x"$with_comp" = x"INTEL" ; then
+  CPM_LIBS="$CPM_LIBS"" -lstdc++"
+elif test x"$with_comp" = x"GNU" ; then
   CPM_LIBS="$CPM_LIBS"" -lstdc++"
 fi
-#CPM_LIBS="$CPM_LIBS"" -lstdc++ -lifport -lifcore"
 
 
 #

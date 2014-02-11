@@ -194,7 +194,6 @@
     real                                  :: pi, x, y
 
     pi = 2.0*asin(1.0)
-!kero left lower coner of cell(1,1,1) is defined as an original point O(0.0, 0.0, 0.0)
 
     do j=1,ny
     do i=1,nx

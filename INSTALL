@@ -1,7 +1,7 @@
 /*
  * CPMlib - Cartesian Partition Manager Library
  *
- * Copyright (C) 2012-2013 Institute of Industrial Science, The University of Tokyo.
+ * Copyright (C) 2012-2014 Institute of Industrial Science, The University of Tokyo.
  * All rights reserved.
  *
  */
@@ -33,7 +33,7 @@ Configure options:
  --prefix=INSTALL_DIR
     Specify a directory to be installed. The default directory is /usr/local/CPMlib.
 
- --with-comp=(INTEL|FJ)
+ --with-comp=(INTEL|FJi|GNU)
     If Intel compiler is used, choose INTEL, and if Fujitsu compiler, specify FJ. 
     This option is mandatory when using both compilers.
 
@@ -83,8 +83,7 @@ Configure options:
  LDFLAGS=LD_OPTIONS
     Specify directory path for Fortran libraries. *
 
- * Mark means that this option does not affect any because CPMlib itself is compiled 
-   by C++.
+ * This option affect only example.
 
 
 
@@ -92,8 +91,9 @@ Here is examples.
 
 # for OpenMPI compiled by Intel compiler and using wrapper compiler, /w f90 example
 
-  $ ./configure --with-pm=/usr/local/PMlib \
-                --with-parser=/usr/local/TextParser \
+  $ ./configure --prefix=/usr/local/FFV/CPMlib \
+                --with-pm=/usr/local/FFV/PMlib \
+                --with-parser=/usr/local/FFV/TextParser \
                 --with-comp=INTEL \
                 --with-f90example=yes \
                 CXX=mpicxx \
@@ -120,6 +120,7 @@ Here is examples.
   $ ./configure --with-pm=/usr/local/PMlib \
                 --with-mpich=/usr/local/mpich \
                 --with-parser=/usr/local/TextParser \
+                --with-comp=GNU \
                 CXX=g++ \
                 CXXFLAGS=-O3 \
                 F90=gfortran \
@@ -141,47 +142,7 @@ Here is examples.
 
 
 
-2. How to use config_cpm.sh
-
-  $ ./config_cpm.sh install_dir
-
-  Specify the directory that you want to install by argument 'install_dir'.
-
-
-$ cat config_cpm.sh
-#! /bin/sh
-#
-# at .bashrc
-#
-# Compiler options:
-#
-#   --with-comp=INTEL|FJ       This option is mandatory if either compiler is specified.
-#   --with-ompi=/hoge          In case of using wrapper compiler, this option may be 
-#                              omitted.
-#   --with-pm=/foo             Specify the directory that the PMlib is installed.
-#   --with-f90real=4|8         Specify real type in fortran
-#   --with-f90example=yes|no   Specify compilation of fortran sample included. 
-#   --host=hostname            Specify in case of cross-compilation.
-#
-# Usage : ./config_cpm.sh install_directory
-#
-#
-./configure --prefix=$1 \
-            --with-comp=INTEL \
-            --with-ompi=/opt/openmpi \
-            --with-parser=/usr/local/TextParser \
-            --with-pm=/usr/local/PMlib \
-            --with-f90example=yes \
-            CXX=icpc \
-            CXXFLAGS=-O3 \
-            F90=ifort \
-            F90FLAGS=-O3 \
-            LDFLAGS=-L/opt/intel/composerxe/lib/intel64
-
-
-
-3. Hand compile
+2. Hand compile
 
 If a provided configure does not work, use Makefile_hand to build this library. At first,
 edit a make_setting file to tell your machine environment.
-

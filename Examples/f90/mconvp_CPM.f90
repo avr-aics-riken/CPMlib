@@ -12,15 +12,15 @@
 
     use array_def
     implicit none
-!CPM.s
+
     include 'mpif.h'
     include 'cpm_fparam.fi'
-!CPM.e
+
     integer            :: nx, ny, nz
     integer            :: n, scheme, itrMax, stp, stpMax
     real               :: dx, dy, dz
     real               :: eps, er, omg, dt, cf
-!CPM.s
+
     integer, parameter :: pg=0
     integer            :: ierr
     integer            :: nrank, myrank, div(3)
@@ -29,9 +29,8 @@
     integer            :: sz(3), head(0:2), nID(0:5)
     real               :: org(3), pch(3), rgn(3)
     real*8             :: org8(3), rgn8(3)
-!CPM.e
 
-!CPM.s
+
     ! MPI_Init
     call MPI_Init(ierr)
 
@@ -45,11 +44,11 @@
     call cpm_GetMyRankID(myrank, pg, ierr)
 
 !   Initialize
-!CPM.s
+
     ! user input for rank 0
     if( myrank == 0 ) then
     write (*,*) 'number of process=', nrank
-!CPM.e
+
     write (*,*) 'Dimension size'
     write (*,*) 'Input dimension x size ='
     read  (*,*)  nx
@@ -93,8 +92,7 @@
     else
       write(*,*) 'Euler Implicit jacobi'
     end if
-    
-!CPM.s
+
     endif
 
     ! broadcast user input
@@ -161,25 +159,21 @@
     , "  neighbor rank =", nID &
     , "  div num       =", div
 !    stop
-!CPM.e
 
     call allocate_array (nx, ny, nz)
-!CPM.s
-!    call pbc (nx, ny, nz, p, dx, dy, dz)
+
     call pbc (nx, ny, nz, p, dx, dy, dz, head, nID)
-!CPM.e
+
     
 !   time step loop
     do stp=1, stpMax
       if ( scheme == 1 ) then
         call ftcs (nx, ny, nz, p, q, cf, dx, dy, dz, dt, er)
-!CPM.s
-!        call pbc (nx, ny, nz, p, dx, dy, dz)
+
         call pbc (nx, ny, nz, p, dx, dy, dz, head, nID)
-!CPM.e
-!CPM.s
+
         if( myrank == 0 ) &
-!CPM.e
+
         write (*,*) stp, er
       else
         er = 0.0
@@ -187,15 +181,14 @@
         ! iteration
         do n=1, itrMax
           call jacobi (nx, ny, nz, p, q, w, cf, dx, dy, dz, dt, omg, er)
-!CPM.s
-!          call pbc (nx, ny, nz, p, dx, dy, dz)
+
           call pbc (nx, ny, nz, p, dx, dy, dz, head, nID)
-!CPM.e
+
           if (er<eps) exit
         end do
-!CPM.s
+
         if( myrank == 0 ) &
-!CPM.e
+
         write (*,*) stp, n, er
       end if
     end do
@@ -225,9 +218,9 @@
 !   ****************************************************
     subroutine jacobi (nx, ny, nz, p, q, w, cf, dx, dy, dz, dt, omg, er)
     implicit none
-!CPM.s
+
     include 'cpm_fparam.fi'
-!CPM.e
+
     integer                                 :: nx, ny, nz 
     real, dimension (0:nx+1,0:ny+1,0:nz+1)  :: p, q, w
     real                                    :: cf, dx, dy, dz, dt, omg, er
@@ -235,11 +228,9 @@
     integer                                 :: i, j, k
     real                                    :: ddx, ddy, ddz, cpd
     real                                    :: s0, ss, sx, sy, sz
-!CPM.s
     integer, parameter                      :: pg=0
     integer                                 :: ierr
     real                                    :: er_buf
-!CPM.e
     
     er = 0.0
     ddx = cf*dt/(dx*dx)
@@ -261,14 +252,11 @@
     end do
     end do
 
-!CPM.s
-!    p(1:nx, 1:ny, 1:nz) = q(1:nx, 1:ny, 1:nz)
-!    er = sqrt(er)
+
     p(1:nx, 1:ny, 1:nz) = q(1:nx, 1:ny, 1:nz)
     call cpm_BndCommS3D(p,nx,ny,nz,1,1,CPM_REAL,pg,ierr)
     er_buf = er
     call cpm_Allreduce(er_buf,er,1,CPM_REAL,CPM_SUM,pg,ierr)
-!CPM.e
     er = sqrt(er)
     
     return
@@ -277,9 +265,7 @@
 !   ***************************************
     subroutine ftcs (nx, ny, nz, p, q, cf, dx, dy, dz, dt, er)
     implicit none
-!CPM.s
     include 'cpm_fparam.fi'
-!CPM.e
 
     integer                                 :: nx, ny, nz
     real, dimension (0:nx+1,0:ny+1,0:nz+1)  :: p, q
@@ -288,11 +274,9 @@
     integer                                 :: i, j, k
     real                                    :: ddx, ddy, ddz
     real                                    :: ss, sx, sy, sz
-!CPM.s
     integer, parameter                      :: pg=0
     integer                                 :: ierr
     real                                    :: er_buf
-!CPM.e
 
     er = 0.0
     ddx=cf*dt/(dx*dx)
@@ -317,47 +301,35 @@
 
     p(1:nx, 1:ny, 1:nz) = q(1:nx, 1:ny, 1:nz)
 
-!CPM.s
+
     call cpm_BndCommS3D(p,nx,ny,nz,1,1,CPM_REAL,pg,ierr)
     er_buf = er
     call cpm_Allreduce(er_buf,er,1,CPM_REAL,CPM_SUM,pg,ierr)
-!CPM.e
+
     er = sqrt(er)
     
     return
     end subroutine ftcs
     
 !   **************************
-!CPM.s
-!    subroutine pbc (nx, ny, nz, p, dx, dy, dz)
     subroutine pbc (nx, ny, nz, p, dx, dy, dz, head, nID)
-!CPM.e
+
     implicit none
-!CPM.s
+
     include 'cpm_fparam.fi'
-!CPM.e
+
     integer                               :: nx, ny, nz
     real, dimension(0:nx+1,0:ny+1,0:nz+1) :: p
     real                                  :: dx, dy, dz
-!CPM.s
+
     integer                               :: head(0:2), nID(0:5)
-!CPM.e
+
 
     integer                               :: i, j, k
     real                                  :: pi, x, y
 
     pi = 2.0*asin(1.0)
-!kero left lower coner of cell(1,1,1) is defined as an original point O(0.0, 0.0, 0.0)
 
-!CPM.s
-!    do j=1,ny
-!    do i=1,nx
-!      x= dx*(i-1)+dx*0.5
-!      y= dy*(j-1)+dy*0.5
-!      p(i,j,0)   =2.0*sin(pi*x)*sin(pi*y)-p(i,j,1)
-!      p(i,j,nz+1)=2.0*sin(pi*x)*sin(pi*y)-p(i,j,nz)
-!    end do
-!    end do
     if( nID(Z_MINUS) < 0 ) then
       do j=1,ny
       do i=1,nx
@@ -376,15 +348,7 @@
       end do
       end do
     endif
-!CPM.e
-    
-!CPM.s
-!    do k=1,nz
-!    do j=1,ny
-!      p(0,   j,k) = p(1, j,k)
-!      p(nx+1,j,k) = p(nx,j,k)
-!    end do
-!    end do
+
     if( nID(X_MINUS) < 0 ) then
       do k=1,nz
       do j=1,ny
@@ -399,15 +363,7 @@
       end do
       end do
     endif
-!CPM.e
 
-!CPM.s
-!    do k=1,nz
-!    do i=1,nx
-!      p(i,0,   k) = p(i,1, k)
-!      p(i,ny+1,k) = p(i,ny,k)
-!    end do
-!    end do
     if( nID(Y_MINUS) < 0 ) then
       do k=1,nz
       do i=1,nx
@@ -422,7 +378,7 @@
       end do
       end do
     endif
-!CPM.e
+
     
     return
     end subroutine pbc
@@ -439,28 +395,17 @@
     integer                                 :: step
     real*4                                  :: org(3), pch(3), time
     character*256                           :: ename
-!CPM.s
     integer, parameter                      :: pg=0
     integer                                 :: ierr, myrank
     real                                    :: rorg(3), rpch(3)
-!CPM.e
 
-!kero left lower coner of cell(1,1,1) is defined as an original point O(0.0, 0.0, 0.0)
-!kero the original point is modified according to the above defined point
 
-!CPM.s
-!    ename='e.sph'
     call cpm_GetMyRankID( myrank, pg, ierr )
     write(ename,'("e_id",I4.4,".sph")') myrank
-!CPM.e
 
     step = 0
     time = 0.0
-!CPM.s
-!    pch(1) = real(dx)
-!    pch(2) = real(dy)
-!    pch(3) = real(dz)
-!    org    = -pch
+
     call cpm_GetLocalOrigin( rorg, pg, ierr )
     call cpm_GetPitch( rpch, pg, ierr )
     pch(1) = rpch(1)
@@ -469,7 +414,7 @@
     org(1) = rorg(1) - pch(1)
     org(2) = rorg(2) - pch(2)
     org(3) = rorg(3) - pch(3)
-!CPM.e
+
     do k=0,nz+1
     do j=0,ny+1
     do i=0,nx+1
