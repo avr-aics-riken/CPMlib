@@ -11,8 +11,12 @@ REVISION HISTORY
 ================
 
 ------------------
+2014-03-04
+ r22 version format [ver 1.1.7]
+  - change output format for cpm-config --version
+  
+------------------
 2014-02-11
-
  r21 update configure.ac [ver 1.1.6]
   - remove chk-uname, config-cpm.sh
   - add GNU compiler
@@ -20,12 +24,10 @@ REVISION HISTORY
 
 ------------------
 2013-10-30
-
  r20 update chk-uname [ver 1.1.5]
 
 ------------------
 2013-10-02
-
  r19 modify configure.ac for CPM special flag [ver 1.1.4]
    - CPM_LIBS="$CPM_LIBS"" -lstdc++"
    
@@ -34,13 +36,11 @@ REVISION HISTORY
  
 ------------------
 2013-07-20
-
  r17 void VersionInfo() >> std::string getVersionInfo() [ver 1.1.2]
    - Also change Examples/cxx/main()
 
 ------------------
 2013-07-13
-
  r16 update include/cpm_Version.h.in and cpm_Base.h
    - cpm_Version.h.in to generate CPM_REVISION automatically
    - change Versioninfo()
@@ -51,13 +51,11 @@ REVISION HISTORY
 
 ------------------
 2013-07-12
-
  r14 update INSTALL
    - modify example of configure for K
 
 ------------------
 2013-07-06
-
  r13 update configure [ver 1.1.0]
    - cpm-uname -> chk-uname
    - update ChangeLog, NEWS
@@ -66,7 +64,6 @@ REVISION HISTORY
 
 ------------------
 2013-06-29
-
  r12 exp. branch, introduce usr_TPdomain()
    - Text implementation of pure virtual method for division policy
      (experimental branch）
@@ -75,26 +72,22 @@ REVISION HISTORY
 
 ------------------
 2013-06-27
-
  r10 ver. 1.0.11
 
  r9 v1.0.10
 
 ------------------
 2013-06-25
-
  r8 update README
 
  r7 update AUTHORS
 
 ------------------
 2013-06-22
-
  r6 improve 1.0.9
 
 ------------------
 2013-06-19
-
  r5 CPMlib-1.0.9
 
  r4 CPMlib-1.0.8
