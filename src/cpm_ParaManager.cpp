@@ -483,26 +483,23 @@ cpm_ParaManager::DecideDivPattern( int divNum
     {
       if( jmax%j != 0 ) continue;
       if( (voxSizell[1] / j) < 1 ) break;
-      unsigned long long kmax = jmax/j;
-      for(k=1; k<=kmax; k++)
+      
+      k = jmax/j;
+      if( (voxSizell[2] / k) < 1 ) break;
+      
+      unsigned long long commSize;
+      if( (commSize=CalcCommSize(i, j, k, voxSizell)) == 0 ) break;
+      
+      if( !flag )
       {
-        if( kmax%k != 0 ) continue;
-        if( (voxSizell[2] / k) < 1 ) break;
-        
-        unsigned long long commSize;
-        if( (commSize=CalcCommSize(i, j, k, voxSizell)) == 0 ) break;
-        
-        if( !flag )
-        {
-          divPttnll[0] = i; divPttnll[1] = j; divPttnll[2] = k;
-          minCommSize = commSize;
-          flag = true;
-        }
-        else if( commSize < minCommSize )
-        {
-          divPttnll[0] = i; divPttnll[1] = j; divPttnll[2] = k;
-          minCommSize = commSize;
-        }
+        divPttnll[0] = i; divPttnll[1] = j; divPttnll[2] = k;
+        minCommSize = commSize;
+        flag = true;
+      }
+      else if( commSize < minCommSize )
+      {
+        divPttnll[0] = i; divPttnll[1] = j; divPttnll[2] = k;
+        minCommSize = commSize;
       }
     }
   }

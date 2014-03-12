@@ -11,6 +11,10 @@ RELEASE
 =======
 
 -------------
+Version 1.1.9   2014-03-12
+ - enhance domain division algorithm
+
+-------------
 Version 1.1.8   2014-03-12
  - update domain division algorithm
 

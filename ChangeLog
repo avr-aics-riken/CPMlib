@@ -12,6 +12,8 @@ REVISION HISTORY
 
 ------------------
 2014-03-12
+ r24 enhance algorithm for domain division [ver 1.1.9]
+
  r23 update domain division algorithm [ver 1.1.8]
   - add CPM_ERROR_DECIDE_DIV_PATTERN
   - change CalcCommSize() iDiv >> iDiv-1
