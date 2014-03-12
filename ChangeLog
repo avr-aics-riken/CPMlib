@@ -11,6 +11,13 @@ REVISION HISTORY
 ================
 
 ------------------
+2014-03-12
+ r23 update domain division algorithm [ver 1.1.8]
+  - add CPM_ERROR_DECIDE_DIV_PATTERN
+  - change CalcCommSize() iDiv >> iDiv-1
+  - change DecideDivPattern()
+
+------------------
 2014-03-04
  r22 version format [ver 1.1.7]
   - change output format for cpm-config --version

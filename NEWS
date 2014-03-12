@@ -11,6 +11,10 @@ RELEASE
 =======
 
 -------------
+Version 1.1.8   2014-03-12
+ - update domain division algorithm
+
+-------------
 Version 1.1.7   2014-03-04
  - change output format for cpm-config --version
  

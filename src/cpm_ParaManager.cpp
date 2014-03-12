@@ -444,9 +444,9 @@ cpm_ParaManager::VoxelInit_Subdomain( int vox[3], double origin[3], double pitch
 // 並列プロセス数からI,J,K方向の分割数を取得する
 cpm_ErrorCode
 cpm_ParaManager::DecideDivPattern( int divNum
-                                 , int voxSize[3]
-                                 , int divPttn[3]
-                                 ) const
+                                  , int voxSize[3]
+                                  , int divPttn[3]
+                                  ) const
 {
   if( !voxSize || !divPttn )
   {
@@ -460,107 +460,62 @@ cpm_ParaManager::DecideDivPattern( int divNum
     divPttn[0] = divPttn[1] = divPttn[2] = 1;
     return CPM_SUCCESS;
   }
-
+  
   divPttn[0] = divPttn[1] = divPttn[2] = 0;
-
+  
   unsigned long long minCommSize = 0;
-
+  
   unsigned long long divNumll = divNum;
   unsigned long long voxSizell[3] = {0, 0, 0};
   unsigned long long divPttnll[3] = {0, 0, 0};
   voxSizell[0] = voxSize[0];
   voxSizell[1] = voxSize[1];
   voxSizell[2] = voxSize[2];
-
-#if 0 //2012.08.03.mod.start
-  bool flag = false;
-  unsigned long long n;
-  for(n=1; n<=divNumll; n++){
-    unsigned long long i, j, k;
-    for(i=1; i<=n; i++){
-      if( (voxSizell[0] / i) < 1 ) break;
-      unsigned long long jmax = n/i;
-      for(j=1; j<=jmax; j++){
-        if( (voxSizell[1] / j) < 1 ) break;
-        unsigned long long kmax = jmax/j;
-        for(k=1; k<=kmax; k++){
-          if( (voxSizell[2] / k) < 1 ) break;
-          if( i*j*k == divNumll){
-            unsigned long long commSize;
-            if( (commSize=CalcCommSize(i, j, k, voxSizell)) == 0 ) break;
-
-            if( !flag ) {
-              minCommSize = commSize;
-              flag = true;
-            }
-            else if( commSize < minCommSize ){
-              divPttnll[0] = i; divPttnll[1] = j; divPttnll[2] = k;
-              minCommSize = commSize;
-            }
-          }
-        }
-      }
-    }
-  }
-#else
+  
   bool flag = false;
   unsigned long long i, j, k;
   for(i=1; i<=divNumll; i++)
   {
     if( divNumll%i != 0 ) continue;
+    if( (voxSizell[0] / i) < 1 ) break;
     unsigned long long jmax = divNumll/i;
     for(j=1; j<=jmax; j++)
     {
-      if( (divNumll/i)%j != 0 ) continue;
-      unsigned long long kmax = divNumll/(i*j);
+      if( jmax%j != 0 ) continue;
+      if( (voxSizell[1] / j) < 1 ) break;
+      unsigned long long kmax = jmax/j;
       for(k=1; k<=kmax; k++)
       {
-        if( (divNumll/(i*j))%k != 0 ) continue;
+        if( kmax%k != 0 ) continue;
         if( (voxSizell[2] / k) < 1 ) break;
-        if( i*j*k == divNumll){
-          unsigned long long commSize;
-          if( (commSize=CalcCommSize(i, j, k, voxSizell)) == 0 ) break;
-
-          if( !flag )
-          {
-            minCommSize = commSize;
-            flag = true;
-          }
-          else if( commSize < minCommSize )
-          {
-            divPttnll[0] = i; divPttnll[1] = j; divPttnll[2] = k;
-            minCommSize = commSize;
-          }
+        
+        unsigned long long commSize;
+        if( (commSize=CalcCommSize(i, j, k, voxSizell)) == 0 ) break;
+        
+        if( !flag )
+        {
+          divPttnll[0] = i; divPttnll[1] = j; divPttnll[2] = k;
+          minCommSize = commSize;
+          flag = true;
+        }
+        else if( commSize < minCommSize )
+        {
+          divPttnll[0] = i; divPttnll[1] = j; divPttnll[2] = k;
+          minCommSize = commSize;
         }
       }
     }
   }
-#endif //2012.08.03.mod.end
-
+  
   divPttn[0] = divPttnll[0];
   divPttn[1] = divPttnll[1];
   divPttn[2] = divPttnll[2];
-
-#if 0
+  
   if( (divPttn[0]==0) || (divPttn[1]==0) || (divPttn[2]==0) )
   {
-    divPttn[0] = divPttn[1] = divPttn[2] = 1;
-    int maxLenElem = 2;
-    if( voxSize[maxLenElem] < voxSize[1] ) maxLenElem = 1;
-    if( voxSize[maxLenElem] < voxSize[0] ) maxLenElem = 0;
-    divPttn[maxLenElem] = divNum;
+    return CPM_ERROR_DECIDE_DIV_PATTERN;
   }
-#else
-  // 決定しなかったとき、Dims_createを試す
-  if( (divPttn[0]==0) || (divPttn[1]==0) || (divPttn[2]==0) )
-  {
-    if( MPI_Dims_create( divNum, 3, divPttn ) != MPI_SUCCESS )
-    {
-      return CPM_ERROR_MPI_DIMSCREATE;
-    }
-  }
-#endif
-
+  
   return CPM_SUCCESS;
 }
 
@@ -568,27 +523,27 @@ cpm_ParaManager::DecideDivPattern( int divNum
 // I,J,K分割を行った時の通信点数の総数を取得する
 unsigned long long
 cpm_ParaManager::CalcCommSize( unsigned long long iDiv
-                             , unsigned long long jDiv
-                             , unsigned long long kDiv
-                             , unsigned long long voxSize[3]
-                             ) const
+                              , unsigned long long jDiv
+                              , unsigned long long kDiv
+                              , unsigned long long voxSize[3]
+                              ) const
 {
   if( (iDiv==0) || (jDiv==0) || (kDiv==0) ) return 0;
   if( !voxSize ) return 0;
-
+  
   unsigned long long Len[3];
   Len[0] = voxSize[0] / iDiv; if( Len[0] == 0 ) return 0;
   Len[1] = voxSize[1] / jDiv; if( Len[1] == 0 ) return 0;
   Len[2] = voxSize[2] / kDiv; if( Len[2] == 0 ) return 0;
-
+  
   unsigned long long commFace[3];
-  if( iDiv != 1) commFace[0] = Len[1]*Len[2]*iDiv;
+  if( iDiv != 1) commFace[0] = Len[1]*Len[2]*(iDiv-1);
   else commFace[0] = 0;
-  if( jDiv != 1) commFace[1] = Len[2]*Len[0]*jDiv;
+  if( jDiv != 1) commFace[1] = Len[2]*Len[0]*(jDiv-1);
   else commFace[1] = 0;
-  if( kDiv != 1) commFace[2] = Len[0]*Len[1]*kDiv;
+  if( kDiv != 1) commFace[2] = Len[0]*Len[1]*(kDiv-1);
   else commFace[2] = 0;
-
+  
   return (commFace[0] + commFace[1] + commFace[2]);
 }
 
