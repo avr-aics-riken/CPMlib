@@ -477,15 +477,15 @@ cpm_ParaManager::DecideDivPattern( int divNum
   for(i=1; i<=divNumll; i++)
   {
     if( divNumll%i != 0 ) continue;
-    if( (voxSizell[0] / i) < 1 ) break;
+    if( voxSizell[0] < i ) break;
     unsigned long long jmax = divNumll/i;
     for(j=1; j<=jmax; j++)
     {
       if( jmax%j != 0 ) continue;
-      if( (voxSizell[1] / j) < 1 ) break;
+      if( voxSizell[1] < j ) break;
       
       k = jmax/j;
-      if( (voxSizell[2] / k) < 1 ) break;
+      if( voxSizell[2] < k ) continue;
       
       unsigned long long commSize;
       if( (commSize=CalcCommSize(i, j, k, voxSizell)) == 0 ) break;
