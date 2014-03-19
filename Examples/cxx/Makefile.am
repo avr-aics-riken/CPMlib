@@ -6,6 +6,9 @@
 # Copyright (C) 2012-2014 Institute of Industrial Science, The University of Tokyo.
 # All right reserved.
 #
+# Copyright (c) 2014 Advanced Institute for Computational Science, RIKEN.
+# All rights reserved.
+#
 ###################################################################################
 ###
 noinst_PROGRAMS=exampleCXX

@@ -4,6 +4,9 @@
  * Copyright (C) 2012-2014 Institute of Industrial Science, The University of Tokyo.
  * All rights reserved.
  *
+ * Copyright (c) 2014 Advanced Institute for Computational Science, RIKEN.
+ * All rights reserved.
+ *
  */
 
 /**
@@ -170,7 +173,7 @@ cpm_Initialize_( int *ierr )
  *  @param[in]  div       領域分割数(サイズ3)
  *  @param[in]  vox       空間全体のボクセル数(サイズ3)
  *  @param[in]  origin    空間全体の原点(サイズ3)
- *  @param[in]  pitch     ボクセルピッチ(サイズ3)
+ *  @param[in]  region    空間全体のサイズ(サイズ3)
  *  @param[in]  maxVC     最大の袖数(袖通信用)
  *  @param[in]  maxN      最大の成分数(袖通信用)
  *  @param[in]  procGrpNo 領域分割を行うプロセスグループ番号
@@ -178,10 +181,11 @@ cpm_Initialize_( int *ierr )
  */
 CPM_EXTERN
 void
-cpm_VoxelInit_( int *div, int *vox, double *origin, double *pitch
-              , int *maxVC, int *maxN, int *procGrpNo, int *ierr )
+cpm_VoxelInit_( int *div, int *vox, double *origin, double *region
+              , int *maxVC, int *maxN, int *procGrpNo
+              , int *ierr )
 {
-  if( !div || !vox || !origin || !pitch || !maxVC || !maxN ||
+  if( !div || !vox || !origin || !region || !maxVC || !maxN ||
       !procGrpNo || !ierr )
   {
     if( ierr ) *ierr = CPM_ERROR_INVALID_PTR;
@@ -196,9 +200,11 @@ cpm_VoxelInit_( int *div, int *vox, double *origin, double *pitch
     return;
   }
 
+
   // VoxelInit
-  *ierr = paraMngr->VoxelInit( div, vox, origin, pitch
-                             , size_t(*maxVC), size_t(*maxN), *procGrpNo );
+  *ierr = paraMngr->VoxelInit( div, vox, origin, region
+                             , size_t(*maxVC), size_t(*maxN), DIV_COMM_SIZE
+                             , *procGrpNo );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -209,19 +215,21 @@ cpm_VoxelInit_( int *div, int *vox, double *origin, double *pitch
  *  - プロセスグループのランク数で自動領域分割
  *  @param[in]  vox       空間全体のボクセル数(サイズ3)
  *  @param[in]  origin    空間全体の原点(サイズ3)
- *  @param[in]  pitch     ボクセルピッチ(サイズ3)
+ *  @param[in]  region    空間全体のサイズ(サイズ3)
  *  @param[in]  maxVC     最大の袖数(袖通信用)
  *  @param[in]  maxN      最大の成分数(袖通信用)
+ *  @param[in]  divPolicy 自動分割ポリシー(0:通信面,1:立方体)
  *  @param[in]  procGrpNo 領域分割を行うプロセスグループ番号
  *  @param[out] ierr      終了コード(0=正常終了、0以外=cpm_ErrorCodeの値)
  */
 CPM_EXTERN
 void
-cpm_VoxelInit_nodiv_( int *vox, double *origin, double *pitch
-                    , int *maxVC, int *maxN, int *procGrpNo, int *ierr )
+cpm_VoxelInit_nodiv_( int *vox, double *origin, double *region
+                    , int *maxVC, int *maxN, int *divPolicy
+                    , int *procGrpNo, int *ierr )
 {
-  if( !vox || !origin || !pitch || !maxVC || !maxN ||
-      !procGrpNo || !ierr )
+  if( !vox || !origin || !region || !maxVC || !maxN ||
+      !divPolicy || !procGrpNo || !ierr )
   {
     if( ierr ) *ierr = CPM_ERROR_INVALID_PTR;
     return;
@@ -235,9 +243,12 @@ cpm_VoxelInit_nodiv_( int *vox, double *origin, double *pitch
     return;
   }
 
+  cpm_DivPolicy divP = DIV_COMM_SIZE;
+  if( *divPolicy == 1 ) divP = DIV_VOX_CUBE;
+
   // VoxelInit
-  *ierr = paraMngr->VoxelInit( vox, origin, pitch
-                             , size_t(*maxVC), size_t(*maxN), *procGrpNo );
+  *ierr = paraMngr->VoxelInit( vox, origin, region
+                             , size_t(*maxVC), size_t(*maxN), divP, *procGrpNo );
 }
 
 ////////////////////////////////////////////////////////////////////////////////

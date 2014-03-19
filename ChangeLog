@@ -4,6 +4,9 @@
  * Copyright (C) 2012-2014 Institute of Industrial Science, The University of Tokyo.
  * All rights reserved.
  *
+ * Copyright (c) 2014 Advanced Institute for Computational Science, RIKEN. 
+ * All rights reserved.
+ *
  */
 
 
@@ -11,7 +14,13 @@ REVISION HISTORY
 ================
 
 ------------------
-2014-03-13
+2014-03-19
+ r26 enhance algorithm for domain division [ver 1.2.1]
+  - add enum cpm_DivPolicy
+	- divide DecideDivPattern() to DecideDivPattern_CommSize() and DecideDivPattern_Cube()
+	- change cpm_ParaManager::VoxelInit() (add argument [divPolicy])
+  - add AICS copyright
+
  r25 bug fix for ver 1.1.9 [ver 1.2.0]
 
 ------------------

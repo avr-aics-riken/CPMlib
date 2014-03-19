@@ -4,6 +4,9 @@
  * Copyright (C) 2012-2014 Institute of Industrial Science, The University of Tokyo.
  * All rights reserved.
  *
+ * Copyright (c) 2014 Advanced Institute for Computational Science, RIKEN. 
+ * All rights reserved.
+ *
  */
 
 /**
@@ -15,10 +18,10 @@
 #define _CPM_VERSION_H_
 
 /** CPMライブラリのバージョン */
-#define CPM_VERSION_NO  "1.2.0"
+#define CPM_VERSION_NO  "1.2.1"
 
 /** CPMライブラリのリビジョン */
-#define CPM_REVISION    "20140313_1430"
+#define CPM_REVISION    "20140319_2000"
 
 #endif /* _CPM_VERSION_H_ */
 

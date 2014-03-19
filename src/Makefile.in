@@ -14,6 +14,20 @@
 
 @SET_MAKE@
 
+###
+###################################################################################
+#
+# CPMlib - Cartesian Partition Manager Library
+# 
+# Copyright (C) 2012-2014 Institute of Industrial Science, The University of Tokyo.
+# All right reserved.
+#
+# Copyright (c) 2014 Advanced Institute for Computational Science, RIKEN.
+# All rights reserved.
+#
+###################################################################################
+###
+
 
 VPATH = @srcdir@
 am__is_gnu_make = test -n '$(MAKEFILE_LIST)' && test -n '$(MAKELEVEL)'
@@ -314,17 +328,6 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-
-###
-###################################################################################
-#
-# CPMlib - Cartesian Partition Manager Library
-# 
-# Copyright (C) 2012-2014 Institute of Industrial Science, The University of Tokyo.
-# All right reserved.
-#
-###################################################################################
-###
 lib_LIBRARIES = libCPM.a
 libCPM_a_CXXFLAGS = @MPICH_CFLAGS@ @TP_CFLAGS@ @PM_CFLAGS@ @REALOPT@ -I$(top_builddir)/include
 libCPM_a_SOURCES = \

@@ -4,6 +4,9 @@
  * Copyright (C) 2012-2014 Institute of Industrial Science, The University of Tokyo.
  * All rights reserved.
  *
+ * Copyright (c) 2014 Advanced Institute for Computational Science, RIKEN.
+ * All rights reserved.
+ *
  */
 
 /**
@@ -132,6 +135,13 @@ enum cpm_PMFlag
 , BOTH       = 2 ///< plus  <-> minus direction
 };
 
+/** 自動分割ポリシー */
+enum cpm_DivPolicy
+{
+  DIV_COMM_SIZE = 0 ///< 通信面総数が小さくなるように
+, DIV_VOX_CUBE  = 1 ///< サブドメインが立方体に近くなるように
+};
+
 /** CPMのエラーコード */
 enum cpm_ErrorCode
 {
@@ -173,7 +183,7 @@ enum cpm_ErrorCode
 , CPM_ERROR_READ_SBDM_DIV         = 3015 ///< ActiveSubdomainファイルの領域分割数読み込みに失敗
 , CPM_ERROR_READ_SBDM_CONTENTS    = 3016 ///< ActiveSubdomainファイルのContents読み込みに失敗
 , CPM_ERROR_SBDM_NUMDOMAIN_ZERO   = 3017 ///< ActiveSubdomainファイルの活性ドメイン数が0
-, CPM_ERROR_MISMATCH_DIV_SUBDOMAIN= 3018 ///< 領域分割数がActiveSubdomainファイルと一致していない
+, CPM_ERROR_MISMATCH_DIV_SUBDOMAIN = 3018 ///< 領域分割数がActiveSubdomainファイルと一致していない
 , CPM_ERROR_DECIDE_DIV_PATTERN    = 3019 ///< 自動領域分割が不可能なパターン
 
 , CPM_ERROR_GET_INFO              = 4000 ///< 情報取得系関数でエラー

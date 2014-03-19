@@ -4,6 +4,9 @@
  * Copyright (C) 2012-2014 Institute of Industrial Science, The University of Tokyo.
  * All rights reserved.
  *
+ * Copyright (c) 2014 Advanced Institute for Computational Science, RIKEN.
+ * All rights reserved.
+ *
  */
 
 /**
@@ -144,11 +147,13 @@ public:
    *  @param[in] region     空間全体のサイズ
    *  @param[in] maxVC      最大の袖数(袖通信用)
    *  @param[in] maxN       最大の成分数(袖通信用)
+   *  @param[in] divPolicy  自動分割ポリシー
    *  @param[in] procGrpNo  領域分割を行うプロセスグループ番号
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
   cpm_ErrorCode VoxelInit( int div[3], int vox[3], double origin[3], double region[3]
-                         , size_t maxVC=1, size_t maxN=3, int procGrpNo=0 );
+                         , size_t maxVC=1, size_t maxN=3, cpm_DivPolicy divPolicy=DIV_COMM_SIZE
+                         , int procGrpNo=0 );
 
   /** 領域分割
    *  - 領域分割の各種情報を引数で渡して領域分割を行う
@@ -159,11 +164,13 @@ public:
    *  @param[in] region     空間全体のサイズ
    *  @param[in] maxVC      最大の袖数(袖通信用)
    *  @param[in] maxN       最大の成分数(袖通信用)
+   *  @param[in] divPolicy  自動分割ポリシー
    *  @param[in] procGrpNo  領域分割を行うプロセスグループ番号
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
   cpm_ErrorCode VoxelInit( int vox[3], double origin[3], double region[3]
-                         , size_t maxVC=1, size_t maxN=3, int procGrpNo=0 );
+                         , size_t maxVC=1, size_t maxN=3, cpm_DivPolicy divPolicy=DIV_COMM_SIZE
+                         , int procGrpNo=0 );
 
   /** 領域分割(ActiveSubdomain指定)
    *  - 領域分割の各種情報を引数で渡して領域分割を行う
@@ -1812,15 +1819,16 @@ private:
   virtual ~cpm_ParaManager();
 
   /** 並列プロセス数からI,J,K方向の分割数を取得する
+   *  通信面のトータルサイズが小さい分割パターンを採用する
    *  @param[in]  divNum  ランク数
    *  @param[in]  voxSize 空間全体のボクセル数
    *  @param[out] divPttn 領域分割数
    *  @return             終了コード(CPM_SUCCESS=正常終了)
    */
   cpm_ErrorCode
-  DecideDivPattern( int divNum
-                  , int voxSize[3]
-                  , int divPttn[3] ) const;
+  DecideDivPattern_CommSize( int divNum
+                           , int voxSize[3]
+                           , int divPttn[3] ) const;
 
   /** I,J,K分割を行った時の通信点数の総数を取得する
    *  @param[in] iDiv    i方向領域分割数
@@ -1834,6 +1842,32 @@ private:
               , unsigned long long jDiv
               , unsigned long long kDiv
               , unsigned long long voxsize[3] ) const;
+
+  /** 並列プロセス数からI,J,K方向の分割数を取得する
+   *  １つのサブドメインが立方体に一番近い分割パターンを採用する
+   *  @param[in]  divNum  ランク数
+   *  @param[in]  voxSize 空間全体のボクセル数
+   *  @param[out] divPttn 領域分割数
+   *  @return             終了コード(CPM_SUCCESS=正常終了)
+   */
+  cpm_ErrorCode
+  DecideDivPattern_Cube( int divNum
+                       , int voxSize[3]
+                       , int divPttn[3] ) const;
+
+  /** I,J,K分割を行った時のI,J,Kボクセル数の最大/最小の差を取得する
+   *  @param[in] iDiv    i方向領域分割数
+   *  @param[in] jDiv    j方向領域分割数
+   *  @param[in] kDiv    k方向領域分割数
+   *  @param[in] voxSize 空間全体のボクセル数
+   *  @retval 0以上      I,J,Kボクセル数の最大/最小の差
+   *  @retval 負値       領域分割不可のパターン
+   */
+  long long
+  CheckCube( unsigned long long iDiv
+           , unsigned long long jDiv
+           , unsigned long long kDiv
+           , unsigned long long voxsize[3] ) const;
 
   /** 袖通信バッファの取得
    *  - 袖通信バッファ情報の取得

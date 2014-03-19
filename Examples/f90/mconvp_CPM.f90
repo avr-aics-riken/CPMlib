@@ -138,7 +138,7 @@
     rgn8(1) = rgn(1)
     rgn8(2) = rgn(2)
     rgn8(3) = rgn(3)
-    call cpm_VoxelInit_nodiv( sz, org8, rgn8, 1, 1, pg, ierr )
+    call cpm_VoxelInit_nodiv( sz, org8, rgn8, 1, 1, 0, pg, ierr )
 
     ! get local voxel size, ead index, neighbor rank No.
     call cpm_GetLocalVoxelSize( sz, pg, ierr )

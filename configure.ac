@@ -6,6 +6,9 @@
 # Copyright (C) 2012-2014 Institute of Industrial Science, The University of Tokyo.
 # All right reserved.
 #
+# Copyright (c) 2014 Advanced Institute for Computational Science, RIKEN.
+# All rights reserved.
+#
 ###################################################################################
 ###
 
@@ -13,7 +16,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.57)
-AC_INIT([CPMlib],[1.2.0],[keno@iis.u-tokyo.ac.jp],[CPMlib])
+AC_INIT([CPMlib],[1.2.1],[keno@{iis.u-tokyo.ac, riken}.jp],[CPMlib])
 AM_INIT_AUTOMAKE()
 AC_CONFIG_SRCDIR([src/cpm_ParaManager.cpp])
 AM_CONFIG_HEADER([config.h])
@@ -21,7 +24,7 @@ AM_CONFIG_HEADER([config.h])
 #
 # revision No.
 #
-CPM_REVISION="20140313_1430"
+CPM_REVISION="20140319_2000"
 AC_SUBST(CPM_REVISION)
 
 

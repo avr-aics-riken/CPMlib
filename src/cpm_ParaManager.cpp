@@ -4,6 +4,9 @@
  * Copyright (C) 2012-2014 Institute of Industrial Science, The University of Tokyo.
  * All rights reserved.
  *
+ * Copyright (c) 2014 Advanced Institute for Computational Science, RIKEN.
+ * All rights reserved.
+ *
  */
 
 /**
@@ -290,7 +293,7 @@ cpm_ParaManager::VoxelInit( cpm_GlobalDomainInfo* domainInfo, size_t maxVC, size
 // 領域分割(領域分割数を指定)
 cpm_ErrorCode
 cpm_ParaManager::VoxelInit( int div[3], int vox[3], double origin[3], double region[3]
-                          , size_t maxVC, size_t maxN, int procGrpNo )
+                          , size_t maxVC, size_t maxN, cpm_DivPolicy divPolicy, int procGrpNo )
 {
   // 入力値のチェック
   if( vox[0] <= 0 || vox[1] <= 0 || vox[2] <= 0 )
@@ -311,7 +314,15 @@ cpm_ParaManager::VoxelInit( int div[3], int vox[3], double origin[3], double reg
     // 領域分割数の決定
     div[0] = div[1] = div[2] = 0;
     cpm_ErrorCode ret;
-    if( (ret = DecideDivPattern( nrank, vox, div )) != CPM_SUCCESS )
+    if( divPolicy == DIV_COMM_SIZE )
+    {
+      ret = DecideDivPattern_CommSize( nrank, vox, div );
+    }
+    else
+    {
+      ret = DecideDivPattern_Cube( nrank, vox, div );
+    }
+    if( ret != CPM_SUCCESS )
     {
       return ret;
     }
@@ -340,11 +351,12 @@ cpm_ParaManager::VoxelInit( int div[3], int vox[3], double origin[3], double reg
 // 領域分割(プロセスグループのランク数で自動領域分割)
 cpm_ErrorCode
 cpm_ParaManager::VoxelInit( int vox[3], double origin[3], double pitch[3]
-                          , size_t maxVC, size_t maxN, int procGrpNo )
+                          , size_t maxVC, size_t maxN, cpm_DivPolicy divPolicy
+                          , int procGrpNo )
 {
   // 領域分割
   int div[3] = {0,0,0};
-  return VoxelInit( div, vox, origin, pitch, maxVC, maxN, procGrpNo );
+  return VoxelInit( div, vox, origin, pitch, maxVC, maxN, divPolicy, procGrpNo );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -442,11 +454,12 @@ cpm_ParaManager::VoxelInit_Subdomain( int vox[3], double origin[3], double pitch
 
 ////////////////////////////////////////////////////////////////////////////////
 // 並列プロセス数からI,J,K方向の分割数を取得する
+// 通信面のトータルサイズが小さい分割パターンを採用する
 cpm_ErrorCode
-cpm_ParaManager::DecideDivPattern( int divNum
-                                  , int voxSize[3]
-                                  , int divPttn[3]
-                                  ) const
+cpm_ParaManager::DecideDivPattern_CommSize( int divNum
+                                          , int voxSize[3]
+                                          , int divPttn[3]
+                                          ) const
 {
   if( !voxSize || !divPttn )
   {
@@ -460,18 +473,18 @@ cpm_ParaManager::DecideDivPattern( int divNum
     divPttn[0] = divPttn[1] = divPttn[2] = 1;
     return CPM_SUCCESS;
   }
-  
+
   divPttn[0] = divPttn[1] = divPttn[2] = 0;
-  
+
   unsigned long long minCommSize = 0;
-  
+
   unsigned long long divNumll = divNum;
   unsigned long long voxSizell[3] = {0, 0, 0};
   unsigned long long divPttnll[3] = {0, 0, 0};
   voxSizell[0] = voxSize[0];
   voxSizell[1] = voxSize[1];
   voxSizell[2] = voxSize[2];
-  
+
   bool flag = false;
   unsigned long long i, j, k;
   for(i=1; i<=divNumll; i++)
@@ -483,13 +496,13 @@ cpm_ParaManager::DecideDivPattern( int divNum
     {
       if( jmax%j != 0 ) continue;
       if( voxSizell[1] < j ) break;
-      
+
       k = jmax/j;
       if( voxSizell[2] < k ) continue;
-      
+
       unsigned long long commSize;
       if( (commSize=CalcCommSize(i, j, k, voxSizell)) == 0 ) break;
-      
+
       if( !flag )
       {
         divPttnll[0] = i; divPttnll[1] = j; divPttnll[2] = k;
@@ -503,16 +516,16 @@ cpm_ParaManager::DecideDivPattern( int divNum
       }
     }
   }
-  
+
   divPttn[0] = divPttnll[0];
   divPttn[1] = divPttnll[1];
   divPttn[2] = divPttnll[2];
-  
+
   if( (divPttn[0]==0) || (divPttn[1]==0) || (divPttn[2]==0) )
   {
     return CPM_ERROR_DECIDE_DIV_PATTERN;
   }
-  
+
   return CPM_SUCCESS;
 }
 
@@ -520,19 +533,19 @@ cpm_ParaManager::DecideDivPattern( int divNum
 // I,J,K分割を行った時の通信点数の総数を取得する
 unsigned long long
 cpm_ParaManager::CalcCommSize( unsigned long long iDiv
-                              , unsigned long long jDiv
-                              , unsigned long long kDiv
-                              , unsigned long long voxSize[3]
-                              ) const
+                             , unsigned long long jDiv
+                             , unsigned long long kDiv
+                             , unsigned long long voxSize[3]
+                             ) const
 {
   if( (iDiv==0) || (jDiv==0) || (kDiv==0) ) return 0;
   if( !voxSize ) return 0;
-  
+
   unsigned long long Len[3];
   Len[0] = voxSize[0] / iDiv; if( Len[0] == 0 ) return 0;
   Len[1] = voxSize[1] / jDiv; if( Len[1] == 0 ) return 0;
   Len[2] = voxSize[2] / kDiv; if( Len[2] == 0 ) return 0;
-  
+
   unsigned long long commFace[3];
   if( iDiv != 1) commFace[0] = Len[1]*Len[2]*(iDiv-1);
   else commFace[0] = 0;
@@ -540,8 +553,110 @@ cpm_ParaManager::CalcCommSize( unsigned long long iDiv
   else commFace[1] = 0;
   if( kDiv != 1) commFace[2] = Len[0]*Len[1]*(kDiv-1);
   else commFace[2] = 0;
-  
+
   return (commFace[0] + commFace[1] + commFace[2]);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// 並列プロセス数からI,J,K方向の分割数を取得する
+// １つのサブドメインが立方体に一番近い分割パターンを採用する
+cpm_ErrorCode
+cpm_ParaManager::DecideDivPattern_Cube( int divNum
+                                      , int voxSize[3]
+                                      , int divPttn[3]
+                                      ) const
+{
+  if( !voxSize || !divPttn )
+  {
+    return CPM_ERROR_INVALID_PTR;
+  }
+  if( (voxSize[0]==0) || (voxSize[1]==0) || (voxSize[2]==0) )
+  {
+    return CPM_ERROR_INVALID_VOXELSIZE;
+  }
+  if( divNum <= 1 ){
+    divPttn[0] = divPttn[1] = divPttn[2] = 1;
+    return CPM_SUCCESS;
+  }
+
+  divPttn[0] = divPttn[1] = divPttn[2] = 0;
+
+  unsigned long long minVoxDiff = 0;
+
+  unsigned long long divNumll = divNum;
+  unsigned long long voxSizell[3] = {0, 0, 0};
+  unsigned long long divPttnll[3] = {0, 0, 0};
+  voxSizell[0] = voxSize[0];
+  voxSizell[1] = voxSize[1];
+  voxSizell[2] = voxSize[2];
+
+  bool flag = false;
+  unsigned long long i, j, k;
+  for(i=1; i<=divNumll; i++)
+  {
+    if( divNumll%i != 0 ) continue;
+    if( voxSizell[0] < i ) break;
+    unsigned long long jmax = divNumll/i;
+    for(j=1; j<=jmax; j++)
+    {
+      if( jmax%j != 0 ) continue;
+      if( voxSizell[1] < j ) break;
+
+      k = jmax/j;
+      if( voxSizell[2] < k ) continue;
+
+      long long voxDiff;
+      if( (voxDiff=CheckCube(i, j, k, voxSizell)) < 0 ) break;
+
+      if( !flag )
+      {
+        divPttnll[0] = i; divPttnll[1] = j; divPttnll[2] = k;
+        minVoxDiff = voxDiff;
+        flag = true;
+      }
+      else if( voxDiff < minVoxDiff )
+      {
+        divPttnll[0] = i; divPttnll[1] = j; divPttnll[2] = k;
+        minVoxDiff = voxDiff;
+      }
+    }
+  }
+
+  divPttn[0] = divPttnll[0];
+  divPttn[1] = divPttnll[1];
+  divPttn[2] = divPttnll[2];
+
+  if( (divPttn[0]==0) || (divPttn[1]==0) || (divPttn[2]==0) )
+  {
+    return CPM_ERROR_DECIDE_DIV_PATTERN;
+  }
+
+  return CPM_SUCCESS;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// I,J,K分割を行った時のI,J,Kボクセル数の最大/最小の差を取得する
+long long
+cpm_ParaManager::CheckCube( unsigned long long iDiv
+                          , unsigned long long jDiv
+                          , unsigned long long kDiv
+                          , unsigned long long voxSize[3]
+                          ) const
+{
+  if( (iDiv==0) || (jDiv==0) || (kDiv==0) ) return -1;
+  if( !voxSize ) return -1;
+
+  unsigned long long Len[3];
+  Len[0] = voxSize[0] / iDiv; if( Len[0] == 0 ) return -1;
+  Len[1] = voxSize[1] / jDiv; if( Len[1] == 0 ) return -1;
+  Len[2] = voxSize[2] / kDiv; if( Len[2] == 0 ) return -1;
+
+  unsigned long long minVox = (Len[0]<Len[1]?Len[0]:Len[1]);
+  minVox = (minVox<Len[2]?minVox:Len[2]);
+  unsigned long long maxVox = (Len[0]>Len[1]?Len[0]:Len[1]);
+  maxVox = (maxVox>Len[2]?maxVox:Len[2]);
+
+  return (maxVox-minVox);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
