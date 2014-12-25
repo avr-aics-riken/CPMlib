@@ -15,6 +15,10 @@ REVISION HISTORY
 
 ------------------
 2014-03-19
+r28 update user guide
+
+------------------
+2014-03-19
 
 r27 suppress f90 example [ver 1.2.2]
   - add Examples in EXTRA_DIST
