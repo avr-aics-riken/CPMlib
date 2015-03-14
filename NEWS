@@ -4,7 +4,7 @@
  * Copyright (C) 2012-2014 Institute of Industrial Science, The University of Tokyo.
  * All rights reserved.
  *
- * Copyright (c) 2014 Advanced Institute for Computational Science, RIKEN. 
+ * Copyright (c) 2014-2015 Advanced Institute for Computational Science, RIKEN. 
  * All rights reserved.
  *
  */
@@ -13,174 +13,56 @@
 RELEASE
 =======
 
--------------
+Version 1.2.4   2015-03-14
+
 Version 1.2.3   2014-12-25
 
--------------
 Version 1.2.2   2014-05-19
- - suppress f90 example
 
--------------
 Version 1.2.1   2014-03-19
- - enhance domain division algorithm
 
--------------
 Version 1.2.0   2014-03-13
- - bug fix for 1.1.9
 
--------------
 Version 1.1.9   2014-03-12
- - enhance domain division algorithm
 
--------------
 Version 1.1.8   2014-03-12
- - update domain division algorithm
 
--------------
 Version 1.1.7   2014-03-04
- - change output format for cpm-config --version
- 
-------------------
+
 Version 1.1.6   2014-02-11
- - update configure.ac
 
-------------------
 Version 1.1.5   2013-10-30
- - update chk-uname, add Marvericks
- 
-------------------
+
 Version 1.1.4   2013-10-02
- - modify configure.ac for CPM special flag
- 
-------------------
+
 Version 1.1.3   2013-10-02
- - modify for intel mpi
- 
-------------------
+
 Version 1.1.2   2013-07-20
- - change VersionInfo()
 
---------------------------
 Version 1.1.1   2013-07-13
- - Update configure.ac for link issue for GNU compiler
- - Update include/cpm_Version.h.in and cpm_Base.h
 
---------------------------
 Version 1.1.0   2013-07-12
- - Edit configure.ac for a wrapper compiler, change install option
 
---------------------------
 Version 1.0.12  2013-06-29
- - Update README, NEWS, ChangeLog, LICENSE, INSTALL, configure.ac
 
-
---------------------------
 Version 1.0.11  2013-06-27
- - Change configure.ac
-  - TP_CFLAGS=`$TP_DIR/bin/tp-config --cflags`
-  - TP_LDFLAGS=`$TP_DIR/bin/tp-config --libs`
-  - remove TP_LIBS from configure.ac & cpm-config.in
-  - PM_CFLAGS=`$PM_DIR/bin/pm-config --cflags`
-  - PM_LDFLAGS=`$PM_DIR/bin/pm-config --libs`
-  - remove PM_LIBS from configure.ac & cpm-config.in
 
---------------------------
 Version 1.0.10  2013-06-27
- - Add PMlib option to configure.
- - Correction of manual.
- - Correction of TextParser archive name -lTP.
- - Correction of cpm-config.
- - Correction of config_cpm.sh
- - Change archive name to libCPM.a
 
--------------------------
-Version 1.0.9  2013-05-02
- - Add a LICENSE file.
- - Modification of User's guide.
+Version 1.0.9   2013-05-02
 
--------------------------
-Version 1.0.8  2013-04-03
- - Introduce a function of ActiveSubdomain. Following functions are added.
-   cpm_ParaManager::VoxelInit_Subdomain関数追加
-   cpm_GlobalDomainInfo::ReadActiveSubdomainFile()
-   cpm_GlobalDomainInfo::isMatchEndianSbdmMagick()
-   cpm_ParaManager::IsOuterBoundary()
-   cpm_ParaManager::IsInnerBoundary()
+Version 1.0.8   2013-04-03
 
- - Introduction of error codes.
-    cpm_Define.h
-    CPM_ERROR_OPEN_SBDM             =3012
-    CPM_ERROR_READ_SBDM_HEADER      =3013
-    CPM_ERROR_READ_SBDM_FORMAT      =3014
-    CPM_ERROR_READ_SBDM_DIV         =3015
-    CPM_ERROR_READ_SBDM_CONTENTS    =3016
-    CPM_ERROR_SBDM_NUMDOMAIN_ZERO   =3017
-    CPM_ERROR_MISMATCH_DIV_SUBDOMAIN=3018
+Version 1.0.6   2012-08-25
 
- - Add endian utility.
-    cpm_EndianUtil.h
+Version 1.0.5   2012-08-04
 
- - Add file path utility.
-    cpm_PathUtil.h
+Version 1.0.4   2012-07-09
 
+Version 1.0.3   2012-07-03
 
--------------------------
-Version 1.0.6  2012-08-25
- - Abolition of using REAL_TYPE
- - Correction by change of TextParser API.
+Version 1.0.2   2012-06-27
 
+Version 1.0.1   2012-06-25
 
--------------------------
-Version 1.0.5  2012-08-04
- - Improve redundant code to automatically decide the number of division for a whole
-  computational domain.
-
--------------------------
-Version 1.0.4  2012-07-09
- - Correction of cpm-uname shell script.
- - Add description for Fortran90 compiler at configure (in User's guide).
-
-
--------------------------
-Version 1.0.3  2012-07-03
- - Add GetHostName()
- - Add GetBndIndexExtGc()
- - Add figures for the description of index and original point (in User's guide).
- - Add description for CPM Op，CPM Datatype (in User's guide).
-
-
--------------------------
-Version 1.0.2  2012-06-27
- - Add description of asynchronous communication (in User's guide).
- - Modification of file format for partitioning information.
- - Change specification of cpm_ParaManager::VoxelInit.
-
-
--------------------------
-Version 1.0.1  2012-06-25
- - Change order of Macro;
-  before
-	  enum cpm_FaceFlag
-	  {
-	    X_MINUS = 0  ///< -X face
-	  , Y_MINUS = 1  ///< -Y face
-	  , Z_MINUS = 2  ///< -Z face
-	  , X_PLUS  = 3  ///< +X face
-	  , Y_PLUS  = 4  ///< +Y face
-	  , Z_PLUS  = 5  ///< +Z face
-	  };
-  after
-	  enum cpm_FaceFlag
-	  {
-	    X_MINUS = 0  ///< -X face
-	  , X_PLUS  = 1  ///< +X face
-	  , Y_MINUS = 2  ///< -Y face
-	  , Y_PLUS  = 3  ///< +Y face
-	  , Z_MINUS = 4  ///< -Z face
-	  , Z_PLUS  = 5  ///< +Z face
-	  };
-
-
--------------------------
-Version 1.0.0  2012-06-18
- - Initial release.
+Version 1.0.0   2012-06-18

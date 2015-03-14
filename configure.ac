@@ -6,7 +6,7 @@
 # Copyright (C) 2012-2014 Institute of Industrial Science, The University of Tokyo.
 # All right reserved.
 #
-# Copyright (c) 2014 Advanced Institute for Computational Science, RIKEN.
+# Copyright (c) 2014-2015 Advanced Institute for Computational Science, RIKEN.
 # All rights reserved.
 #
 ###################################################################################
@@ -16,7 +16,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.57)
-AC_INIT([CPMlib],[1.2.3],[keno@{iis.u-tokyo.ac, riken}.jp],[CPMlib])
+AC_INIT([CPMlib],[1.2.4],[keno@{iis.u-tokyo.ac, riken}.jp],[CPMlib])
 AM_INIT_AUTOMAKE()
 AC_CONFIG_SRCDIR([src/cpm_ParaManager.cpp])
 AM_CONFIG_HEADER([config.h])
@@ -24,7 +24,7 @@ AM_CONFIG_HEADER([config.h])
 #
 # revision No.
 #
-CPM_REVISION="20141225_1300"
+CPM_REVISION="20150314_1600"
 AC_SUBST(CPM_REVISION)
 
 
@@ -89,6 +89,8 @@ case "$CPM_CXX" in
   mpic++)   enable_mpi="wrappermpi" ;;
   mpiFCCpx) enable_mpi="wrappermpi" ;;
   CC)       enable_mpi="wrappermpi" ;;
+  mpiicc)   enable_mpi="wrappermpi" ;;
+  mpiicpc)  enable_mpi="wrappermpi" ;;
 esac
 
 # mpiFCCpx ; Fujitsu  FX

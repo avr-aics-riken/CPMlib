@@ -4,7 +4,7 @@
  * Copyright (C) 2012-2014 Institute of Industrial Science, The University of Tokyo.
  * All rights reserved.
  *
- * Copyright (c) 2014 Advanced Institute for Computational Science, RIKEN. 
+ * Copyright (c) 2014-2015 Advanced Institute for Computational Science, RIKEN. 
  * All rights reserved.
  *
  */
@@ -23,6 +23,7 @@ HOW TO BUILD
 
 1. with configure
 
+$ export FFV_HOME=/hogehoge
 $ ./configure [options]
 $ make
 # make install
@@ -94,9 +95,9 @@ Here is examples.
 
 # for OpenMPI compiled by Intel compiler and using wrapper compiler, /wo f90 example
 
-  $ ./configure --prefix=/usr/local/FFV/CPMlib \
-                --with-pm=/usr/local/FFV/PMlib \
-                --with-parser=/usr/local/FFV/TextParser \
+  $ ./configure --prefix=${FFV_HOME}/CPMlib \
+                --with-pm=${FFV_HOME}/PMlib \
+                --with-parser=${FFV_HOME}/TextParser \
                 --with-comp=INTEL \
                 --with-f90example=no \
                 CXX=mpicxx \
@@ -107,9 +108,9 @@ Here is examples.
 
 # for Intel compiler and OpenMPI.
 
-  $ ./configure --with-pm=/usr/local/PMlib \
+  $ ./configure --with-pm=${FFV_HOME}/PMlib \
                 --with-ompi=/opt/openmpi \
-                --with-parser=/usr/local/TextParser \
+                --with-parser=${FFV_HOME}/TextParser \
                 --with-comp=INTEL \
                 CXX=icpc \
                 CXXFLAGS=-O3 \
@@ -120,9 +121,9 @@ Here is examples.
 
 # for GNU compiler and MPICH.
 
-  $ ./configure --with-pm=/usr/local/PMlib \
+  $ ./configure --with-pm=${FFV_HOME}/PMlib \
                 --with-mpich=/usr/local/mpich \
-                --with-parser=/usr/local/TextParser \
+                --with-parser=${FFV_HOME}/TextParser \
                 --with-comp=GNU \
                 CXX=g++ \
                 CXXFLAGS=-O3 \
@@ -133,8 +134,9 @@ Here is examples.
 
 # for K-computer. cross-compiling, /wo f90 example
 
-  $ ./configure --prefix=$1 \
-                --with-pm=/hogehoge \
+  $ ./configure --prefix=${FFV_HOME}/CPMlib \
+                --with-pm=${FFV_HOME}/PMlib \
+                --with-parser=${FFV_HOME}/TextParser \
                 --with-comp=FJ \
                 --with-f90example=no \
                 --host=sparc64-unknown-linux-gnu \
