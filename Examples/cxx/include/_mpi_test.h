@@ -420,7 +420,7 @@
     } \
 }
 
-  // BndComm, PeriodicComm(S4D)
+  // BndComm, PeriodicComm(S3D)
 #if 1
   {
     int rank = paraMngr->GetMyRankID();
@@ -549,7 +549,7 @@
     paraMngr->wait_BndCommV3D( pp, imax, jmax, kmax, vc, 2, req );
 #endif
 
-    _PRINT_S4D(ofs,"after BndComm",nmax,imax,jmax,kmax,vc,n);
+    _PRINT_S4D(ofs,"after BndComm",imax,jmax,kmax,nmax,vc,n);
 
     // PeriodicCommX
     paraMngr->PeriodicCommV3D( pp, imax, jmax, kmax, vc, 2, X_DIR, BOTH );
@@ -624,7 +624,7 @@
     paraMngr->wait_BndCommS4D( pp, imax, jmax, kmax, nmax, vc, 2, req );
 #endif
 
-    _PRINT_S4D(ofs,"after BndComm",nmax,imax,jmax,kmax,vc,n);
+    _PRINT_S4D(ofs,"after BndComm",imax,jmax,kmax,nmax,vc,n);
 
     // PeriodicCommX
     paraMngr->PeriodicCommS4D( pp, imax, jmax, kmax, nmax, vc, 2, X_DIR, BOTH );

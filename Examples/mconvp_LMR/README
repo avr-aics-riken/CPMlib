@@ -1,0 +1,39 @@
+/*
+ * CPMlib - Cartesian Partition Manager Library
+ *
+ * Copyright (C) 2012-2014 Institute of Industrial Science, The University of Tokyo.
+ * All rights reserved.
+ *
+ * Copyright (c) 2014-2015 Advanced Institute for Computational Science, RIKEN. 
+ * All rights reserved.
+ *
+ */
+
+LMR版CPMライブラリ使用サンプル
+
+1.提供コード
+  mconvp.f90        : CPMライブラリを使用しないオリジナルコード
+  mconvp_LMR_main.C : CPM-ライブラリでLMR版MPI並列化コード(メイン)
+  mconvp_LMR_main.h : mconvp_LMR_main.Cのヘッダーファイル
+  mconvp_LMR.f90    : mconvp_LMR_main.Cで使用するFortran90サブルーチン群ファイル
+
+2.使用方法
+(1) オリジナルコード
+    makeすると、mconvpプログラムが生成されます。
+    dataディレクトリの入力ファイルin.ftcsもしくはin.jacobiを
+    プログラムにリダイレクトすることで、プログラムが実行
+    されます。
+
+    $ cd data
+    $ ../mconvp < in.ftcs
+    $ ../mconvp < in.jacobi
+
+(2) CPM-LMR版コード
+    makeすると、mconvp_LMRプログラムが生成されます。
+    dataディレクトリの入力ファイルmconv.tpをプログラム引数として与えることで、
+    プログラムが実行されます。
+    MPI並列で実行する場合は、mpirunを用います。
+
+    $ cd data
+    $ mpirun -np 15 ../mconvp_LMR mconv.tp
+

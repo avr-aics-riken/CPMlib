@@ -16,7 +16,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.57)
-AC_INIT([CPMlib],[1.2.4],[keno@{iis.u-tokyo.ac, riken}.jp],[CPMlib])
+AC_INIT([CPMlib],[2.0.0],[keno@{iis.u-tokyo.ac, riken}.jp],[CPMlib])
 AM_INIT_AUTOMAKE()
 AC_CONFIG_SRCDIR([src/cpm_ParaManager.cpp])
 AM_CONFIG_HEADER([config.h])
@@ -24,7 +24,7 @@ AM_CONFIG_HEADER([config.h])
 #
 # revision No.
 #
-CPM_REVISION="20150314_1600"
+CPM_REVISION="20150605_1500"
 AC_SUBST(CPM_REVISION)
 
 
@@ -154,7 +154,8 @@ elif test x"$enable_mpi" = x"mpich" ; then
   MPICH_FCLIBS="$MPICH_LIBS"" -lfmpich"
 elif test x"$enable_mpi" = x"ompi" ; then
   MPICH_LIBS="-lmpi -lmpi_cxx"
-  MPICH_FCLIBS="$MPICH_LIBS"" -lmpi_f77 -lmpi_f90"
+#  MPICH_FCLIBS="$MPICH_LIBS"" -lmpi_f77 -lmpi_f90"
+  MPICH_FCLIBS="$MPICH_LIBS"" -lmpi_f77 -lmpi_f90 -lmpi_cxx"
 fi
 
 
@@ -165,6 +166,7 @@ if test x"$enable_mpi" = x"none" ; then
   echo "           If compilation error occurs about MPI, specify --with-mpich or --with-ompi option."
 fi
 
+MPICH_FCLIBS="$MPICH_FCLIBS"" -lmpi_cxx"
 
 
 #
@@ -257,6 +259,7 @@ AC_SUBST(CPM_FC_LD)
 if test x"$with_comp" = x"FJ"; then
   CPM_FC_LD="$CXX"" --linkfortran"
 elif test x"$with_comp" = x"INTEL" ; then
+  CPM_FC_LD="$CXX"" -lifport -lifcore"
   CPM_LIBS="$CPM_LIBS"" -lstdc++"
 elif test x"$with_comp" = x"GNU" ; then
   CPM_LIBS="$CPM_LIBS"" -lstdc++"
@@ -267,9 +270,9 @@ fi
 # MAKE_SUB_DIRS
 #
 AC_SUBST(MAKE_SUB_DIRS)
-MAKE_SUB_DIRS="src doc Examples/cxx"
+MAKE_SUB_DIRS="src doc Examples/cxx Examples/cxx_LMR"
 if test "$with_f90example" = "yes" ; then
-  MAKE_SUB_DIRS="$MAKE_SUB_DIRS"" Examples/f90"
+  MAKE_SUB_DIRS="$MAKE_SUB_DIRS"" Examples/f90 Examples/mconvp_LMR"
 fi
 
 
@@ -319,7 +322,9 @@ AC_CONFIG_FILES([Makefile \
                  cpm-config \
                  include/cpm_Version.h \
                  Examples/cxx/Makefile \
+                 Examples/cxx_LMR/Makefile \
                  Examples/f90/Makefile \
+                 Examples/mconvp_LMR/Makefile \
                 ])
 
 AC_OUTPUT

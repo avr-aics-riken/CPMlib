@@ -31,53 +31,13 @@
 /** プロセスグループ毎のVOXEL空間情報管理マップ */
 typedef std::map<int, cpm_VoxelInfo*> VoxelInfoMap;
 
-/** プロセスグループ毎のランク番号マップ */
-typedef std::map<int, int*> RankNoMap;
-
-/** 袖通信バッファ情報 */
-struct S_BNDCOMM_BUFFER
-{
-  size_t m_maxVC; ///< 最大袖数
-  size_t m_maxN;  ///< 最大成分数
-  size_t m_nwX;   ///< バッファサイズ
-  size_t m_nwY;   ///< バッファサイズ
-  size_t m_nwZ;   ///< バッファサイズ
-  REAL_BUF_TYPE *m_bufX[4]; ///< バッファ
-  REAL_BUF_TYPE *m_bufY[4]; ///< バッファ
-  REAL_BUF_TYPE *m_bufZ[4]; ///< バッファ
-
-  S_BNDCOMM_BUFFER()
-  {
-    m_maxVC = m_maxN = 0;
-    m_nwX = m_nwY = m_nwZ = 0;
-    for( int i=0;i<4;i++ )
-    {
-      m_bufX[i] = NULL;
-      m_bufY[i] = NULL;
-      m_bufZ[i] = NULL;
-    }
-  }
-
-  ~S_BNDCOMM_BUFFER()
-  {
-    for( int i=0;i<4;i++ )
-    {
-      if( m_bufX[i] ) delete [] m_bufX[i];
-      if( m_bufY[i] ) delete [] m_bufY[i];
-      if( m_bufZ[i] ) delete [] m_bufZ[i];
-    }
-  }
-};
-
-/** プロセスグループ毎の袖通信バッファ情報 */
-typedef std::map<int, S_BNDCOMM_BUFFER*> BndCommInfoMap;
-
 /** CPMの並列管理クラス
  *  - 現時点ではユーザがインスタンスすることを許していない
  *  - get_instance静的関数を用いて唯一のインスタンスを取得する
  */
 class cpm_ParaManager : public cpm_Base
 {
+friend class C_PARAMANAGER;
 ////////////////////////////////////////////////////////////////////////////////
 // メンバー関数
 ////////////////////////////////////////////////////////////////////////////////
@@ -89,11 +49,18 @@ public:
   static cpm_ParaManager* get_instance();
 
   /** 唯一のインスタンスの取得(initialize処理も実行)
-   *  @param[in] argc プログラム実行時引数の数
-   *  @param[in] argv プログラム実行時引数
+   *  @param[in] argc       プログラム実行時引数の数
+   *  @param[in] argv       プログラム実行時引数
+   *  @param[in] domainType インスタンスする領域タイプ(デフォルト=カーテシアン)
    *  @return インスタンスのポインタ
    */
-  static cpm_ParaManager* get_instance(int &argc, char**& argv);
+  static cpm_ParaManager* get_instance(int &argc, char**& argv, cpm_DomainType domainType=CPM_DOMAIN_CARTESIAN);
+
+  /** 唯一のインスタンスの取得(initialize処理も実行. fortanインターフェイス用)
+   *  @param[in] domainType インスタンスする領域タイプ(デフォルト=カーテシアン)
+   *  @return インスタンスのポインタ
+   */
+  static cpm_ParaManager* get_instance(cpm_DomainType domainType);
 
   /** 初期化処理(MPI_Initは実行済みの場合)
    *  - MPI_Initは既に実行済みである必要がある
@@ -125,7 +92,7 @@ public:
    */
   bool IsParallel() const;
 
-  /** 領域分割
+  /** カーテシアン用の領域分割
    *  - 既に作成済みの領域分割情報を用いた領域分割処理
    *  @param[in] domainInfo 領域分割情報
    *  @param[in] maxVC      最大の袖数(袖通信用)
@@ -133,11 +100,12 @@ public:
    *  @param[in] procGrpNo  領域分割を行うプロセスグループ番号
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
+  virtual
   cpm_ErrorCode VoxelInit( cpm_GlobalDomainInfo* domainInfo
                          , size_t maxVC=1, size_t maxN=3
                          , int procGrpNo=0 );
 
-  /** 領域分割
+  /** カーテシアン用の領域分割
    *  - 領域分割の各種情報を引数で渡して領域分割を行う
    *  - プロセスグループの全てのランクが活性ドメインになる
    *  - I,J,K方向の領域分割数を指定するバージョン
@@ -151,11 +119,12 @@ public:
    *  @param[in] procGrpNo  領域分割を行うプロセスグループ番号
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
+  virtual
   cpm_ErrorCode VoxelInit( int div[3], int vox[3], double origin[3], double region[3]
                          , size_t maxVC=1, size_t maxN=3, cpm_DivPolicy divPolicy=DIV_COMM_SIZE
                          , int procGrpNo=0 );
 
-  /** 領域分割
+  /** カーテシアン用の領域分割
    *  - 領域分割の各種情報を引数で渡して領域分割を行う
    *  - プロセスグループの全てのランクが活性ドメインになる
    *  - 並列数=プロセスグループの並列数とし、内部で自動的に領域分割をするバージョン
@@ -168,11 +137,12 @@ public:
    *  @param[in] procGrpNo  領域分割を行うプロセスグループ番号
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
+  virtual
   cpm_ErrorCode VoxelInit( int vox[3], double origin[3], double region[3]
                          , size_t maxVC=1, size_t maxN=3, cpm_DivPolicy divPolicy=DIV_COMM_SIZE
                          , int procGrpNo=0 );
 
-  /** 領域分割(ActiveSubdomain指定)
+  /** カーテシアン用の領域分割(ActiveSubdomain指定)
    *  - 領域分割の各種情報を引数で渡して領域分割を行う
    *  - ActiveSubdomainファイルで指定される領域分割位置のランクが活性ドメインになる
    *  - I,J,K方向の領域分割数を指定するバージョン
@@ -188,11 +158,12 @@ public:
    *  @param[in] procGrpNo     領域分割を行うプロセスグループ番号
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
+  virtual
   cpm_ErrorCode VoxelInit_Subdomain( int div[3], int vox[3], double origin[3], double region[3]
                                    , std::string subDomainFile
                                    , size_t maxVC=1, size_t maxN=3, int procGrpNo=0 );
 
-  /** 領域分割(ActiveSubdomain指定)
+  /** カーテシアン用の領域分割(ActiveSubdomain指定)
    *  - 領域分割の各種情報を引数で渡して領域分割を行う
    *  - ActiveSubdomainファイルで指定される領域分割位置のランクが活性ドメインになる
    *  - ActiveSubdomainファイルで指定されている領域分割数で領域分割を行う
@@ -206,9 +177,22 @@ public:
    *  @param[in] procGrpNo     領域分割を行うプロセスグループ番号
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
+  virtual
   cpm_ErrorCode VoxelInit_Subdomain( int vox[3], double origin[3], double region[3]
                                    , std::string subDomainFile
                                    , size_t maxVC=1, size_t maxN=3, int procGrpNo=0 );
+
+  /** LMR用の領域分割
+   *  - FXgen出力の領域情報ファイル、木情報ファイルを渡して領域分割情報を生成する
+   *  @param[in] treefile  木情報ファイル
+   *  @param[in] maxVC     最大の袖数(袖通信用)
+   *  @param[in] maxN      最大の成分数(袖通信用)
+   *  @param[in] procGrpNo 領域分割を行うプロセスグループ番号
+   *  @return 終了コード(CPM_SUCCESS=正常終了)
+   */
+  virtual
+  cpm_ErrorCode VoxelInit_LMR( std::string treeFile
+                             , size_t maxVC=1, size_t maxN=3, int procGrpNo=0 );
 
   /** プロセスグループの作成
    *  - 指定されたプロセスリストを使用してプロセスグループを生成する
@@ -225,6 +209,11 @@ public:
 
 
 ////// 領域情報の取得関数 //////
+
+  /** 領域分割タイプを取得
+   *  @return 領域分割タイプ
+   */
+  cpm_DomainType GetDomainType();
 
   /** VOXEL空間マップを検索
    *  @param[in] procGrpNo プロセスグループ番号(省略時=0)
@@ -312,6 +301,29 @@ public:
    */
   const int* GetPeriodicRankID( int procGrpNo=0 );
 
+  /** 指定面における自ランクの隣接ランク番号を取得
+   *  @param[in]  face 面方向
+   *  @param[out] num  面の数(CARTのとき1)
+   *  @param[in]  procGrpNo プロセスグループ番号(省略時=0)
+   *  @return 指定面における自ランクの隣接ランク番号整数配列のポインタ
+   */
+  const int* GetNeighborRankList( cpm_FaceFlag face, int &num, int procGrpNo=0 );
+
+  /** 指定面における自ランクの周期境界の隣接ランク番号を取得
+   *  @param[in]  face 面方向
+   *  @param[out] num  面の数(CARTのとき1)
+   *  @param[in]  procGrpNo プロセスグループ番号(省略時=0)
+   *  @return 指定面における自ランクの周期境界の隣接ランク番号整数配列のポインタ
+   */
+  const int* GetPeriodicRankList( cpm_FaceFlag face, int &num, int procGrpNo=0 );
+
+  /** 指定面におけるレベル差を取得
+   *  @param[in]  face 面方向
+   *  @param[in]  procGrpNo プロセスグループ番号(省略時=0)
+   *  @return     レベル差(0:同じレベル, 1:fine, -1:coarse)
+   */
+  int GetNeighborLevelDiff( cpm_FaceFlag face, int procGrpNo=0 );
+
   /** 指定idを含む全体ボクセル空間のインデクス範囲を取得
    *  - 全体空間実セルのスタートインデクスを0としたときの，i,j,k各方向の
    *    スタートインデクスと長さを取得する．
@@ -328,6 +340,7 @@ public:
    *  @retval true  指定idを含むセルが存在した
    *  @retval false 指定idを含むセルが存在しない
    */
+  virtual
   bool GetBndIndexExtGc( int id, int *array, int vc
                        , int &ista, int &jsta, int &ksta, int &ilen, int &jlen, int &klen
                        , int procGrpNo=0 );
@@ -351,6 +364,7 @@ public:
    *  @retval true  指定idを含むセルが存在した
    *  @retval false 指定idを含むセルが存在しない
    */
+  virtual
   bool GetBndIndexExtGc( int id, int *array, int imax, int jmax, int kmax, int vc
                        , int &ista, int &jsta, int &ksta, int &ilen, int &jlen, int &klen
                        , int procGrpNo=0 );
@@ -790,7 +804,7 @@ public:
    *  @param[in]   vc        仮想セル数
    *  @param[in]   vc_comm   通信する仮想セル数
    *  @param[in]   datatype  袖通信データのデータタイプ(cpm_fparam.fi参照)
-   *  @param[out]  reqNo     リクエスト番号配列(サイズ12)
+   *  @param[out]  reqNo     リクエスト番号配列(サイズ48,CARTの場合12でも良い)
    *  @param[in]   procGrpNo プロセスグループ番号
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
@@ -807,7 +821,7 @@ public:
    *  @param[in]   vc        仮想セル数
    *  @param[in]   vc_comm   通信する仮想セル数
    *  @param[in]   datatype  袖通信データのデータタイプ(cpm_fparam.fi参照)
-   *  @param[out]  reqNo     リクエスト番号配列(サイズ12)
+   *  @param[out]  reqNo     リクエスト番号配列(サイズ48,CARTの場合12でも良い)
    *  @param[in]   procGrpNo プロセスグループ番号
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
@@ -825,7 +839,7 @@ public:
    *  @param[in]   vc        仮想セル数
    *  @param[in]   vc_comm   通信する仮想セル数
    *  @param[in]   datatype  袖通信データのデータタイプ(cpm_fparam.fi参照)
-   *  @param[out]  reqNo     リクエスト番号配列(サイズ12)
+   *  @param[out]  reqNo     リクエスト番号配列(サイズ48,CARTの場合12でも良い)
    *  @param[in]   procGrpNo プロセスグループ番号
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
@@ -842,7 +856,7 @@ public:
    *  @param[in]   vc        仮想セル数
    *  @param[in]   vc_comm   通信する仮想セル数
    *  @param[in]   datatype  袖通信データのデータタイプ(cpm_fparam.fi参照)
-   *  @param[out]  reqNo     リクエスト番号配列(サイズ12)
+   *  @param[in]   reqNo     リクエスト番号配列(サイズ48,CARTの場合12でも良い)
    *  @param[in]   procGrpNo プロセスグループ番号
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
@@ -859,7 +873,7 @@ public:
    *  @param[in]   vc        仮想セル数
    *  @param[in]   vc_comm   通信する仮想セル数
    *  @param[in]   datatype  袖通信データのデータタイプ(cpm_fparam.fi参照)
-   *  @param[out]  reqNo     リクエスト番号配列(サイズ12)
+   *  @param[in]   reqNo     リクエスト番号配列(サイズ48,CARTの場合12でも良い)
    *  @param[in]   procGrpNo プロセスグループ番号
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
@@ -877,7 +891,7 @@ public:
    *  @param[in]   vc        仮想セル数
    *  @param[in]   vc_comm   通信する仮想セル数
    *  @param[in]   datatype  袖通信データのデータタイプ(cpm_fparam.fi参照)
-   *  @param[out]  reqNo     リクエスト番号配列(サイズ12)
+   *  @param[in]   reqNo     リクエスト番号配列(サイズ48,CARTの場合12でも良い)
    *  @param[in]   procGrpNo プロセスグループ番号
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
@@ -894,7 +908,7 @@ public:
    *  @param[in]   vc        仮想セル数
    *  @param[in]   vc_comm   通信する仮想セル数
    *  @param[in]   datatype  袖通信データのデータタイプ(cpm_fparam.fi参照)
-   *  @param[out]  reqNo     リクエスト番号配列(サイズ12)
+   *  @param[out]  reqNo     リクエスト番号配列(サイズ48,CARTの場合12でも良い)
    *  @param[in]   procGrpNo プロセスグループ番号
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
@@ -912,7 +926,7 @@ public:
    *  @param[in]   vc        仮想セル数
    *  @param[in]   vc_comm   通信する仮想セル数
    *  @param[in]   datatype  袖通信データのデータタイプ(cpm_fparam.fi参照)
-   *  @param[out]  reqNo     リクエスト番号配列(サイズ12)
+   *  @param[out]  reqNo     リクエスト番号配列(サイズ48,CARTの場合12でも良い)
    *  @param[in]   procGrpNo プロセスグループ番号
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
@@ -929,7 +943,7 @@ public:
    *  @param[in]   vc        仮想セル数
    *  @param[in]   vc_comm   通信する仮想セル数
    *  @param[in]   datatype  袖通信データのデータタイプ(cpm_fparam.fi参照)
-   *  @param[out]  reqNo     リクエスト番号配列(サイズ12)
+   *  @param[in]   reqNo     リクエスト番号配列(サイズ48,CARTの場合12でも良い)
    *  @param[in]   procGrpNo プロセスグループ番号
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
@@ -947,7 +961,7 @@ public:
    *  @param[in]   vc        仮想セル数
    *  @param[in]   vc_comm   通信する仮想セル数
    *  @param[in]   datatype  袖通信データのデータタイプ(cpm_fparam.fi参照)
-   *  @param[out]  reqNo     リクエスト番号配列(サイズ12)
+   *  @param[in]   reqNo     リクエスト番号配列(サイズ48,CARTの場合12でも良い)
    *  @param[in]   procGrpNo プロセスグループ番号
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
@@ -967,6 +981,7 @@ public:
    *  @param[in] procGrpNo プロセスグループ番号
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
+  virtual
   cpm_ErrorCode SetBndCommBuffer( size_t maxVC, size_t maxN, int procGrpNo=0 );
 
   /** 袖通信バッファサイズの取得
@@ -974,6 +989,7 @@ public:
    *  @param[in] procGrpNo プロセスグループ番号(負の場合、全プロセスグループでのトータルを返す)
    *  @return バッファサイズ(byte)
    */
+  virtual
   size_t GetBndCommBufferSize( int procGrpNo=0 ); 
 
   /** 袖通信(Scalar3D版)
@@ -1081,13 +1097,13 @@ public:
    *  @param[in]   kmax      配列サイズ(K方向)
    *  @param[in]   vc        仮想セル数
    *  @param[in]   vc_comm   通信する仮想セル数
-   *  @param[out]  req       MPIリクエスト
+   *  @param[out]  req       MPIリクエスト(サイズ48、CARTの場合12でも良い)
    *  @param[in]   procGrpNo プロセスグループ番号
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
   template<class T> CPM_INLINE
   cpm_ErrorCode BndCommS3D_nowait( T *array, int imax, int jmax, int kmax, int vc, int vc_comm
-                                 , MPI_Request req[12], int procGrpNo=0 );
+                                 , MPI_Request req[48], int procGrpNo=0 );
 
   /** 非同期版袖通信(Scalar3D版, MPI_Datatype指定)
    *  - (imax,jmax,kmax)の形式の配列の非同期袖通信を行う
@@ -1101,12 +1117,12 @@ public:
    *  @param[in]   kmax      配列サイズ(K方向)
    *  @param[in]   vc        仮想セル数
    *  @param[in]   vc_comm   通信する仮想セル数
-   *  @param[out]  req       MPIリクエスト
+   *  @param[out]  req       MPIリクエスト(サイズ48、CARTの場合12でも良い)
    *  @param[in]   procGrpNo プロセスグループ番号
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
   cpm_ErrorCode BndCommS3D_nowait( MPI_Datatype dtype, void *array, int imax, int jmax, int kmax
-                                 , int vc, int vc_comm, MPI_Request req[12], int procGrpNo=0 );
+                                 , int vc, int vc_comm, MPI_Request req[48], int procGrpNo=0 );
 
   /** 非同期版袖通信(Vector3D版)
    *  - (imax,jmax,kmax,3)の形式の配列の非同期袖通信を行う
@@ -1118,13 +1134,13 @@ public:
    *  @param[in]   kmax      配列サイズ(K方向)
    *  @param[in]   vc        仮想セル数
    *  @param[in]   vc_comm   通信する仮想セル数
-   *  @param[out]  req       MPIリクエスト
+   *  @param[out]  req       MPIリクエスト(サイズ48、CARTの場合12でも良い)
    *  @param[in]   procGrpNo プロセスグループ番号
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
   template<class T> CPM_INLINE
   cpm_ErrorCode BndCommV3D_nowait( T *array, int imax, int jmax, int kmax, int vc, int vc_comm
-                                 , MPI_Request req[12], int procGrpNo=0 );
+                                 , MPI_Request req[48], int procGrpNo=0 );
 
   /** 非同期版袖通信(Vector3D版, MPI_Datatype指定)
    *  - (imax,jmax,kmax,3)の形式の配列の非同期袖通信を行う
@@ -1138,12 +1154,12 @@ public:
    *  @param[in]   kmax      配列サイズ(K方向)
    *  @param[in]   vc        仮想セル数
    *  @param[in]   vc_comm   通信する仮想セル数
-   *  @param[out]  req       MPIリクエスト
+   *  @param[out]  req       MPIリクエスト(サイズ48、CARTの場合12でも良い)
    *  @param[in]   procGrpNo プロセスグループ番号
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
   cpm_ErrorCode BndCommV3D_nowait( MPI_Datatype dtype, void *array, int imax, int jmax, int kmax
-                                 , int vc, int vc_comm, MPI_Request req[12], int procGrpNo=0 );
+                                 , int vc, int vc_comm, MPI_Request req[48], int procGrpNo=0 );
 
   /** 非同期版袖通信(Scalar4D版)
    *  - (imax,jmax,kmax,nmax)の形式の配列の非同期袖通信を行う
@@ -1156,13 +1172,13 @@ public:
    *  @param[in]   nmax      配列サイズ(成分数)
    *  @param[in]   vc        仮想セル数
    *  @param[in]   vc_comm   通信する仮想セル数
-   *  @param[out]  req       MPIリクエスト
+   *  @param[out]  req       MPIリクエスト(サイズ48、CARTの場合12でも良い)
    *  @param[in]   procGrpNo プロセスグループ番号
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
   template<class T> CPM_INLINE
   cpm_ErrorCode BndCommS4D_nowait( T *array, int imax, int jmax, int kmax, int nmax, int vc, int vc_comm
-                                 , MPI_Request req[12], int procGrpNo=0 );
+                                 , MPI_Request req[48], int procGrpNo=0 );
 
   /** 非同期版袖通信(Scalar4D版, MPI_Datatype指定)
    *  - (imax,jmax,kmax,nmax)の形式の配列の非同期袖通信を行う
@@ -1177,12 +1193,12 @@ public:
    *  @param[in]   nmax      配列サイズ(成分数)
    *  @param[in]   vc        仮想セル数
    *  @param[in]   vc_comm   通信する仮想セル数
-   *  @param[out]  req       MPIリクエスト
+   *  @param[out]  req       MPIリクエスト(サイズ48、CARTの場合12でも良い)
    *  @param[in]   procGrpNo プロセスグループ番号
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
   cpm_ErrorCode BndCommS4D_nowait( MPI_Datatype dtype, void *array, int imax, int jmax, int kmax, int nmax
-                                 , int vc, int vc_comm, MPI_Request req[12], int procGrpNo=0 );
+                                 , int vc, int vc_comm, MPI_Request req[48], int procGrpNo=0 );
 
   /** 非同期版袖通信のwait、展開(Scalar3D版)
    *  - (imax,jmax,kmax)の形式の配列の非同期版袖通信のwaitと展開を行う
@@ -1192,13 +1208,13 @@ public:
    *  @param[in]    kmax      配列サイズ(K方向)
    *  @param[in]    vc        仮想セル数
    *  @param[in]    vc_comm   通信する仮想セル数
-   *  @param[in]    req       MPIリクエスト
+   *  @param[in]    req       MPIリクエスト(サイズ48、CARTの場合12でも良い)
    *  @param[in]    procGrpNo プロセスグループ番号
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
   template<class T> CPM_INLINE
   cpm_ErrorCode wait_BndCommS3D( T *array, int imax, int jmax, int kmax, int vc, int vc_comm
-                               , MPI_Request req[12], int procGrpNo=0 );
+                               , MPI_Request req[48], int procGrpNo=0 );
 
   /** 非同期版袖通信のwait、展開(Scalar3D版, MPI_Datatype指定)
    *  - (imax,jmax,kmax)の形式の配列の非同期版袖通信のwaitと展開を行う
@@ -1210,12 +1226,12 @@ public:
    *  @param[in]    kmax      配列サイズ(K方向)
    *  @param[in]    vc        仮想セル数
    *  @param[in]    vc_comm   通信する仮想セル数
-   *  @param[in]    req       MPIリクエスト
+   *  @param[in]    req       MPIリクエスト(サイズ48、CARTの場合12でも良い)
    *  @param[in]    procGrpNo プロセスグループ番号
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
   cpm_ErrorCode wait_BndCommS3D( MPI_Datatype dtype, void *array, int imax, int jmax, int kmax
-                               , int vc, int vc_comm, MPI_Request req[12], int procGrpNo=0 );
+                               , int vc, int vc_comm, MPI_Request req[48], int procGrpNo=0 );
 
   /** 非同期版袖通信のwait、展開(Vector3D版)
    *  - (imax,jmax,kmax,3)の形式の配列の非同期版袖通信のwaitと展開を行う
@@ -1225,13 +1241,13 @@ public:
    *  @param[in]    kmax      配列サイズ(K方向)
    *  @param[in]    vc        仮想セル数
    *  @param[in]    vc_comm   通信する仮想セル数
-   *  @param[in]    req       MPIリクエスト
+   *  @param[in]    req       MPIリクエスト(サイズ48、CARTの場合12でも良い)
    *  @param[in]    procGrpNo プロセスグループ番号
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
   template<class T> CPM_INLINE
   cpm_ErrorCode wait_BndCommV3D( T *array, int imax, int jmax, int kmax, int vc, int vc_comm
-                               , MPI_Request req[12], int procGrpNo=0 );
+                               , MPI_Request req[48], int procGrpNo=0 );
 
   /** 非同期版袖通信のwait、展開(Vector3D版, MPI_Datatype指定)
    *  - (imax,jmax,kmax,3)の形式の配列の非同期版袖通信のwaitと展開を行う
@@ -1243,12 +1259,12 @@ public:
    *  @param[in]    kmax      配列サイズ(K方向)
    *  @param[in]    vc        仮想セル数
    *  @param[in]    vc_comm   通信する仮想セル数
-   *  @param[in]    req       MPIリクエスト
+   *  @param[in]    req       MPIリクエスト(サイズ48、CARTの場合12でも良い)
    *  @param[in]    procGrpNo プロセスグループ番号
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
   cpm_ErrorCode wait_BndCommV3D( MPI_Datatype dtype, void *array, int imax, int jmax, int kmax
-                               , int vc, int vc_comm, MPI_Request req[12], int procGrpNo=0 );
+                               , int vc, int vc_comm, MPI_Request req[48], int procGrpNo=0 );
 
   /** 非同期版袖通信のwait、展開(Scalar4D版)
    *  - (imax,jmax,kmax,nmax)の形式の配列の非同期版袖通信のwaitと展開を行う
@@ -1259,13 +1275,13 @@ public:
    *  @param[in]    nmax      配列サイズ(成分数)
    *  @param[in]    vc        仮想セル数
    *  @param[in]    vc_comm   通信する仮想セル数
-   *  @param[in]    req       MPIリクエスト
+   *  @param[in]    req       MPIリクエスト(サイズ48、CARTの場合12でも良い)
    *  @param[in]    procGrpNo プロセスグループ番号
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
   template<class T> CPM_INLINE
   cpm_ErrorCode wait_BndCommS4D( T *array, int imax, int jmax, int kmax, int nmax, int vc, int vc_comm
-                               , MPI_Request req[12], int procGrpNo=0 );
+                               , MPI_Request req[48], int procGrpNo=0 );
 
   /** 非同期版袖通信のwait、展開(Scalar4D版, MPI_Datatype指定)
    *  - (imax,jmax,kmax,nmax)の形式の配列の非同期版袖通信のwaitと展開を行う
@@ -1278,12 +1294,12 @@ public:
    *  @param[in]    nmax      配列サイズ(成分数)
    *  @param[in]    vc        仮想セル数
    *  @param[in]    vc_comm   通信する仮想セル数
-   *  @param[in]    req       MPIリクエスト
+   *  @param[in]    req       MPIリクエスト(サイズ48、CARTの場合12でも良い)
    *  @param[in]    procGrpNo プロセスグループ番号
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
   cpm_ErrorCode wait_BndCommS4D( MPI_Datatype dtype, void *array, int imax, int jmax, int kmax, int nmax
-                               , int vc, int vc_comm, MPI_Request req[12], int procGrpNo=0 );
+                               , int vc, int vc_comm, MPI_Request req[48], int procGrpNo=0 );
 
   /** 周期境界袖通信(Scalar3D版)
    *  - (imax,jmax,kmax)の形式の配列の周期境界方向の袖通信を行う
@@ -1465,13 +1481,13 @@ public:
    *  @param[in]   kmax      配列サイズ(K方向)
    *  @param[in]   vc        仮想セル数
    *  @param[in]   vc_comm   通信する仮想セル数
-   *  @param[out]  req       MPIリクエスト
+   *  @param[out]  req       MPIリクエスト(サイズ48、CARTの場合12でも良い)
    *  @param[in]   procGrpNo プロセスグループ番号
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
   template<class T> CPM_INLINE
   cpm_ErrorCode BndCommV3DEx_nowait( T *array, int imax, int jmax, int kmax, int vc, int vc_comm
-                                   , MPI_Request req[12], int procGrpNo=0 );
+                                   , MPI_Request req[48], int procGrpNo=0 );
 
   /** 非同期版袖通信(Vector3DEx版, MPI_Datatype指定)
    *  - (3,imax,jmax,kmax)の形式の配列の非同期袖通信を行う
@@ -1485,12 +1501,12 @@ public:
    *  @param[in]   kmax      配列サイズ(K方向)
    *  @param[in]   vc        仮想セル数
    *  @param[in]   vc_comm   通信する仮想セル数
-   *  @param[out]  req       MPIリクエスト
+   *  @param[out]  req       MPIリクエスト(サイズ48、CARTの場合12でも良い)
    *  @param[in]   procGrpNo プロセスグループ番号
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
   cpm_ErrorCode BndCommV3DEx_nowait( MPI_Datatype dtype, void *array, int imax, int jmax, int kmax
-                                   , int vc, int vc_comm, MPI_Request req[12], int procGrpNo=0 );
+                                   , int vc, int vc_comm, MPI_Request req[48], int procGrpNo=0 );
 
   /** 非同期版袖通信(Scalar4DEx版)
    *  - (nmax,imax,jmax,kmax)の形式の配列の非同期袖通信を行う
@@ -1503,13 +1519,13 @@ public:
    *  @param[in]   kmax      配列サイズ(K方向)
    *  @param[in]   vc        仮想セル数
    *  @param[in]   vc_comm   通信する仮想セル数
-   *  @param[out]  req       MPIリクエスト
+   *  @param[out]  req       MPIリクエスト(サイズ48、CARTの場合12でも良い)
    *  @param[in]   procGrpNo プロセスグループ番号
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
   template<class T> CPM_INLINE
   cpm_ErrorCode BndCommS4DEx_nowait( T *array, int nmax, int imax, int jmax, int kmax, int vc, int vc_comm
-                                   , MPI_Request req[12], int procGrpNo=0 );
+                                   , MPI_Request req[48], int procGrpNo=0 );
 
   /** 非同期版袖通信(Scalar4DEx版, MPI_Datatype指定)
    *  - (nmax,imax,jmax,kmax)の形式の配列の非同期袖通信を行う
@@ -1524,12 +1540,12 @@ public:
    *  @param[in]   kmax      配列サイズ(K方向)
    *  @param[in]   vc        仮想セル数
    *  @param[in]   vc_comm   通信する仮想セル数
-   *  @param[out]  req       MPIリクエスト
+   *  @param[out]  req       MPIリクエスト(サイズ48、CARTの場合12でも良い)
    *  @param[in]   procGrpNo プロセスグループ番号
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
   cpm_ErrorCode BndCommS4DEx_nowait( MPI_Datatype dtype, void *array, int nmax, int imax, int jmax, int kmax
-                                   , int vc, int vc_comm, MPI_Request req[12], int procGrpNo=0 );
+                                   , int vc, int vc_comm, MPI_Request req[48], int procGrpNo=0 );
 
   /** 非同期版袖通信のwait、展開(Vector3DEx版)
    *  - (3,imax,jmax,kmax)の形式の配列の非同期版袖通信のwaitと展開を行う
@@ -1539,13 +1555,13 @@ public:
    *  @param[in]    kmax      配列サイズ(K方向)
    *  @param[in]    vc        仮想セル数
    *  @param[in]    vc_comm   通信する仮想セル数
-   *  @param[in]    req       MPIリクエスト
+   *  @param[in]    req       MPIリクエスト(サイズ48、CARTの場合12でも良い)
    *  @param[in]    procGrpNo プロセスグループ番号
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
   template<class T> CPM_INLINE
   cpm_ErrorCode wait_BndCommV3DEx( T *array, int imax, int jmax, int kmax, int vc, int vc_comm
-                                 , MPI_Request req[12], int procGrpNo=0 );
+                                 , MPI_Request req[48], int procGrpNo=0 );
 
   /** 非同期版袖通信のwait、展開(Vector3DEx版, MPI_Datatype指定)
    *  - (3,imax,jmax,kmax)の形式の配列の非同期版袖通信のwaitと展開を行う
@@ -1557,12 +1573,12 @@ public:
    *  @param[in]    kmax      配列サイズ(K方向)
    *  @param[in]    vc        仮想セル数
    *  @param[in]    vc_comm   通信する仮想セル数
-   *  @param[in]    req       MPIリクエスト
+   *  @param[in]    req       MPIリクエスト(サイズ48、CARTの場合12でも良い)
    *  @param[in]    procGrpNo プロセスグループ番号
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
   cpm_ErrorCode wait_BndCommV3DEx( MPI_Datatype dtype, void *array, int imax, int jmax, int kmax
-                                 , int vc, int vc_comm, MPI_Request req[12], int procGrpNo=0 );
+                                 , int vc, int vc_comm, MPI_Request req[48], int procGrpNo=0 );
 
   /** 非同期版袖通信のwait、展開(Scalar4DEx版)
    *  - (nmax,imax,jmax,kmax)の形式の配列の非同期版袖通信のwaitと展開を行う
@@ -1573,13 +1589,13 @@ public:
    *  @param[in]    kmax      配列サイズ(K方向)
    *  @param[in]    vc        仮想セル数
    *  @param[in]    vc_comm   通信する仮想セル数
-   *  @param[in]    req       MPIリクエスト
+   *  @param[in]    req       MPIリクエスト(サイズ48、CARTの場合12でも良い)
    *  @param[in]    procGrpNo プロセスグループ番号
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
   template<class T> CPM_INLINE
   cpm_ErrorCode wait_BndCommS4DEx( T *array, int nmax, int imax, int jmax, int kmax, int vc, int vc_comm
-                                 , MPI_Request req[12], int procGrpNo=0 );
+                                 , MPI_Request req[48], int procGrpNo=0 );
 
   /** 非同期版袖通信のwait、展開(Scalar4DEx版, MPI_Datatype指定)
    *  - (nmax,imax,jmax,kmax)の形式の配列の非同期版袖通信のwaitと展開を行う
@@ -1592,12 +1608,12 @@ public:
    *  @param[in]    kmax      配列サイズ(K方向)
    *  @param[in]    vc        仮想セル数
    *  @param[in]    vc_comm   通信する仮想セル数
-   *  @param[in]    req       MPIリクエスト
+   *  @param[in]    req       MPIリクエスト(サイズ48、CARTの場合12でも良い)
    *  @param[in]    procGrpNo プロセスグループ番号
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
   cpm_ErrorCode wait_BndCommS4DEx( MPI_Datatype dtype, void *array, int nmax, int imax, int jmax, int kmax
-                                 , int vc, int vc_comm, MPI_Request req[12], int procGrpNo=0 );
+                                 , int vc, int vc_comm, MPI_Request req[48], int procGrpNo=0 );
 
   /** 周期境界袖通信(Vector3DEx版)
    *  - (3,imax,jmax,kmax)の形式の配列の周期境界方向の袖通信を行う
@@ -1810,7 +1826,7 @@ public:
   void printVoxelInfo(int myrank=-1);
 #endif
 
-private:
+protected:
 
   /** コンストラクタ */
   cpm_ParaManager();
@@ -1818,303 +1834,6 @@ private:
   /** デストラクタ */
   virtual ~cpm_ParaManager();
 
-  /** 並列プロセス数からI,J,K方向の分割数を取得する
-   *  通信面のトータルサイズが小さい分割パターンを採用する
-   *  @param[in]  divNum  ランク数
-   *  @param[in]  voxSize 空間全体のボクセル数
-   *  @param[out] divPttn 領域分割数
-   *  @return             終了コード(CPM_SUCCESS=正常終了)
-   */
-  cpm_ErrorCode
-  DecideDivPattern_CommSize( int divNum
-                           , int voxSize[3]
-                           , int divPttn[3] ) const;
-
-  /** I,J,K分割を行った時の通信点数の総数を取得する
-   *  @param[in] iDiv    i方向領域分割数
-   *  @param[in] jDiv    j方向領域分割数
-   *  @param[in] kDiv    k方向領域分割数
-   *  @param[in] voxSize 空間全体のボクセル数
-   *  @return            袖通信点数
-   */
-  unsigned long long
-  CalcCommSize( unsigned long long iDiv
-              , unsigned long long jDiv
-              , unsigned long long kDiv
-              , unsigned long long voxsize[3] ) const;
-
-  /** 並列プロセス数からI,J,K方向の分割数を取得する
-   *  １つのサブドメインが立方体に一番近い分割パターンを採用する
-   *  @param[in]  divNum  ランク数
-   *  @param[in]  voxSize 空間全体のボクセル数
-   *  @param[out] divPttn 領域分割数
-   *  @return             終了コード(CPM_SUCCESS=正常終了)
-   */
-  cpm_ErrorCode
-  DecideDivPattern_Cube( int divNum
-                       , int voxSize[3]
-                       , int divPttn[3] ) const;
-
-  /** I,J,K分割を行った時のI,J,Kボクセル数の最大/最小の差を取得する
-   *  @param[in] iDiv    i方向領域分割数
-   *  @param[in] jDiv    j方向領域分割数
-   *  @param[in] kDiv    k方向領域分割数
-   *  @param[in] voxSize 空間全体のボクセル数
-   *  @retval 0以上      I,J,Kボクセル数の最大/最小の差
-   *  @retval 負値       領域分割不可のパターン
-   */
-  long long
-  CheckCube( unsigned long long iDiv
-           , unsigned long long jDiv
-           , unsigned long long kDiv
-           , unsigned long long voxsize[3] ) const;
-
-  /** 袖通信バッファの取得
-   *  - 袖通信バッファ情報の取得
-   *  @param[in] procGrpNo プロセスグループ番号
-   *  @return 袖通信バッファ情報のポインタ
-   */
-  CPM_INLINE
-  S_BNDCOMM_BUFFER* GetBndCommBuffer( int procGrpNo=0 )
-  {
-    BndCommInfoMap::iterator it = m_bndCommInfoMap.find(procGrpNo);
-    if( it == m_bndCommInfoMap.end() ) return NULL;
-    return it->second;
-  }
-
-  /** 袖通信(Scalar3D,4D,Vector3D版)のX方向送信バッファのセット 
-   *  @param[in]  array   袖通信をする配列の先頭ポインタ
-   *  @param[in]  imax    配列サイズ(I方向)
-   *  @param[in]  jmax    配列サイズ(J方向)
-   *  @param[in]  kmax    配列サイズ(K方向)
-   *  @param[in]  nmax    配列サイズ(成分数)
-   *  @param[in]  vc      仮想セル数
-   *  @param[in]  vc_comm 通信する仮想セル数
-   *  @param[out] sendm   マイナス方向の送信バッファ
-   *  @param[out] sendp   プラス方向の送信バッファ
-   *  @param[in]  nIDm    マイナス方向の隣接ランク番号
-   *  @param[in]  nIDp    プラス方向の隣接ランク番号
-   *  @return 終了コード(CPM_SUCCESS=正常終了)
-   */
-  template<class T>
-  cpm_ErrorCode packX( T *array, int imax, int jmax, int kmax, int nmax, int vc, int vc_comm
-                     , T *sendm, T *sendp, int nIDm, int nIDp );
-
-  /** 袖通信(Scalar3D,4D,Vector3D版)のX方向受信バッファを元に戻す
-   *  @param[inout] array   袖通信をした配列の先頭ポインタ
-   *  @param[in]    imax    配列サイズ(I方向)
-   *  @param[in]    jmax    配列サイズ(J方向)
-   *  @param[in]    kmax    配列サイズ(K方向)
-   *  @param[in]    nmax    配列サイズ(成分数)
-   *  @param[in]    vc      仮想セル数
-   *  @param[in]    vc_comm 通信する仮想セル数
-   *  @param[in]    recvm   マイナス方向の受信バッファ
-   *  @param[in]    recvp   プラス方向の受信バッファ
-   *  @param[in]    nIDm    マイナス方向の隣接ランク番号
-   *  @param[in]    nIDp    プラス方向の隣接ランク番号
-   *  @return 終了コード(CPM_SUCCESS=正常終了)
-   */
-  template<class T>
-  cpm_ErrorCode unpackX( T *array, int imax, int jmax, int kmax, int nmax, int vc, int vc_comm
-                       , T *recvm, T *recvp, int nIDm, int nIDp );
-
-  /** 袖通信(Scalar3D,4D,Vector3D版)のY方向送信バッファのセット 
-   *  @param[in]  array   袖通信をする配列の先頭ポインタ
-   *  @param[in]  imax    配列サイズ(I方向)
-   *  @param[in]  jmax    配列サイズ(J方向)
-   *  @param[in]  kmax    配列サイズ(K方向)
-   *  @param[in]  nmax    配列サイズ(成分数)
-   *  @param[in]  vc      仮想セル数
-   *  @param[in]  vc_comm 通信する仮想セル数
-   *  @param[out] sendm   マイナス方向の送信バッファ
-   *  @param[out] sendp   プラス方向の送信バッファ
-   *  @param[in]  nIDm    マイナス方向の隣接ランク番号
-   *  @param[in]  nIDp    プラス方向の隣接ランク番号
-   *  @return 終了コード(CPM_SUCCESS=正常終了)
-   */
-  template<class T>
-  cpm_ErrorCode packY( T *array, int imax, int jmax, int kmax, int nmax, int vc, int vc_comm
-                     , T *sendm, T *sendp, int nIDm, int nIDp );
-
-  /** 袖通信(Scalar3D,4D,Vector3D版)のY方向受信バッファを元に戻す
-   *  @param[inout] array   袖通信をした配列の先頭ポインタ
-   *  @param[in]    imax    配列サイズ(I方向)
-   *  @param[in]    jmax    配列サイズ(J方向)
-   *  @param[in]    kmax    配列サイズ(K方向)
-   *  @param[in]    nmax    配列サイズ(成分数)
-   *  @param[in]    vc      仮想セル数
-   *  @param[in]    vc_comm 通信する仮想セル数
-   *  @param[in]    recvm   マイナス方向の受信バッファ
-   *  @param[in]    recvp   プラス方向の受信バッファ
-   *  @param[in]    nIDm    マイナス方向の隣接ランク番号
-   *  @param[in]    nIDp    プラス方向の隣接ランク番号
-   *  @return 終了コード(CPM_SUCCESS=正常終了)
-   */
-  template<class T>
-  cpm_ErrorCode unpackY( T *array, int imax, int jmax, int kmax, int nmax, int vc, int vc_comm
-                       , T *recvm, T *recvp, int nIDm, int nIDp );
-
-  /** 袖通信(Scalar3D,4D,Vector3D版)のZ方向送信バッファのセット 
-   *  @param[in]  array   袖通信をする配列の先頭ポインタ
-   *  @param[in]  imax    配列サイズ(I方向)
-   *  @param[in]  jmax    配列サイズ(J方向)
-   *  @param[in]  kmax    配列サイズ(K方向)
-   *  @param[in]  nmax    配列サイズ(成分数)
-   *  @param[in]  vc      仮想セル数
-   *  @param[in]  vc_comm 通信する仮想セル数
-   *  @param[out] sendm   マイナス方向の送信バッファ
-   *  @param[out] sendp   プラス方向の送信バッファ
-   *  @param[in]  nIDm    マイナス方向の隣接ランク番号
-   *  @param[in]  nIDp    プラス方向の隣接ランク番号
-   *  @return 終了コード(CPM_SUCCESS=正常終了)
-   */
-  template<class T>
-  cpm_ErrorCode packZ( T *array, int imax, int jmax, int kmax, int nmax, int vc, int vc_comm
-                     , T *sendm, T *sendp, int nIDm, int nIDp );
-
-  /** 袖通信(Scalar3D,4D,Vector3D版)のZ方向受信バッファを元に戻す
-   *  @param[inout] array   袖通信をした配列の先頭ポインタ
-   *  @param[in]    imax    配列サイズ(I方向)
-   *  @param[in]    jmax    配列サイズ(J方向)
-   *  @param[in]    kmax    配列サイズ(K方向)
-   *  @param[in]    nmax    配列サイズ(成分数)
-   *  @param[in]    vc      仮想セル数
-   *  @param[in]    vc_comm 通信する仮想セル数
-   *  @param[in]    recvm   マイナス方向の受信バッファ
-   *  @param[in]    recvp   プラス方向の受信バッファ
-   *  @param[in]    nIDm    マイナス方向の隣接ランク番号
-   *  @param[in]    nIDp    プラス方向の隣接ランク番号
-   *  @return 終了コード(CPM_SUCCESS=正常終了)
-   */
-  template<class T>
-  cpm_ErrorCode unpackZ( T *array, int imax, int jmax, int kmax, int nmax, int vc, int vc_comm
-                       , T *recvm, T *recvp, int nIDm, int nIDp );
-
-  /** 袖通信(Scalar4DEx,Vector3DEx版)のX方向送信バッファのセット 
-   *  @param[in]  array   袖通信をする配列の先頭ポインタ
-   *  @param[in]  nmax    配列サイズ(成分数)
-   *  @param[in]  imax    配列サイズ(I方向)
-   *  @param[in]  jmax    配列サイズ(J方向)
-   *  @param[in]  kmax    配列サイズ(K方向)
-   *  @param[in]  vc      仮想セル数
-   *  @param[in]  vc_comm 通信する仮想セル数
-   *  @param[out] sendm   マイナス方向の送信バッファ
-   *  @param[out] sendp   プラス方向の送信バッファ
-   *  @param[in]  nIDm    マイナス方向の隣接ランク番号
-   *  @param[in]  nIDp    プラス方向の隣接ランク番号
-   *  @return 終了コード(CPM_SUCCESS=正常終了)
-   */
-  template<class T>
-  cpm_ErrorCode packXEx( T *array, int nmax, int imax, int jmax, int kmax, int vc, int vc_comm
-                       , T *sendm, T *sendp, int nIDm, int nIDp );
-
-  /** 袖通信(Scalar4DEx,Vector3DEx版)のX方向受信バッファを元に戻す
-   *  @param[inout] array   袖通信をした配列の先頭ポインタ
-   *  @param[in]    nmax    配列サイズ(成分数)
-   *  @param[in]    imax    配列サイズ(I方向)
-   *  @param[in]    jmax    配列サイズ(J方向)
-   *  @param[in]    kmax    配列サイズ(K方向)
-   *  @param[in]    vc      仮想セル数
-   *  @param[in]    vc_comm 通信する仮想セル数
-   *  @param[in]    recvm   マイナス方向の受信バッファ
-   *  @param[in]    recvp   プラス方向の受信バッファ
-   *  @param[in]    nIDm    マイナス方向の隣接ランク番号
-   *  @param[in]    nIDp    プラス方向の隣接ランク番号
-   *  @return 終了コード(CPM_SUCCESS=正常終了)
-   */
-  template<class T>
-  cpm_ErrorCode unpackXEx( T *array, int nmax, int imax, int jmax, int kmax, int vc, int vc_comm
-                         , T *recvm, T *recvp, int nIDm, int nIDp );
-
-  /** 袖通信(Scalar4DEx,Vector3DEx版)のY方向送信バッファのセット 
-   *  @param[in]  array   袖通信をする配列の先頭ポインタ
-   *  @param[in]  nmax    配列サイズ(成分数)
-   *  @param[in]  imax    配列サイズ(I方向)
-   *  @param[in]  jmax    配列サイズ(J方向)
-   *  @param[in]  kmax    配列サイズ(K方向)
-   *  @param[in]  vc      仮想セル数
-   *  @param[in]  vc_comm 通信する仮想セル数
-   *  @param[out] sendm   マイナス方向の送信バッファ
-   *  @param[out] sendp   プラス方向の送信バッファ
-   *  @param[in]  nIDm    マイナス方向の隣接ランク番号
-   *  @param[in]  nIDp    プラス方向の隣接ランク番号
-   *  @return 終了コード(CPM_SUCCESS=正常終了)
-   */
-  template<class T>
-  cpm_ErrorCode packYEx( T *array, int nmax, int imax, int jmax, int kmax, int vc, int vc_comm
-                       , T *sendm, T *sendp, int nIDm, int nIDp );
-
-  /** 袖通信(Scalar4DEx,Vector3DEx版)のY方向受信バッファを元に戻す
-   *  @param[inout] array   袖通信をした配列の先頭ポインタ
-   *  @param[in]    nmax    配列サイズ(成分数)
-   *  @param[in]    imax    配列サイズ(I方向)
-   *  @param[in]    jmax    配列サイズ(J方向)
-   *  @param[in]    kmax    配列サイズ(K方向)
-   *  @param[in]    vc      仮想セル数
-   *  @param[in]    vc_comm 通信する仮想セル数
-   *  @param[in]    recvm   マイナス方向の受信バッファ
-   *  @param[in]    recvp   プラス方向の受信バッファ
-   *  @param[in]    nIDm    マイナス方向の隣接ランク番号
-   *  @param[in]    nIDp    プラス方向の隣接ランク番号
-   *  @return 終了コード(CPM_SUCCESS=正常終了)
-   */
-  template<class T>
-  cpm_ErrorCode unpackYEx( T *array, int nmax, int imax, int jmax, int kmax, int vc, int vc_comm
-                         , T *recvm, T *recvp, int nIDm, int nIDp );
-
-  /** 袖通信(Scalar4DEx,Vector3DEx版)のZ方向送信バッファのセット 
-   *  @param[in]  array   袖通信をする配列の先頭ポインタ
-   *  @param[in]  nmax    配列サイズ(成分数)
-   *  @param[in]  imax    配列サイズ(I方向)
-   *  @param[in]  jmax    配列サイズ(J方向)
-   *  @param[in]  kmax    配列サイズ(K方向)
-   *  @param[in]  vc      仮想セル数
-   *  @param[in]  vc_comm 通信する仮想セル数
-   *  @param[out] sendm   マイナス方向の送信バッファ
-   *  @param[out] sendp   プラス方向の送信バッファ
-   *  @param[in]  nIDm    マイナス方向の隣接ランク番号
-   *  @param[in]  nIDp    プラス方向の隣接ランク番号
-   *  @return 終了コード(CPM_SUCCESS=正常終了)
-   */
-  template<class T>
-  cpm_ErrorCode packZEx( T *array, int nmax, int imax, int jmax, int kmax, int vc, int vc_comm
-                       , T *sendm, T *sendp, int nIDm, int nIDp );
-
-  /** 袖通信(Scalar4DEx,Vector3DEx版)のZ方向受信バッファを元に戻す
-   *  @param[inout] array   袖通信をした配列の先頭ポインタ
-   *  @param[in]    imax    配列サイズ(I方向)
-   *  @param[in]    jmax    配列サイズ(J方向)
-   *  @param[in]    kmax    配列サイズ(K方向)
-   *  @param[in]    nmax    配列サイズ(成分数)
-   *  @param[in]    vc      仮想セル数
-   *  @param[in]    vc_comm 通信する仮想セル数
-   *  @param[in]    recvm   マイナス方向の受信バッファ
-   *  @param[in]    recvp   プラス方向の受信バッファ
-   *  @param[in]    nIDm    マイナス方向の隣接ランク番号
-   *  @param[in]    nIDp    プラス方向の隣接ランク番号
-   *  @return 終了コード(CPM_SUCCESS=正常終了)
-   */
-  template<class T>
-  cpm_ErrorCode unpackZEx( T *array, int nmax, int imax, int jmax, int kmax, int vc, int vc_comm
-                         , T *recvm, T *recvp, int nIDm, int nIDp );
-
-  /** １方向(プラス、マイナス)の双方向袖通信処理
-   *  @param[in]  sendm     マイナス方向の送信バッファ
-   *  @param[in]  sendp     プラス方向の送信バッファ
-   *  @param[in]  recvm     マイナス方向の受信バッファ
-   *  @param[in]  recvp     プラス方向の受信バッファ
-   *  @param[in]  nw        送受信サイズ
-   *  @param[out] req       MPI_Request配列のポインタ(サイズ4)
-   *  @param[in]  nIDsm     マイナス方向受信用の隣接ランク番号
-   *  @param[in]  nIDrm     マイナス方向送信用の隣接ランク番号
-   *  @param[in]  nIDsp     プラス方向受信用の隣接ランク番号
-   *  @param[in]  nIDrp     プラス方向送信用の隣接ランク番号
-   *  @param[in]  procGrpNo プロセスグループ番号
-   *  @return 終了コード(CPM_SUCCESS=正常終了)
-   */
-  template<class T>
-  cpm_ErrorCode sendrecv( T *sendm, T *recvm, T *sendp, T *recvp, size_t nw, MPI_Request *req
-                        , int nIDsm, int nIDrm, int nIDsp, int nIDrp, int procGrpNo=0 );
 
 
 
@@ -2124,12 +1843,15 @@ private:
 ////////////////////////////////////////////////////////////////////////////////
 public:
 
-private:
+protected:
   /** プロセス並列数 */
   int m_nRank;
 
   /** MPI_COMM_WORLDでの自ランク番号 */
   int m_rankNo;
+
+  /** 領域分割タイプ */
+  cpm_DomainType m_domainType;
 
   /** プロセスグループのリスト
    *  - VOXEL空間番号をインデクスとしたVOXEL空間のMPIコミュニケータを格納
@@ -2146,20 +1868,14 @@ private:
    */
   VoxelInfoMap m_voxelInfoMap;
 
-  /** プロセスグループ毎のランク番号マップ
-   *  - VOXEL空間番号をキーとしたランク番号マップ(未使用)
-   */
-  RankNoMap m_rankNoMap;
-
-  /** プロセスグループ毎の袖通信バッファ情報
-   */
-  BndCommInfoMap m_bndCommInfoMap;
-
   /** MPI_Requestの管理マップ
    *  - Fortranインターフェイス用
    */
   cpm_ObjList<MPI_Request> m_reqList;
 };
+
+#include "cpm_ParaManagerCART.h"
+#include "cpm_ParaManagerLMR.h"
 
 //インライン関数
 #include "inline/cpm_ParaManager_inline.h"

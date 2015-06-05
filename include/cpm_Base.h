@@ -229,6 +229,14 @@ public:
     return str;
   }
   
+  /** リビジョンを情報を返す
+   */
+  static std::string getRevisionInfo()
+  {
+    std::string str(CPM_REVISION);
+    return str;
+  }
+  
 protected:
   /** コンストラクタ */
   cpm_Base(){};

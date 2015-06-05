@@ -27,56 +27,43 @@
 class cpm_VoxelInfo : public cpm_Base
 {
 friend class cpm_ParaManager;
+friend class cpm_ParaManagerCART;
 ////////////////////////////////////////////////////////////////////////////////
 // メンバー関数 
 ////////////////////////////////////////////////////////////////////////////////
 public:
 
 
-private:
+protected:
   /** コンストラクタ */
   cpm_VoxelInfo();
 
   /** デストラクタ */
   virtual ~cpm_VoxelInfo();
 
-  /** CPM領域分割情報の生成
-   *  - MPI_COMM_WORLDを使用した領域を生成する。
-   *  @param[in]  comm  MPIコミュニケータ
-   *  @param[in]  dInfo 領域分割情報
-   *  @param[in]  maxVC 最大の袖数(袖通信用)
-   *  @param[in]  maxN  最大の成分数(袖通信用)
-   *  @return 終了コード(CPM_SUCCESS=正常終了)
-   */
-  cpm_ErrorCode Init( MPI_Comm comm, cpm_GlobalDomainInfo* dInfo );
-
-  /** ランクマップを生成
-   *  @retval true  正常終了
-   *  @retval false エラー
-   */
-  bool CreateRankMap();
-
-  /** 隣接ランク情報を生成
-   *  @retval true  正常終了
-   *  @retval false エラー
-   */
-  bool CreateNeighborRankInfo();
-
-  /** ローカル領域情報を生成
-   *  @retval true  正常終了
-   *  @retval false エラー
-   */
-  bool CreateLocalDomainInfo();
-
   /** 領域分割数を取得
+   *  LMRのときは最大レベルにおける分割数を返す
    *  @return 領域分割数整数配列のポインタ
    */
   const int* GetDivNum() const;
 
-  /** ピッチを取得
+  /** 自ランクの領域分割位置を取得
+   *  LMRのときは最大レベルにおける分割位置を返す
+   *  @return 自ランクの領域分割位置整数配列のポインタ
+   */
+  const int* GetDivPos() const;
+
+  /** ローカルピッチを取得
    *  @return ピッチ実数配列のポインタ
    */
   const double* GetPitch() const;
+
+  /** グローバルピッチを取得
+   *  カーテシアンのときはGetPitchと同じ
+   *  LMRのときは最大レベルにおけるピッチ
+   *  @return ピッチ実数配列のポインタ
+   */
+  const double* GetGlobalPitch() const;
 
   /** 全体ボクセル数を取得
    *  @return 全体ボクセル数整数配列のポインタ
@@ -108,36 +95,59 @@ private:
    */
   const double* GetLocalRegion() const;
 
-  /** 自ランクの領域分割位置を取得
-   *  @return 自ランクの領域分割位置整数配列のポインタ
-   */
-  const int* GetDivPos() const;
-
   /** 自ランクの始点VOXELの全体空間でのインデクスを取得
+   *  LMRのときは最大レベルにおける始点インデクスを返す
    *  @return 自ランクの始点インデクス整数配列のポインタ
    */
   const int* GetVoxelHeadIndex() const;
 
   /** 自ランクの終点VOXELの全体空間でのインデクスを取得
+   *  LMRのときは最大レベルにおける終点インデクスを返す
    *  @return 自ランクの終点インデクス整数配列のポインタ
    */
   const int* GetVoxelTailIndex() const;
 
   /** 自ランクの隣接ランク番号を取得
+   *  LMRで隣接ランクが4つの場合は、1番目のランクを返す
    *  @return 自ランクの隣接ランク番号整数配列のポインタ
    */
   const int* GetNeighborRankID() const;
 
   /** 自ランクの周期境界の隣接ランク番号を取得
+   *  LMRで隣接ランクが4つの場合は、1番目のランクを返す
    *  @return 自ランクの周期境界の隣接ランク番号整数配列のポインタ
    */
   const int* GetPeriodicRankID() const;
+
+  /** 指定面における自ランクの隣接ランク番号を取得
+   *  @param[in]  face 面方向
+   *  @param[out] num  面の数(CARTのとき1)
+   *  @return 指定面における自ランクの隣接ランク番号整数配列のポインタ
+   */
+  virtual
+  const int* GetNeighborRankList( cpm_FaceFlag face, int &num ) const;
+
+  /** 指定面における自ランクの周期境界の隣接ランク番号を取得
+   *  @param[in]  face 面方向
+   *  @param[out] num  面の数(CARTのとき1)
+   *  @return 指定面における自ランクの周期境界の隣接ランク番号整数配列のポインタ
+   */
+  virtual
+  const int* GetPeriodicRankList( cpm_FaceFlag face, int &num ) const;
+
+  /** 指定面におけるレベル差を取得
+   *  @param[in]  face 面方向
+   *  @return     レベル差(0:同じレベル, 1:fine, -1:coarse)
+   */
+  virtual
+  int GetNeighborLevelDiff( cpm_FaceFlag face ) const;
 
   /** 自ランクの境界が外部境界かどうかを判定
    *  @param[in] face  面方向
    *  @retval    true  外部境界
    *  @retval    false 外部境界でない
    */
+  virtual
   bool IsOuterBoundary( cpm_FaceFlag face ) const;
 
   /** 自ランクの境界が内部境界(隣が不活性ドメイン)かどうかを判定
@@ -145,6 +155,7 @@ private:
    *  @retval    true  内部境界
    *  @retval    false 内部境界でない
    */
+  virtual
   bool IsInnerBoundary( cpm_FaceFlag face ) const;
 
 
@@ -155,7 +166,7 @@ private:
 public:
 
 
-private:
+protected:
   /**** 全体空間の情報 ****/
   cpm_GlobalDomainInfo m_globalDomainInfo; ///< 空間全体の領域情報
  
@@ -170,9 +181,6 @@ private:
   int m_rankNo;            ///< コミュニケータ内でのランク番号
   int m_neighborRankID[6]; ///< 隣接ランク番号(外部境界は負の値)
   int m_periodicRankID[6]; ///< 周期境界の隣接ランク番号
-
-  int *m_rankMap; ///< ランクマップ
-
 };
 
 #endif /* _CPM_VOXELINFO_H_ */

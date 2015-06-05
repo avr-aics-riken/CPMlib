@@ -16,6 +16,7 @@
     include 'mpif.h'
     include 'cpm_fparam.fi'
 
+    integer, parameter :: domainType = 0
     integer            :: nx, ny, nz
     integer            :: n, scheme, itrMax, stp, stpMax
     real               :: dx, dy, dz
@@ -35,7 +36,7 @@
     call MPI_Init(ierr)
 
     ! initialize CPM library
-    call cpm_Initialize(ierr)
+    call cpm_Initialize(domainType, ierr)
 
     ! get number of rank
     call cpm_GetNumRank(nrank, pg, ierr)
@@ -397,7 +398,7 @@
     character*256                           :: ename
     integer, parameter                      :: pg=0
     integer                                 :: ierr, myrank
-    real                                    :: rorg(3), rpch(3)
+    real*8                                  :: rorg(3), rpch(3)
 
 
     call cpm_GetMyRankID( myrank, pg, ierr )

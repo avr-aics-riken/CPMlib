@@ -1,0 +1,33 @@
+/*
+ * CPMlib - Cartesian Partition Manager Library
+ *
+ * Copyright (C) 2012-2014 Institute of Industrial Science, The University of Tokyo.
+ * All rights reserved.
+ *
+ * Copyright (c) 2014-2015 Advanced Institute for Computational Science, RIKEN. 
+ * All rights reserved.
+ *
+ */
+
+C++プログラムでのCPM-LMRライブラリ使用サンプル
+
+1.提供コード
+  main.C : CPM-LMRを利用したサンプルコード
+
+2.使用方法
+  makeすると、exampleCXX_LMRプログラムが生成されます。
+  dataディレクトリの入力ファイルleaf15.tpをプログラムの
+  引数で指定します。
+  leaf15.tpは並列数が15用のLMR領域情報ファイルとして記述されているため、
+  mpirunの実行時オプションで"-np 15"を指定して
+  ください。
+
+  $ cd data
+  $ mpirun -np 15 ../exampleCXX_LMR leaf15.tp
+
+  dataディレクトリに存在するleaf15.octファイルはリーフ数が
+  15の木情報ファイルです。
+  leaf15.tpから参照されており、サンプルプログラム実行時に
+  自動的に読み込まれます。
+
+

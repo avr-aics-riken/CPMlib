@@ -10,5 +10,5 @@ dvipdfmx refman.dvi
 cp refman.pdf ../../reference.pdf
 cd ..
 
-rm -rf latex html
+#rm -rf latex html
 

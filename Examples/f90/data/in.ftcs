@@ -2,7 +2,7 @@
 128    !ny
 128    !nz
 1      !scheme=ftcs
-100    !stpMax
+1000   !stpMax
 0.0001 !dt
 0.0001 !cf
 

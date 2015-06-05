@@ -1,0 +1,40 @@
+
+BCTable {
+
+}
+
+Domain {
+  GlobalOrigin =  (-5.000000e-01, -5.000000e-01,-5.000000e-01)
+  //GlobalRegion =  (2.500000e+00, 2.500000e+00,2.500000e+00)
+  GlobalRegion =  (1.0, 1.0, 1.0)
+}
+
+BCMTree {
+  TreeFile = "leaf15.oct"
+}
+
+LeafBlock {
+  Size =  (32, 32, 32)
+
+  Unit {
+    Length = "NonDimensional"
+  }
+
+}
+
+MCONV {
+  Scheme = "ftcs"
+  stpMax = 5000
+  dt     = 0.001
+  cf     = 0.01
+/*
+  Scheme = "jacobi"
+  stpMax = 50
+  dt     = 0.1
+  cf     = 0.01
+  itrMax = 1000
+  eps    = 1e-3
+  omg    = 0.8
+*/
+}
+

@@ -108,6 +108,14 @@
  */
 #define _IDX_V3DEX(_N,_I,_J,_K,_NI,_NJ,_NK,_VC) (_IDX_S4DEX(_N,_I,_J,_K,3,_NI,_NJ,_NK,_VC))
 
+/** 領域分割タイプ */
+enum cpm_DomainType
+{
+  CPM_DOMAIN_UNKNOWN   = -1  ///< 未定義
+, CPM_DOMAIN_CARTESIAN = 0   ///< カーテシアン
+, CPM_DOMAIN_LMR       = 1   ///< LMR(Local Mesh Refinement)
+};
+
 /** 面フラグ */
 enum cpm_FaceFlag
 {
@@ -165,6 +173,13 @@ enum cpm_ErrorCode
 , CPM_ERROR_TP_INVALID_G_DIV      = 2008 ///< 領域分割情報ファイルのドメイン領域分割数情報が不正
 , CPM_ERROR_TP_INVALID_POS        = 2009 ///< 領域分割情報ファイルのサブドメイン位置情報が不正
 
+, CPM_ERROR_TP_LMR_DOMAINFILE     = 2100 ///< LMR領域分割情報ファイルの読み込みエラー
+, CPM_ERROR_TP_LMR_DOMAIN         = 2101 ///< LMR領域分割情報ファイルのDomainブロック読み込みエラー
+, CPM_ERROR_TP_LMR_BCMTREE        = 2102 ///< LMR領域分割情報ファイルのBCMTreeブロック読み込みエラー
+, CPM_ERROR_TP_LMR_LEAFBLOCK      = 2103 ///< LMR領域分割情報ファイルのLeafBlock読み込みエラー
+, CPM_ERROR_TP_LMR_UNIT           = 2104 ///< LMR領域分割情報ファイルのLeafBlock/Unit読み込みエラー
+, CPM_ERROR_TP_LMR_SIZE_NOT_EVEN  = 2105 ///< LMR領域分割情報ファイルのLeafBlock/Sizeが偶数でない
+
 , CPM_ERROR_VOXELINIT             = 3000 ///< VoxelInitでエラー
 , CPM_ERROR_NOT_IN_PROCGROUP      = 3001 ///< 自ランクがプロセスグループに含まれていない
 , CPM_ERROR_ALREADY_VOXELINIIT    = 3002 ///< 指定されたプロセスグループが既に領域分割済み:
@@ -185,6 +200,16 @@ enum cpm_ErrorCode
 , CPM_ERROR_SBDM_NUMDOMAIN_ZERO   = 3017 ///< ActiveSubdomainファイルの活性ドメイン数が0
 , CPM_ERROR_MISMATCH_DIV_SUBDOMAIN = 3018 ///< 領域分割数がActiveSubdomainファイルと一致していない
 , CPM_ERROR_DECIDE_DIV_PATTERN    = 3019 ///< 自動領域分割が不可能なパターン
+
+, CPM_ERROR_VOXELINIT_LMR         = 3100 ///< VoxelInit_LMRでエラー
+, CPM_ERROR_LMR_OPEN_OCTFILE      = 3101 ///< LMR用木情報ファイルオープンエラー
+, CPM_ERROR_LMR_INVALID_OCTFILE   = 3102 ///< LMR用木情報ファイルのエンディアン識別子が不正
+, CPM_ERROR_LMR_READ_OCT_HEADER   = 3103 ///< LMR用木情報ファイルのヘッダー情報読み込みエラー
+, CPM_ERROR_LMR_READ_OCT_PEDIGREE = 3104 ///< LMR用木情報ファイルのぺディグリー情報読み込みエラー
+, CPM_ERROR_LMR_MISMATCH_NP_NUMLEAF = 3105 ///< LMRでリーフ数と並列数が一致しない
+
+, CPM_ERROR_DOMAINTYPE_VOXELINIT     = 3100 ///< 領域分割タイプと対応しないVoxelInitがコールされた
+, CPM_ERROR_DOMAINTYPE_SETBNDCOMMBUF = 3101 ///< 領域分割タイプと対応しないSetBndCommBufferがコールされた
 
 , CPM_ERROR_GET_INFO              = 4000 ///< 情報取得系関数でエラー
 , CPM_ERROR_GET_DIVNUM            = 4001 ///< 領域分割数の取得エラー
@@ -225,6 +250,7 @@ enum cpm_ErrorCode
 , CPM_ERROR_BNDCOMM_VOXELSIZE     = 9501 ///< VoxelSize取得でエラー
 , CPM_ERROR_BNDCOMM_BUFFER        = 9502 ///< 袖通信バッファ取得でエラー
 , CPM_ERROR_BNDCOMM_BUFFERLENGTH  = 9503 ///< 袖通信バッファサイズが足りない
+, CPM_ERROR_BNDCOMM_ALLOC_BUFFER  = 9504 ///< 袖通信バッファ領域確保でエラー
 
 , CPM_ERROR_PERIODIC              = 9600 ///< PeriodicCommでエラー
 , CPM_ERROR_PERIODIC_INVALID_DIR  = 9601 ///< 不正な軸方向フラグが指定された
@@ -279,5 +305,10 @@ enum CPM_Op
 , CPM_MINLOC = 110 ///< 最大値と位置(not support)
 , CPM_MAXLOC = 111 ///< 最小値と位置(not support)
 };
+
+/** デバッグライト用 */
+#ifndef stmpd_printf
+  #define stmpd_printf printf("%s (%d):  ",__FILE__, __LINE__); printf
+#endif
 
 #endif /* _CPM_DEFINE_H_ */

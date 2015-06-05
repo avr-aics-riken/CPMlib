@@ -1,0 +1,25 @@
+
+BCTable {
+
+}
+
+Domain {
+  GlobalOrigin =  (-5.000000e-01, -5.000000e-01,-5.000000e-01)
+  GlobalRegion =  (2.500000e+00, 2.500000e+00,2.500000e+00)
+}
+
+BCMTree {
+  TreeFile = "leaf15.oct"
+}
+
+LeafBlock {
+  Size =  (8, 6, 4)
+
+  Unit {
+    Length = "NonDimensional"
+  }
+
+}
+
+
+

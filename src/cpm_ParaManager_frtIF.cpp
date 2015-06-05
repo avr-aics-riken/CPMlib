@@ -141,27 +141,45 @@
 /** 初期化処理(MPI_Initは実行済みの場合)
  *  - InitializeのFortranインターフェイス関数
  *  - FortranでMPI_Initがコールされている必要がある
- *  @param[out] ierr 終了コード(0=正常終了、0以外=cpm_ErrorCodeの値)
+ *  @param[in]  domainType 領域分割タイプ(0:カーテシアン、1:LMR))
+ *  @param[out] ierr       終了コード(0=正常終了、0以外=cpm_ErrorCodeの値)
  */
 CPM_EXTERN
 void
-cpm_Initialize_( int *ierr )
+cpm_Initialize_( int *domainType, int *ierr )
 {
-  if( ierr )
+  if( !domainType )
   {
+    if( ierr ) *ierr = CPM_ERROR_PM_INSTANCE;
     return;
   }
 
+  // 領域分割タイプ
+  cpm_DomainType dType = CPM_DOMAIN_UNKNOWN;
+  if( *domainType == 0 )
+  {
+    dType = CPM_DOMAIN_CARTESIAN;
+  }
+  else if( *domainType == 1 )
+  {
+    dType = CPM_DOMAIN_LMR;
+  }
+  else
+  {
+    *ierr = CPM_ERROR_PM_INSTANCE;
+    return;
+  }
+  
   // インスタンス取得
-  cpm_ParaManager *paraMngr = cpm_ParaManager::get_instance();
+  cpm_ParaManager *paraMngr = cpm_ParaManager::get_instance(dType);
   if( !paraMngr )
   {
     *ierr = CPM_ERROR_PM_INSTANCE;
     return;
   }
 
-  // Initialize
-  *ierr = paraMngr->Initialize();
+  // 戻り値
+  *ierr = CPM_SUCCESS;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

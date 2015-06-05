@@ -22,7 +22,7 @@
 AR = ar rv
 RANLIB = ranlib
 MPICXX = mpixlcxx_r
-MPI_DIR = 
+MPI_DIR =  
 TP_DIR=/hogehoge/textparser-1.2/textparser
 
 TARGET = libcpmlib.a
@@ -30,11 +30,17 @@ TARGET = libcpmlib.a
 SRCS = cpm_DomainInfo.cpp \
        cpm_ParaManager_frtIF.cpp \
        cpm_TextParserDomain.cpp \
+       cpm_TextParserDomainLMR.cpp \
        cpm_TextParser.cpp \
        cpm_ParaManager_Alloc.cpp \
        cpm_ParaManager_MPI.cpp \
        cpm_VoxelInfo.cpp \
-       cpm_ParaManager.cpp
+       cpm_VoxelInfoCART.cpp \
+       cpm_VoxelInfoLMR.cpp \
+       cpm_ParaManager.cpp \
+       cpm_ParaManagerCART.cpp \
+       cpm_ParaManagerLMR.cpp \
+       BCM/BCMOctree.cpp
 
 FSRCS =
 
@@ -45,6 +51,7 @@ OBJS=$(SRCS:.cpp=.o)
 CXXFLAGS = -O3 -qarch=450d -qtune=450 \
            -I$(MPI_DIR) \
            -I../include \
+           -I../include/BCM \
            -I$(TP_DIR)/include
 
 FFLAGS = -I../include
