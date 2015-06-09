@@ -14,5 +14,5 @@
 
 doc_includedir = $(prefix)/doc
 doc_include_HEADERS = \
-    $(top_builddir)/doc/reference.pdf \
-    $(top_builddir)/doc/CPMlib.pdf
+    $(top_srcdir)/doc/reference.pdf \
+    $(top_srcdir)/doc/CPMlib.pdf

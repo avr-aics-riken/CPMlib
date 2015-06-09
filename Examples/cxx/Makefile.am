@@ -29,7 +29,7 @@ exampleCXX_SOURCES = \
     ./data_subdomain/run.sh
 
 exampleCXX_CXXFLAGS = \
-    -I$(top_builddir)/include \
+    -I$(top_srcdir)/include \
     @MPICH_CFLAGS@ \
     @TP_CFLAGS@ \
     @REALOPT@

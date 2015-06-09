@@ -29,13 +29,13 @@ mconvp_LMR_SOURCES = \
 
 
 mconvp_LMR_CXXFLAGS = \
-    -I$(top_builddir)/include \
+    -I$(top_srcdir)/include \
     @MPICH_CFLAGS@ \
     @TP_CFLAGS@ \
     @REALOPT@
 
 mconvp_LMR_FCFLAGS = \
-    -I$(top_builddir)/include \
+    -I$(top_srcdir)/include \
     @MPICH_CFLAGS@ \
     @FREALOPT@
 

@@ -25,8 +25,8 @@ exampleCXX_LMR_SOURCES = \
     ./data/run.sh
 
 exampleCXX_LMR_CXXFLAGS = \
-    -I$(top_builddir)/include \
-    -I$(top_builddir)/include/BCM \
+    -I$(top_srcdir)/include \
+    -I$(top_srcdir)/include/BCM \
     @MPICH_CFLAGS@ \
     @TP_CFLAGS@ \
     @REALOPT@

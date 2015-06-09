@@ -12,9 +12,11 @@
 ###################################################################################
 ###
 
+AUTOMAKE_OPTIONS = subdir-objects
+
 lib_LIBRARIES = libCPM.a
 
-libCPM_a_CXXFLAGS = @MPICH_CFLAGS@ @TP_CFLAGS@ @PM_CFLAGS@ @REALOPT@ -I$(top_builddir)/include -I$(top_builddir)/include/BCM
+libCPM_a_CXXFLAGS = @MPICH_CFLAGS@ @TP_CFLAGS@ @PM_CFLAGS@ @REALOPT@ -I$(top_srcdir)/include -I$(top_srcdir)/include/BCM
 
 libCPM_a_SOURCES = \
     cpm_DomainInfo.cpp \
@@ -34,42 +36,42 @@ libCPM_a_SOURCES = \
 
 CPM_includedir = $(includedir)
 CPM_include_HEADERS = \
-    $(top_builddir)/include/cpm_Base.h \
-    $(top_builddir)/include/cpm_Define.h \
-    $(top_builddir)/include/cpm_DomainInfo.h \
-    $(top_builddir)/include/cpm_ObjList.h \
-    $(top_builddir)/include/cpm_ParaManager.h \
-    $(top_builddir)/include/cpm_ParaManagerCART.h \
-    $(top_builddir)/include/cpm_ParaManagerLMR.h \
-    $(top_builddir)/include/cpm_TextParser.h \
-    $(top_builddir)/include/cpm_TextParserDomain.h \
-    $(top_builddir)/include/cpm_TextParserDomainLMR.h \
-    $(top_builddir)/include/cpm_Version.h \
-    $(top_builddir)/include/cpm_VoxelInfo.h \
-    $(top_builddir)/include/cpm_VoxelInfoCART.h \
-    $(top_builddir)/include/cpm_VoxelInfoLMR.h \
-    $(top_builddir)/include/cpm_fparam.fi \
-    $(top_builddir)/include/cpm_EndianUtil.h \
-    $(top_builddir)/include/cpm_PathUtil.h \
-    $(top_builddir)/include/BCM/BCMFileCommon.h \
-    $(top_builddir)/include/BCM/BCMOctree.h \
-    $(top_builddir)/include/BCM/BCMTools.h \
-    $(top_builddir)/include/BCM/BitVoxel.h \
-    $(top_builddir)/include/BCM/Divider.h \
-    $(top_builddir)/include/BCM/NeighborInfo.h \
-    $(top_builddir)/include/BCM/Node.h \
-    $(top_builddir)/include/BCM/Partition.h \
-    $(top_builddir)/include/BCM/Pedigree.h \
-    $(top_builddir)/include/BCM/RootGrid.h \
-    $(top_builddir)/include/BCM/Vec3.h
+    $(top_srcdir)/include/cpm_Base.h \
+    $(top_srcdir)/include/cpm_Define.h \
+    $(top_srcdir)/include/cpm_DomainInfo.h \
+    $(top_srcdir)/include/cpm_ObjList.h \
+    $(top_srcdir)/include/cpm_ParaManager.h \
+    $(top_srcdir)/include/cpm_ParaManagerCART.h \
+    $(top_srcdir)/include/cpm_ParaManagerLMR.h \
+    $(top_srcdir)/include/cpm_TextParser.h \
+    $(top_srcdir)/include/cpm_TextParserDomain.h \
+    $(top_srcdir)/include/cpm_TextParserDomainLMR.h \
+    $(top_srcdir)/include/cpm_Version.h \
+    $(top_srcdir)/include/cpm_VoxelInfo.h \
+    $(top_srcdir)/include/cpm_VoxelInfoCART.h \
+    $(top_srcdir)/include/cpm_VoxelInfoLMR.h \
+    $(top_srcdir)/include/cpm_fparam.fi \
+    $(top_srcdir)/include/cpm_EndianUtil.h \
+    $(top_srcdir)/include/cpm_PathUtil.h \
+    $(top_srcdir)/include/BCM/BCMFileCommon.h \
+    $(top_srcdir)/include/BCM/BCMOctree.h \
+    $(top_srcdir)/include/BCM/BCMTools.h \
+    $(top_srcdir)/include/BCM/BitVoxel.h \
+    $(top_srcdir)/include/BCM/Divider.h \
+    $(top_srcdir)/include/BCM/NeighborInfo.h \
+    $(top_srcdir)/include/BCM/Node.h \
+    $(top_srcdir)/include/BCM/Partition.h \
+    $(top_srcdir)/include/BCM/Pedigree.h \
+    $(top_srcdir)/include/BCM/RootGrid.h \
+    $(top_srcdir)/include/BCM/Vec3.h
 
 CPM_inline_includedir = $(includedir)/inline
 
 CPM_inline_include_HEADERS = \
-    $(top_builddir)/include/inline/cpm_ParaManager_inline.h \
-    $(top_builddir)/include/inline/cpm_ParaManager_BndComm.h \
-    $(top_builddir)/include/inline/cpm_ParaManager_BndCommEx.h \
-    $(top_builddir)/include/inline/cpm_ParaManager_BndComm_CART.h \
-    $(top_builddir)/include/inline/cpm_ParaManager_BndCommEx_CART.h \
-    $(top_builddir)/include/inline/cpm_ParaManager_BndComm_LMR.h \
-    $(top_builddir)/include/inline/cpm_ParaManager_BndCommEx_LMR.h
+    $(top_srcdir)/include/inline/cpm_ParaManager_inline.h \
+    $(top_srcdir)/include/inline/cpm_ParaManager_BndComm.h \
+    $(top_srcdir)/include/inline/cpm_ParaManager_BndCommEx.h \
+    $(top_srcdir)/include/inline/cpm_ParaManager_BndComm_CART.h \
+    $(top_srcdir)/include/inline/cpm_ParaManager_BndCommEx_CART.h \
+    $(top_srcdir)/include/inline/cpm_ParaManager_BndComm_LMR.h \
+    $(top_srcdir)/include/inline/cpm_ParaManager_BndCommEx_LMR.h
