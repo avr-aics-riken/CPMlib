@@ -18,10 +18,10 @@
 #define _CPM_VERSION_H_
 
 /** CPMライブラリのバージョン */
-#define CPM_VERSION_NO  "2.0.1"
+#define CPM_VERSION_NO  "2.0.2"
 
 /** CPMライブラリのリビジョン */
-#define CPM_REVISION    "20150609_2100"
+#define CPM_REVISION    "20150610_1300"
 
 #endif /* _CPM_VERSION_H_ */
 
