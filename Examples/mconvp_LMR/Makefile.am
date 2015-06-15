@@ -21,6 +21,7 @@ mconvp_SOURCES = \
 
 mconvp_LMR_SOURCES = \
     mconvp_LMR_main.C \
+    mconvp_LMR_main.h \
     mconvp_LMR.f90 \
     README \
     ./data/mconv.tp \

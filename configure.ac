@@ -17,7 +17,7 @@
 
 AC_PREREQ([2.57])
 
-AC_INIT([CPMlib],[2.0.2],[keno@{iis.u-tokyo.ac, riken}.jp],[CPMlib])
+AC_INIT([CPMlib],[2.0.3],[keno@{iis.u-tokyo.ac, riken}.jp],[CPMlib])
 
 echo "----------------------------------------"
 echo "Running CPMlib Configure Script"
@@ -66,7 +66,7 @@ AM_INIT_AUTOMAKE()
 #
 # revision No.
 #
-CPM_REVISION="20150610_1300"
+CPM_REVISION="20150615_1400"
 AC_SUBST(CPM_REVISION)
 
 
@@ -214,7 +214,7 @@ MPICH_FCLIBS="$MPICH_FCLIBS"" -lmpi_cxx"
 #
 # f90 example
 #
-AC_ARG_WITH(f90example, [AC_HELP_STRING([--with-f90example=(yes|no)],[make f90 example [yes]])], , with_f90example=yes)
+AC_ARG_WITH(f90example, [AC_HELP_STRING([--with-f90example=(no|yes)],[make f90 example [no]])], , with_f90example=no)
 
 
 #
@@ -232,6 +232,12 @@ if test x"_$FCFLAGS" = x"_"; then
     FCFLAGS=$F90FLAGS
   fi
 fi
+
+
+#
+# example
+#
+AC_ARG_WITH(example, [AC_HELP_STRING([--with-example=(no|yes)],[make example [no]])], , with_example=no)
 
 
 
@@ -312,9 +318,14 @@ fi
 # MAKE_SUB_DIRS
 #
 AC_SUBST(MAKE_SUB_DIRS)
-MAKE_SUB_DIRS="src doc Examples/cxx Examples/cxx_LMR"
+MAKE_SUB_DIRS="src doc"
+
 if test "$with_f90example" = "yes" ; then
   MAKE_SUB_DIRS="$MAKE_SUB_DIRS"" Examples/f90 Examples/mconvp_LMR"
+fi
+
+if test "$with_example" = "yes" ; then
+MAKE_SUB_DIRS="$MAKE_SUB_DIRS"" Examples/cxx Examples/cxx_LMR"
 fi
 
 

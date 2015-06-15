@@ -29,7 +29,7 @@ mconvp_CPM_SOURCES = \
 
 
 mconvp_CPM_FCFLAGS = \
-    -I$(top_builddir)/include \
+    -I$(top_srcdir)/include \
     @MPICH_CFLAGS@ \
     @FREALOPT@
 
