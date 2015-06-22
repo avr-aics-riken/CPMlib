@@ -369,6 +369,21 @@ public:
                        , int &ista, int &jsta, int &ksta, int &ilen, int &jlen, int &klen
                        , int procGrpNo=0 );
 
+  /** グローバルインデクスからローカルインデクスを計算
+   *  - 全体空間実セルのスタートインデクスを0としたときの，i,j,k各方向の
+   *    ローカルインデクスの計算と自領域に含まれるかの判定を行う．
+   *  @param[in]  iG        グローバルのiインデクス
+   *  @param[in]  jG        グローバルのjインデクス
+   *  @param[in]  kG        グローバルのkインデクス
+   *  @param[out] iL        ローカルのiインデクス
+   *  @param[out] jL        ローカルのiインデクス
+   *  @param[out] kL        ローカルのiインデクス
+   *  @param[in]  procGrpNo プロセスグループ番号(省略時=0)
+   *  @retval     true      自領域の実計算セルに含まれる
+   *  @retval     false     自領域の実計算セルに含まれない
+   */
+  bool Global2LocalIndex( int iG, int jG, int kG, int &iL, int &jL, int &kL, int procGrpNo=0 );
+
   /** 自ランクの境界が外部境界かどうかを判定
    *  @param[in] face      面方向
    *  @param[in] procGrpNo プロセスグループ番号(省略時=0)

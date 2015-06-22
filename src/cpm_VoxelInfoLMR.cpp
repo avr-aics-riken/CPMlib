@@ -344,7 +344,7 @@ cpm_VoxelInfoLMR::SetLocalDomainInfo( S_OCT_DOMAIN_INFO &domainInfo )
   m_localDomainInfo.SetPos(pos);
 
   // head/tail
-  // 最大レベルでのhead/Tailをセット
+  // 自身のリーフレベルでのhead/Tailをセット
   for( int m=0;m<3;m++ )
   {
     m_voxelHeadIndex[m] = pos[m] * m_localDomainInfo.GetVoxNum()[m];

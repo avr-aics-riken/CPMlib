@@ -611,6 +611,30 @@ cpm_ParaManager::GetBndIndexExtGc( int id, int *array
 ////////////////////////////////////////////////////////////////////////////////
 // 自ランクの境界が外部境界かどうかを判定
 bool
+cpm_ParaManager::Global2LocalIndex( int iG, int jG, int kG, int &iL, int &jL, int &kL, int procGrpNo )
+{
+  iL = jL = kL = 0;
+
+  // sizeとhead
+  const int *sz = GetLocalVoxelSize( procGrpNo );
+  const int *hd = GetVoxelHeadIndex( procGrpNo );
+  if( !sz ) return false;
+
+  // ローカルインデクス計算
+  iL = iG - hd[0];
+  jL = jG - hd[1];
+  kL = kG - hd[2];
+
+  // 内外判定
+  if( iL < 0 || iL >= sz[0] ) return false;
+  if( jL < 0 || jL >= sz[1] ) return false;
+  if( kL < 0 || kL >= sz[2] ) return false;
+  return true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// 自ランクの境界が外部境界かどうかを判定
+bool
 cpm_ParaManager::IsOuterBoundary( cpm_FaceFlag face, int procGrpNo )
 {
   // VOXEL空間マップを検索

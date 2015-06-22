@@ -136,6 +136,15 @@ int main( int argc, char **argv )
   _FLUSH(cout);
 #endif
 
+  {
+    int iG=0, jG=0, kG=0;
+    int iL=0, jL=0, kL=0;
+    bool bret = paraMngr->Global2LocalIndex(iG,jG,kG,iL,jL,kL);
+    printf( "[%d] G2L %d %d %d => %d %d %d , %d\n", paraMngr->GetMyRankID(), iG, jG, kG, iL, jL, kL, (int)bret );
+
+  }
+
+
   ////// MPI test //////
   #include "include/_mpi_test.h"
 
