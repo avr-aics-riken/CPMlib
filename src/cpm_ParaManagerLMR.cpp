@@ -15,7 +15,8 @@
  * @author University of Tokyo
  * @date   2012/05/31
  */
-#include "cpm_ParaManagerLMR.h"
+//#include "cpm_ParaManagerLMR.h"
+#include "cpm_ParaManager.h"
 #include "cpm_VoxelInfoLMR.h"
 
 

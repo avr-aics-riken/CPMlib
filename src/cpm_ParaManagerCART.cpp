@@ -15,7 +15,8 @@
  * @author University of Tokyo
  * @date   2015/03/27
  */
-#include "cpm_ParaManagerCART.h"
+//#include "cpm_ParaManagerCART.h"
+#include "cpm_ParaManager.h"
 #include "cpm_VoxelInfoCART.h"
 
 ////////////////////////////////////////////////////////////////////////////////
