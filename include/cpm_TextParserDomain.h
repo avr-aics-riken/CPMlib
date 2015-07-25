@@ -12,7 +12,6 @@
 /**
  * @file   cpm_TextParserDomain.h
  * 領域情報のテキストパーサークラスのヘッダーファイル
- * @author University of Tokyo
  * @date   2012/05/31
  */
 

@@ -12,7 +12,6 @@
 /**
  * @file   cpm_DomainInfo.cpp
  * DomainInfoクラスのソースファイル
- * @author University of Tokyo
  * @date   2012/05/31
  */
 #include "cpm_DomainInfo.h"

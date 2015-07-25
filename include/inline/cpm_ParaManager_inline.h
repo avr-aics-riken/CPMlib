@@ -12,7 +12,6 @@
 /**
  * @file   cpm_ParaManager_inline.h
  * パラレルマネージャクラスのinline関数ヘッダーファイル
- * @author University of Tokyo
  * @date   2012/05/31
  */
 

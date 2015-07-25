@@ -12,7 +12,6 @@
 /**
  * @file   cpm_TextParser.cpp
  * TextParserクラスのソースファイル
- * @author University of Tokyo
  * @date   2012/05/31
  */
 #include "cpm_TextParser.h"

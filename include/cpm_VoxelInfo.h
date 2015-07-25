@@ -12,7 +12,6 @@
 /**
  * @file   cpm_VoxelInfo.h
  * VOXEL空間情報クラスのヘッダーファイル
- * @author University of Tokyo
  * @date   2012/05/31
  */
 

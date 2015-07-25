@@ -12,7 +12,6 @@
 /**
  * @file   cpm_Define.h
  * CPMの定義マクロ記述ヘッダーファイル
- * @author University of Tokyo
  * @date   2012/05/31
  */
 #ifndef _CPM_DEFINE_H_

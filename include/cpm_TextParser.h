@@ -12,7 +12,6 @@
 /**
  * @file   cpm_TextParser.h
  * テキストパーサークラスのヘッダーファイル
- * @author University of Tokyo
  * @date   2012/05/31
  */
 

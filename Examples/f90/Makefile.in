@@ -106,8 +106,6 @@ mconvp_LDADD = $(LDADD)
 am_mconvp_CPM_OBJECTS = mconvp_CPM-mconvp_CPM.$(OBJEXT)
 mconvp_CPM_OBJECTS = $(am_mconvp_CPM_OBJECTS)
 mconvp_CPM_DEPENDENCIES =
-mconvp_CPM_LINK = $(FCLD) $(mconvp_CPM_FCFLAGS) $(FCFLAGS) \
-	$(AM_LDFLAGS) $(LDFLAGS) -o $@
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -304,6 +302,7 @@ mconvp_CPM_FCFLAGS = \
 
 #mconvp_CPM_LINK = @CPM_FC_LD@ $(FCFLAGS) \
 #  $(AM_LDFLAGS) $(LDFLAGS) -o $@
+mconvp_CPM_LINK = @CPM_FC_LD@ -o $@
 mconvp_CPM_LDADD = \
     -L$(top_builddir)/src \
     @CPM_LIBS@ \
@@ -356,7 +355,7 @@ mconvp$(EXEEXT): $(mconvp_OBJECTS) $(mconvp_DEPENDENCIES) $(EXTRA_mconvp_DEPENDE
 
 mconvp_CPM$(EXEEXT): $(mconvp_CPM_OBJECTS) $(mconvp_CPM_DEPENDENCIES) $(EXTRA_mconvp_CPM_DEPENDENCIES) 
 	@rm -f mconvp_CPM$(EXEEXT)
-	$(AM_V_FCLD)$(mconvp_CPM_LINK) $(mconvp_CPM_OBJECTS) $(mconvp_CPM_LDADD) $(LIBS)
+	$(AM_V_GEN)$(mconvp_CPM_LINK) $(mconvp_CPM_OBJECTS) $(mconvp_CPM_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)

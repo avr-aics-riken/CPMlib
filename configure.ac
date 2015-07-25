@@ -17,7 +17,7 @@
 
 AC_PREREQ([2.57])
 
-AC_INIT([CPMlib],[2.0.5],[keno@{iis.u-tokyo.ac, riken}.jp],[CPMlib])
+AC_INIT([CPMlib],[2.1.0],[keno@{iis.u-tokyo.ac, riken}.jp],[CPMlib])
 
 echo "----------------------------------------"
 echo "Running CPMlib Configure Script"
@@ -66,7 +66,7 @@ AM_INIT_AUTOMAKE()
 #
 # revision No.
 #
-CPM_REVISION="20150708_1500"
+CPM_REVISION="20150725_1200"
 AC_SUBST(CPM_REVISION)
 
 
@@ -153,9 +153,8 @@ AC_SUBST(MPICH_FCLIBS)
 # if wrapper compiler is specified, skip this part
 #
 
-if test x"$enable_mpi" = x"none" ; then
-
 # MPICH
+if test x"$enable_mpi" = x"none" ; then
   AC_ARG_WITH(mpich, [AC_HELP_STRING([--with-mpich=dir],[Specify MPICH install directory])], , with_mpich=none)
   if test x"$with_mpich" != x"none" ; then
     MPICH_DIR=$with_mpich;
@@ -163,21 +162,29 @@ if test x"$enable_mpi" = x"none" ; then
     MPICH_LDFLAGS=-L$MPICH_DIR/lib
     enable_mpi="mpich"
   fi
-
-# OpenMPI // mpichが指定されておらず，かつ，ompが指定されていれば変数をセット
-  if test x"$with_mpich" = x"none" ; then
-    AC_ARG_WITH(ompi, [AC_HELP_STRING([--with-ompi=dir],[Specify OpenMPI install directory])], , with_ompi=none)
-
-    if test x"$with_ompi" != x"none" ; then
-      MPICH_DIR=$with_ompi;
-      MPICH_CFLAGS=-I$MPICH_DIR/include
-      MPICH_LDFLAGS=-L$MPICH_DIR/lib
-      enable_mpi="ompi"
-    fi
-  fi
-
 fi
 
+# OpenMPI // mpichが指定されておらず，かつ，ompiが指定されていれば変数をセット
+if test x"$enable_mpi" = x"none" ; then
+  AC_ARG_WITH(ompi, [AC_HELP_STRING([--with-ompi=dir],[Specify OpenMPI install directory])], , with_ompi=none)
+  if test x"$with_ompi" != x"none" ; then
+    MPICH_DIR=$with_ompi;
+    MPICH_CFLAGS=-I$MPICH_DIR/include
+    MPICH_LDFLAGS=-L$MPICH_DIR/lib
+    enable_mpi="ompi"
+  fi
+fi
+
+# IntelMPI // mpich/OpenMPIが指定されておらず，かつ，impiが指定されていれば変数をセット
+if test x"$enable_mpi" = x"none" ; then
+  AC_ARG_WITH(impi, [AC_HELP_STRING([--with-impi=dir],[Specify IntelMPI install directory])], , with_impi=none)
+  if test x"$with_impi" != x"none" ; then
+    MPICH_DIR=$with_impi;
+    MPICH_CFLAGS=-I$MPICH_DIR/include
+    MPICH_LDFLAGS=-L$MPICH_DIR/lib
+    enable_mpi="impi"
+  fi
+fi
 
 
 #
@@ -196,8 +203,12 @@ elif test x"$enable_mpi" = x"mpich" ; then
   MPICH_FCLIBS="$MPICH_LIBS"" -lfmpich"
 elif test x"$enable_mpi" = x"ompi" ; then
   MPICH_LIBS="-lmpi -lmpi_cxx"
-#  MPICH_FCLIBS="$MPICH_LIBS"" -lmpi_f77 -lmpi_f90"
   MPICH_FCLIBS="$MPICH_LIBS"" -lmpi_f77 -lmpi_f90 -lmpi_cxx"
+elif test x"$enable_mpi" = x"impi" || test x"$FC" = x"mpiifort" || test x"$F90" = x"mpiifort" ; then
+  MPICH_LIBS="-lmpi -lmpicxx"
+  MPICH_FCLIBS="$MPICH_LIBS"" -lmpifort"
+else
+  MPICH_FCLIBS="$MPICH_FCLIBS"" -lmpi_cxx"
 fi
 
 
@@ -205,10 +216,8 @@ fi
 #
 if test x"$enable_mpi" = x"none" ; then
   echo "  Warning: Neither MPICH nor OpenMPI library is not specified."
-  echo "           If compilation error occurs about MPI, specify --with-mpich or --with-ompi option."
+  echo "           If compilation error occurs about MPI, specify --with-mpich or --with-ompi or --with-impi option."
 fi
-
-MPICH_FCLIBS="$MPICH_FCLIBS"" -lmpi_cxx"
 
 
 #
@@ -227,6 +236,7 @@ if test x"_$FC" = x"_"; then
     FC=$F90
   fi
 fi
+
 if test x"_$FCFLAGS" = x"_"; then
   if test x"_$F90FLAGS" != x"_"; then
     FCFLAGS=$F90FLAGS
@@ -249,6 +259,7 @@ AC_SUBST(TP_DIR)
 AC_SUBST(TP_CFLAGS)
 AC_SUBST(TP_LDFLAGS)
 AC_SUBST(TP_LIBS)
+
 if test x"$with_parser" != x"none" ; then
   TP_DIR=$with_parser;
   TP_CFLAGS=`$TP_DIR/bin/tp-config --cflags`
@@ -307,8 +318,7 @@ AC_SUBST(CPM_FC_LD)
 if test x"$with_comp" = x"FJ"; then
   CPM_FC_LD="$CXX"" --linkfortran"
 elif test x"$with_comp" = x"INTEL" ; then
-  CPM_FC_LD="$CXX"" -lifport -lifcore"
-  CPM_LIBS="$CPM_LIBS"" -lstdc++"
+  CPM_LIBS="$CPM_LIBS"" -lstdc++ -lifport -lifcore"
 elif test x"$with_comp" = x"GNU" ; then
   CPM_LIBS="$CPM_LIBS"" -lstdc++"
 fi
@@ -320,12 +330,12 @@ fi
 AC_SUBST(MAKE_SUB_DIRS)
 MAKE_SUB_DIRS="src doc"
 
-if test "$with_f90example" = "yes" ; then
+if test x"$with_f90example" = x"yes" ; then
   MAKE_SUB_DIRS="$MAKE_SUB_DIRS"" Examples/f90 Examples/mconvp_LMR"
 fi
 
-if test "$with_example" = "yes" ; then
-MAKE_SUB_DIRS="$MAKE_SUB_DIRS"" Examples/cxx Examples/cxx_LMR"
+if test x"$with_example" = x"yes" ; then
+  MAKE_SUB_DIRS="$MAKE_SUB_DIRS"" Examples/cxx Examples/cxx_LMR"
 fi
 
 

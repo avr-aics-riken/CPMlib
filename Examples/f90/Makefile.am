@@ -36,6 +36,8 @@ mconvp_CPM_FCFLAGS = \
 #mconvp_CPM_LINK = @CPM_FC_LD@ $(FCFLAGS) \
 #  $(AM_LDFLAGS) $(LDFLAGS) -o $@
 
+mconvp_CPM_LINK = @CPM_FC_LD@ -o $@
+
 mconvp_CPM_LDADD = \
     -L$(top_builddir)/src \
     @CPM_LIBS@ \

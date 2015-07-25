@@ -12,7 +12,6 @@
 /**
  * @file   cpm_VoxelInfo.cpp
  * VOXEL空間情報クラスのソースファイル
- * @author University of Tokyo
  * @date   2012/05/31
  */
 #include "cpm_VoxelInfo.h"

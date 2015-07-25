@@ -14,7 +14,7 @@ SOFTWARE REQUIREMENT
 ====================
 
 - MPI library
-- Text parsing library
+- Text Parser library
 
 
 
@@ -52,6 +52,11 @@ Configure options:
  --with-f90real=(4|8)
     Specify the REAL_TYPE macro by selecting 4(float) or 8(double). If this option is 
     omitted, float type will be used.
+
+ --with-impi=IntelMPI_DIR
+    If you use an IntelMPI library, specify this option and use wrapper compiler driver.
+    If you exploit to use mpiifort for FC or F90, configure script recognizes that you
+    specified this option.
 
  --with-mpich=MPICH_DIR
     If you will use a MPICH library, specify the directory that MPICH library is

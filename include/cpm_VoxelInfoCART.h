@@ -11,8 +11,7 @@
 
 /**
  * @file   cpm_VoxelInfoCART.h
- * カーテシアン用のVOXEL空間情報クラスのヘッダーファイル
- * @author University of Tokyo
+ * カーテシアン用のVOXEL空間情報クラスのヘッダーファイルo
  * @date   2015/03/27
  */
 

@@ -12,7 +12,6 @@
 /**
  * @file   cpm_TextParserDomain.cpp
  * LMR用領域情報のTextParserクラスのソースファイル
- * @author University of Tokyo
  * @date   2015/03/27
  */
 #include "cpm_TextParserDomainLMR.h"

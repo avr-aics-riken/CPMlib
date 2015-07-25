@@ -12,7 +12,6 @@
 /**
  * @file   cpm_Base.h
  * CPMのベースクラスのヘッダーファイル
- * @author University of Tokyo
  * @date   2012/05/31
  */
 

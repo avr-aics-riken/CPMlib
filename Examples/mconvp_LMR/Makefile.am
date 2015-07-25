@@ -42,12 +42,13 @@ mconvp_LMR_FCFLAGS = \
 
 #mconvp_LMR_LINK = @CPM_FC_LD@ $(FCFLAGS) \
 #  $(AM_LDFLAGS) $(LDFLAGS) -o $@
-mconvp_LMR_LINK = @CPM_FC_LD@ -o $@
+
 
 mconvp_LMR_LDADD = \
     -L$(top_builddir)/src \
     @CPM_LIBS@ \
     @MPICH_LDFLAGS@ \
+    @MPICH_FCLIBS@ \
     @TP_LDFLAGS@ \
     @TP_LIBS@
 

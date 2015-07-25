@@ -12,7 +12,6 @@
 /**
  * @file   cpm_ParaManager_BndCommEx_CART.h
  * カーテシアン用パラレルマネージャクラスのインラインヘッダーファイル
- * @author University of Tokyo
  * @date   2012/05/31
  */
 

@@ -12,7 +12,6 @@
 /**
  * @file   cpm_VoxelInfoCART.cpp
  * カーテシアン用のVOXEL空間情報クラスのソースファイル
- * @author University of Tokyo
  * @date   2015/03/27
  */
 #include "cpm_VoxelInfoCART.h"

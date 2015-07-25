@@ -12,7 +12,6 @@
 /**
  * @file   cpm_ParaManager_MPI.cpp
  * パラレルマネージャクラスのMPIインターフェイス関数ソースファイル
- * @author University of Tokyo
  * @date   2012/05/31
  */
 #include "stdlib.h"

@@ -12,7 +12,6 @@
 /**
  * @file   cpm_PathUtil.h
  * ファイルパス文字列関連ユーティリティヘッダーファイル
- * @author University of Tokyo
  * @date   2013/04/02
  */
 #ifndef _CPM_PATH_UTIL_H_

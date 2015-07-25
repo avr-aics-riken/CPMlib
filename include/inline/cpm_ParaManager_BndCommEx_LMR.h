@@ -12,7 +12,6 @@
 /**
  * @file   cpm_ParaManager_BndComm_LMR.h
  * LMR用パラレルマネージャクラスのインラインヘッダーファイル
- * @author University of Tokyo
  * @date   2015/03/27
  */
 

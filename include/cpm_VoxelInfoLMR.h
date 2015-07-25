@@ -12,7 +12,6 @@
 /**
  * @file   cpm_VoxelInfoLMR.h
  * LMR用のVOXEL空間情報クラスのヘッダーファイル
- * @author University of Tokyo
  * @date   2015/03/27
  */
 

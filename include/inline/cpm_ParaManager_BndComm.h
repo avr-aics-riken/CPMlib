@@ -12,7 +12,6 @@
 /**
  * @file   cpm_ParaManager_BndComm.h
  * パラレルマネージャクラスのインラインヘッダーファイル
- * @author University of Tokyo
  * @date   2012/05/31
  */
 

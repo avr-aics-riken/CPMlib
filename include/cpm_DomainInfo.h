@@ -12,7 +12,6 @@
 /**
  * @file   cpm_DomainInfo.h
  * 領域情報クラスのヘッダーファイル
- * @author University of Tokyo
  * @date   2012/05/31
  */
 

@@ -12,7 +12,6 @@
 /**
  * @file   cpm_TextParserDomainLMR.h
  * LMR用領域情報のテキストパーサークラスのヘッダーファイル
- * @author University of Tokyo
  * @date   2012/05/31
  */
 

@@ -12,7 +12,6 @@
 /**
  * @file   cpm_ParaManagerCART.h
  * カーテシアン用のパラレルマネージャクラスのヘッダーファイル
- * @author University of Tokyo
  * @date   2015/03/27
  */
 

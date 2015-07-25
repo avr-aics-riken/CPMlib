@@ -12,7 +12,6 @@
 /**
  * @file   cpm_ParaManagerLMR.h
  * LMR用のパラレルマネージャクラスのヘッダーファイル
- * @author University of Tokyo
  * @date   2015/03/27
  */
 

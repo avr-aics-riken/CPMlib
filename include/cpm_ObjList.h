@@ -12,7 +12,6 @@
 /**
  * @file   cpm_ObjList.h
  * 汎用オブジェクトの管理クラスのヘッダーファイル
- * @author University of Tokyo
  * @date   2012/05/31
  */
 

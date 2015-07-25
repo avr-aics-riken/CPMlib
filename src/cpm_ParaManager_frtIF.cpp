@@ -12,7 +12,6 @@
 /**
  * @file   cpm_ParaManager_frtIF.cpp
  * パラレルマネージャクラスのFortranインターフェイスのソースファイル
- * @author University of Tokyo
  * @date   2012/05/31
  */
 #include "cpm_ParaManager.h"

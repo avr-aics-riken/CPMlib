@@ -12,7 +12,6 @@
 /**
  * @file   cpm_EndianUtil.h
  * CPMエンディアンユーティリティヘッダーファイル
- * @author University of Tokyo
  * @date   2013/04/02
  */
 

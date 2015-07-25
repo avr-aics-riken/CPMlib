@@ -107,6 +107,8 @@ am_mconvp_LMR_OBJECTS = mconvp_LMR-mconvp_LMR_main.$(OBJEXT) \
 	mconvp_LMR-mconvp_LMR.$(OBJEXT)
 mconvp_LMR_OBJECTS = $(am_mconvp_LMR_OBJECTS)
 mconvp_LMR_DEPENDENCIES =
+mconvp_LMR_LINK = $(CXXLD) $(mconvp_LMR_CXXFLAGS) $(CXXFLAGS) \
+	$(AM_LDFLAGS) $(LDFLAGS) -o $@
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -339,11 +341,11 @@ mconvp_LMR_FCFLAGS = \
 
 #mconvp_LMR_LINK = @CPM_FC_LD@ $(FCFLAGS) \
 #  $(AM_LDFLAGS) $(LDFLAGS) -o $@
-mconvp_LMR_LINK = @CPM_FC_LD@ -o $@
 mconvp_LMR_LDADD = \
     -L$(top_builddir)/src \
     @CPM_LIBS@ \
     @MPICH_LDFLAGS@ \
+    @MPICH_FCLIBS@ \
     @TP_LDFLAGS@ \
     @TP_LIBS@
 
@@ -391,7 +393,7 @@ mconvp$(EXEEXT): $(mconvp_OBJECTS) $(mconvp_DEPENDENCIES) $(EXTRA_mconvp_DEPENDE
 
 mconvp_LMR$(EXEEXT): $(mconvp_LMR_OBJECTS) $(mconvp_LMR_DEPENDENCIES) $(EXTRA_mconvp_LMR_DEPENDENCIES) 
 	@rm -f mconvp_LMR$(EXEEXT)
-	$(AM_V_GEN)$(mconvp_LMR_LINK) $(mconvp_LMR_OBJECTS) $(mconvp_LMR_LDADD) $(LIBS)
+	$(AM_V_CXXLD)$(mconvp_LMR_LINK) $(mconvp_LMR_OBJECTS) $(mconvp_LMR_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
