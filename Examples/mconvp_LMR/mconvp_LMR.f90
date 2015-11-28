@@ -136,7 +136,7 @@
     end do
 
 !   Post
-    call fileout (nx, ny, nz, gc, p, w, dx, dy, dz, ox, oy, oz)
+    call fileout (nx, ny, nz, gc, p, w)
 
 
     stop
@@ -319,7 +319,7 @@
       end do
     endif
 
-    
+
     return
     end subroutine pbc
 
