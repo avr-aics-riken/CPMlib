@@ -17,7 +17,7 @@
 
 AC_PREREQ([2.57])
 
-AC_INIT([CPMlib],[2.1.1],[keno@{iis.u-tokyo.ac, riken}.jp],[CPMlib])
+AC_INIT([CPMlib],[2.1.2],[keno@{iis.u-tokyo.ac, riken}.jp],[CPMlib])
 
 echo "----------------------------------------"
 echo "Running CPMlib Configure Script"
@@ -66,7 +66,7 @@ AM_INIT_AUTOMAKE()
 #
 # revision No.
 #
-CPM_REVISION="20151128_1330"
+CPM_REVISION="20151128_1730"
 AC_SUBST(CPM_REVISION)
 
 

@@ -157,7 +157,7 @@ $ ../configure --with-pm=${FFV_HOME}/PMlib \
                CXXFLAGS=-O3 \
                F90=gfortran \
                F90FLAGS=-O3 \
-               LDFLAGS=-lgfortran
+               LDFLAGS="-L/usr/local/gfortran/lib -lgfortran"
 
 ## OpenMPI using a wrapper compiler, /w examples
 $ ../configure --prefix=${FFV_HOME}/CPMlib \

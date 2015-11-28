@@ -15,6 +15,8 @@ REVISION HISTORY
 
 --------------------------
 2015-11-28
+r38 modify LDFLAGS option of GNU compiler in INSTALL
+
 r37 --with-comp becomes essential
 - change configure.ac, INSTALL, and NEWS
 
