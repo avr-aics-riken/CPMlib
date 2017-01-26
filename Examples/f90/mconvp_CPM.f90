@@ -16,7 +16,6 @@
     include 'mpif.h'
     include 'cpm_fparam.fi'
 
-    integer, parameter :: domainType = 0
     integer            :: nx, ny, nz
     integer            :: n, scheme, itrMax, stp, stpMax
     real               :: dx, dy, dz
@@ -31,12 +30,11 @@
     real               :: org(3), pch(3), rgn(3)
     real*8             :: org8(3), rgn8(3)
 
-
     ! MPI_Init
     call MPI_Init(ierr)
 
     ! initialize CPM library
-    call cpm_Initialize(domainType, ierr)
+    call cpm_Initialize(ierr)
 
     ! get number of rank
     call cpm_GetNumRank(nrank, pg, ierr)
@@ -71,7 +69,7 @@
     
     write (*,*) 'Coef. of diffusion='
     read  (*,*) cf
-      
+     
     if ( scheme == 2 ) then
       write (*,*) 'Iteration max='
       read  (*,*) itrMax
@@ -152,14 +150,17 @@
     dx = pch(1)
     dy = pch(2)
     dz = pch(3)
-    write(*,'(A,/,A,I4,/,A,3(1X,I4),/,A,3(1X,I4),/,A,6(1X,I4),/,A,3(1X,I4))') &
+    write(*,'(A,/,A,I4,/, &
+              A,3(1X,I4),/, &
+              A,3(1X,I4),/, &
+              A,6(1X,I4),/, &
+              A,3(1X,I4))') &
       "+--------------------------------------+" &
     , "myrank = ", myrank &
-    , "  local voxel   =", sz &
-    , "  head index    =", head &
+    , "  nx, ny, nz    =", nx, ny, nz &
+    , "  voxel head    =", head &
     , "  neighbor rank =", nID &
     , "  div num       =", div
-!    stop
 
     call allocate_array (nx, ny, nz)
 
@@ -174,6 +175,7 @@
         call pbc (nx, ny, nz, p, dx, dy, dz, head, nID)
 
         if( myrank == 0 ) &
+        !if( myrank == 0 .and. mod(stp,100) == 0 ) &
 
         write (*,*) stp, er
       else
@@ -189,6 +191,7 @@
         end do
 
         if( myrank == 0 ) &
+        !if( myrank == 0 .and. mod(stp,100) == 0 ) &
 
         write (*,*) stp, n, er
       end if
@@ -252,7 +255,6 @@
     end do
     end do
     end do
-
 
     p(1:nx, 1:ny, 1:nz) = q(1:nx, 1:ny, 1:nz)
     call cpm_BndCommS3D(p,nx,ny,nz,1,1,CPM_REAL,pg,ierr)

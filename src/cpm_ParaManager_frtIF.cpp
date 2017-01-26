@@ -28,18 +28,37 @@
   #define cpm_Initialize_            cpm_initialize_
   #define cpm_VoxelInit_             cpm_voxelinit_
   #define cpm_VoxelInit_nodiv_       cpm_voxelinit_nodiv_
+// 2016/01/22 FEAST add.s
+  #define cpm_NodeInit_              cpm_nodeinit_
+  #define cpm_NodeInit_nodiv_        cpm_nodeinit_nodiv_
+// 2016/01/22 FEAST add.e
   #define cpm_IsParallel_            cpm_isparallel_
   #define cpm_GetDivNum_             cpm_getdivnum_
   #define cpm_GetPitch_              cpm_getpitch_
   #define cpm_GetGlobalVoxelSize_    cpm_getglobalvoxelsize_
+// 2016/01/22 FEAST add.s
+  #define cpm_GetGlobalNodeSize_     cpm_getglobalnodesize_
+  #define cpm_GetGlobalArraySize_    cpm_getglobalarraysize_
+// 2016/01/22 FEAST add.e
   #define cpm_GetGlobalOrigin_       cpm_getglobalorigin_
   #define cpm_GetGlobalRegion_       cpm_getglobalregion_
   #define cpm_GetLocalVoxelSize_     cpm_getlocalvoxelsize_
+// 2016/01/22 FEAST add.s
+  #define cpm_GetLocalNodeSize_      cpm_getlocalnodesize_
+  #define cpm_GetLocalArraySize_     cpm_getlocalarraysize_
+// 2016/01/22 FEAST add.e
   #define cpm_GetLocalOrigin_        cpm_getlocalorigin_
   #define cpm_GetLocalRegion_        cpm_getlocalregion_
   #define cpm_GetDivPos_             cpm_getdivpos_
   #define cpm_GetVoxelHeadIndex_     cpm_getvoxelheadindex_
   #define cpm_GetVoxelTailIndex_     cpm_getvoxeltailindex_
+// 2016/01/22 FEAST add.s
+  #define cpm_GetNodeHeadIndex_      cpm_getnodeheadindex_
+  #define cpm_GetNodeTailIndex_      cpm_getnodetailindex_
+  #define cpm_GetArrayHeadIndex_     cpm_getarrayheadindex_
+  #define cpm_GetArrayTailIndex_     cpm_getarraytailindex_
+  #define cpm_GetDefPointType_       cpm_getdefpointtype_
+// 2016/01/22 FEAST add.e
   #define cpm_GetNeighborRankID_     cpm_getneighborrankid_
   #define cpm_GetPeriodicRankID_     cpm_getperiodicrankid_
   #define cpm_GetMyRankID_           cpm_getmyrankid_
@@ -83,18 +102,37 @@
   #define cpm_Initialize_            CPM_INITIALIZE
   #define cpm_VoxelInit_             CPM_VOXELINIT
   #define cpm_VoxelInit_nodiv_       CPM_VOXELINIT_NODIV
+// 2016/01/22 FEAST add.s
+  #define cpm_NodeInit_              CPM_NODEINIT 
+  #define cpm_NodeInit_nodiv_        CPM_NODEINIT_NODIV  
+// 2016/01/22 FEAST add.e
   #define cpm_IsParallel_            CPM_ISPARALLEL
   #define cpm_GetDivNum_             CPM_GETDIVNUM
   #define cpm_GetPitch_              CPM_GETPITCH
   #define cpm_GetGlobalVoxelSize_    CPM_GETGLOBALVOXELSIZE
+// 2016/01/22 FEAST add.s
+  #define cpm_GetGlobalNodeSize_     CPM_GETGLOBALNODESIZE 
+  #define cpm_GetGlobalArraySize_    CPM_GETGLOBALARRAYSIZE 
+// 2016/01/22 FEAST add.e
   #define cpm_GetGlobalOrigin_       CPM_GETGLOBALORIGIN
   #define cpm_GetGlobalRegion_       CPM_GETGLOBALREGION
   #define cpm_GetLocalVoxelSize_     CPM_GETLOCALVOXELSIZE
+// 2016/01/22 FEAST add.s
+  #define cpm_GetLocalNodeSize_      CPM_GETLOCALNODESIZE 
+  #define cpm_GetLocalArraySize_     CPM_GETLOCALARRAYSIZE 
+// 2016/01/22 FEAST add.e
   #define cpm_GetLocalOrigin_        CPM_GETLOCALORIGIN
   #define cpm_GetLocalRegion_        CPM_GETLOCALREGION
   #define cpm_GetDivPos_             CPM_GETDIVPOS
   #define cpm_GetVoxelHeadIndex_     CPM_GETVOXELHEADINDEX
   #define cpm_GetVoxelTailIndex_     CPM_GETVOXELTAILINDEX
+// 2016/01/22 FEAST add.s
+  #define cpm_GetNodeHeadIndex_      CPM_GETNODEHEADINDEX 
+  #define cpm_GetNodeTailIndex_      CPM_GETNODETAILINDEX 
+  #define cpm_GetArrayHeadIndex_     CPM_GETARRAYHEADINDEX 
+  #define cpm_GetArrayTailIndex_     CPM_GETARRAYTAILINDEX 
+  #define cpm_GetDefPointType_       CPM_GETDEFPOINTTYPE 
+// 2016/01/22 FEAST add.e
   #define cpm_GetNeighborRankID_     CPM_GETNEIGHBORRANKID
   #define cpm_GetPeriodicRankID_     CPM_GETPERIODICRANKID
   #define cpm_GetMyRankID_           CPM_GETMYRANKID
@@ -140,37 +178,14 @@
 /** 初期化処理(MPI_Initは実行済みの場合)
  *  - InitializeのFortranインターフェイス関数
  *  - FortranでMPI_Initがコールされている必要がある
- *  @param[in]  domainType 領域分割タイプ(0:カーテシアン、1:LMR))
  *  @param[out] ierr       終了コード(0=正常終了、0以外=cpm_ErrorCodeの値)
  */
 CPM_EXTERN
 void
-cpm_Initialize_( int *domainType, int *ierr )
+cpm_Initialize_( int *ierr )
 {
-  if( !domainType )
-  {
-    if( ierr ) *ierr = CPM_ERROR_PM_INSTANCE;
-    return;
-  }
-
-  // 領域分割タイプ
-  cpm_DomainType dType = CPM_DOMAIN_UNKNOWN;
-  if( *domainType == 0 )
-  {
-    dType = CPM_DOMAIN_CARTESIAN;
-  }
-  else if( *domainType == 1 )
-  {
-    dType = CPM_DOMAIN_LMR;
-  }
-  else
-  {
-    *ierr = CPM_ERROR_PM_INSTANCE;
-    return;
-  }
-  
   // インスタンス取得
-  cpm_ParaManager *paraMngr = cpm_ParaManager::get_instance(dType);
+  cpm_ParaManager *paraMngr = cpm_ParaManager::get_instance();
   if( !paraMngr )
   {
     *ierr = CPM_ERROR_PM_INSTANCE;
@@ -182,7 +197,7 @@ cpm_Initialize_( int *domainType, int *ierr )
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-/** 領域分割
+/** 領域分割(FVM用)
  *  - VoxelInitのFortranインターフェイス関数
  *  - 領域分割の各種情報を引数で渡して領域分割を行う
  *  - プロセスグループの全てのランクが活性ドメインになる
@@ -224,8 +239,52 @@ cpm_VoxelInit_( int *div, int *vox, double *origin, double *region
                              , *procGrpNo );
 }
 
+// 2016/01/22 FEAST add.s
 ////////////////////////////////////////////////////////////////////////////////
-/** 領域分割
+/** 領域分割(FDM用)
+ *  - NodeInitのFortranインターフェイス関数
+ *  - 領域分割の各種情報を引数で渡して領域分割を行う
+ *  - プロセスグループの全てのランクが活性ドメインになる
+ *  - 領域分割数を指定する
+ *  @param[in]  div       領域分割数(サイズ3)
+ *  @param[in]  nod       空間全体の頂点数(サイズ3)
+ *  @param[in]  origin    空間全体の原点(サイズ3)
+ *  @param[in]  region    空間全体のサイズ(サイズ3)
+ *  @param[in]  maxVC     最大の袖数(袖通信用)
+ *  @param[in]  maxN      最大の成分数(袖通信用)
+ *  @param[in]  procGrpNo 領域分割を行うプロセスグループ番号
+ *  @param[out] ierr      終了コード(0=正常終了、0以外=cpm_ErrorCodeの値)
+ */
+CPM_EXTERN
+void
+cpm_NodeInit_( int *div, int *nod, double *origin, double *region
+              , int *maxVC, int *maxN, int *procGrpNo
+              , int *ierr )
+{
+  if( !div || !nod || !origin || !region || !maxVC || !maxN ||
+      !procGrpNo || !ierr )
+  {
+    if( ierr ) *ierr = CPM_ERROR_INVALID_PTR;
+    return;
+  }
+
+  // インスタンス取得
+  cpm_ParaManager *paraMngr = cpm_ParaManager::get_instance();
+  if( !paraMngr )
+  {
+    *ierr = CPM_ERROR_PM_INSTANCE;
+    return;
+  }
+
+  // NodeInit
+  *ierr = paraMngr->NodeInit( div, nod, origin, region
+                             , size_t(*maxVC), size_t(*maxN), DIV_COMM_SIZE
+                             , *procGrpNo );
+}
+// 2016/01/22 FEAST add.e
+
+////////////////////////////////////////////////////////////////////////////////
+/** 領域分割(FVM)
  *  - VoxelInitのFortranインターフェイス関数
  *  - 領域分割の各種情報を引数で渡して領域分割を行う
  *  - プロセスグループの全てのランクが活性ドメインになる
@@ -267,6 +326,52 @@ cpm_VoxelInit_nodiv_( int *vox, double *origin, double *region
   *ierr = paraMngr->VoxelInit( vox, origin, region
                              , size_t(*maxVC), size_t(*maxN), divP, *procGrpNo );
 }
+
+// 2016/01/22 FEAST add.s
+////////////////////////////////////////////////////////////////////////////////
+/** 領域分割(FDM)
+ *  - NodeInitのFortranインターフェイス関数
+ *  - 領域分割の各種情報を引数で渡して領域分割を行う
+ *  - プロセスグループの全てのランクが活性ドメインになる
+ *  - プロセスグループのランク数で自動領域分割
+ *  @param[in]  nod       空間全体の頂点数(サイズ3)
+ *  @param[in]  origin    空間全体の原点(サイズ3)
+ *  @param[in]  region    空間全体のサイズ(サイズ3)
+ *  @param[in]  maxVC     最大の袖数(袖通信用)
+ *  @param[in]  maxN      最大の成分数(袖通信用)
+ *  @param[in]  divPolicy 自動分割ポリシー(0:通信面,1:立方体)
+ *  @param[in]  procGrpNo 領域分割を行うプロセスグループ番号
+ *  @param[out] ierr      終了コード(0=正常終了、0以外=cpm_ErrorCodeの値)
+ */
+CPM_EXTERN
+void
+cpm_NodeInit_nodiv_( int *nod, double *origin, double *region
+                    , int *maxVC, int *maxN, int *divPolicy
+                    , int *procGrpNo, int *ierr )
+{
+  if( !nod || !origin || !region || !maxVC || !maxN ||
+      !divPolicy || !procGrpNo || !ierr )
+  {
+    if( ierr ) *ierr = CPM_ERROR_INVALID_PTR;
+    return;
+  }
+
+  // インスタンス取得
+  cpm_ParaManager *paraMngr = cpm_ParaManager::get_instance();
+  if( !paraMngr )
+  {
+    *ierr = CPM_ERROR_PM_INSTANCE;
+    return;
+  }
+
+  cpm_DivPolicy divP = DIV_COMM_SIZE;
+  if( *divPolicy == 1 ) divP = DIV_VOX_CUBE;
+
+  // NodeInit
+  *ierr = paraMngr->NodeInit( nod, origin, region
+                             , size_t(*maxVC), size_t(*maxN), divP, *procGrpNo );
+}
+// 2016/01/22 FEAST add.e
 
 ////////////////////////////////////////////////////////////////////////////////
 /** 並列実行であるかチェックする
@@ -427,6 +532,93 @@ cpm_GetGlobalVoxelSize_( int *wsz, int *procGrpNo, int *ierr )
   return;
 }
 
+// 2016/01/22 FEAST add.s
+////////////////////////////////////////////////////////////////////////////////
+/** 全体頂点数を取得
+ *  - GetGlobalNodeSizeのFortranインターフェイス関数
+ *  @param[in]  procGrpNo プロセスグループ番号
+ *  @param[out] wsz       全体頂点数(3wordの整数配列)
+ *  @param[out] ierr      終了コード(0=正常終了、0以外=cpm_ErrorCodeの値)
+ */
+CPM_EXTERN
+void
+cpm_GetGlobalNodeSize_( int *wsz, int *procGrpNo, int *ierr )
+{
+  if( !procGrpNo || !wsz || !ierr )
+  {
+    if( ierr ) *ierr = CPM_ERROR_INVALID_PTR;
+    return;
+  }
+
+  wsz[0] = wsz[1] = wsz[2] = 0;
+
+  // インスタンス取得
+  cpm_ParaManager *paraMngr = cpm_ParaManager::get_instance();
+  if( !paraMngr )
+  {
+    *ierr = CPM_ERROR_PM_INSTANCE;
+    return;
+  }
+
+  const int *sz = paraMngr->GetGlobalNodeSize( *procGrpNo );
+  if( !sz )
+  {
+    *ierr = CPM_ERROR_GET_GLOBALNODESIZE;
+    return;
+  }
+
+  wsz[0] = sz[0];
+  wsz[1] = sz[1];
+  wsz[2] = sz[2];
+
+  *ierr = CPM_SUCCESS;
+  return;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+/** 全体ボクセル数または頂点数を取得
+ *  - FVMのときはボクセル数、FDMのときは頂点数
+ *  - GetGlobalArraySizeのFortranインターフェイス関数
+ *  @param[in]  procGrpNo プロセスグループ番号
+ *  @param[out] wsz       全体ボクセル数または頂点数(3wordの整数配列)
+ *  @param[out] ierr      終了コード(0=正常終了、0以外=cpm_ErrorCodeの値)
+ */
+CPM_EXTERN
+void
+cpm_GetGlobalArraySize_( int *wsz, int *procGrpNo, int *ierr )
+{
+  if( !procGrpNo || !wsz || !ierr )
+  {
+    if( ierr ) *ierr = CPM_ERROR_INVALID_PTR;
+    return;
+  }
+
+  wsz[0] = wsz[1] = wsz[2] = 0;
+
+  // インスタンス取得
+  cpm_ParaManager *paraMngr = cpm_ParaManager::get_instance();
+  if( !paraMngr )
+  {
+    *ierr = CPM_ERROR_PM_INSTANCE;
+    return;
+  }
+
+  const int *sz = paraMngr->GetGlobalArraySize( *procGrpNo );
+  if( !sz )
+  {
+    *ierr = CPM_ERROR_GET_GLOBALARRAYSIZE;
+    return;
+  }
+
+  wsz[0] = sz[0];
+  wsz[1] = sz[1];
+  wsz[2] = sz[2];
+
+  *ierr = CPM_SUCCESS;
+  return;
+}
+// 2016/01/22 FEAST add.e
+
 ////////////////////////////////////////////////////////////////////////////////
 /** 全体空間の原点を取得
  *  - GetGlobalOriginのFortranインターフェイス関数
@@ -553,6 +745,93 @@ cpm_GetLocalVoxelSize_( int *lsz, int *procGrpNo, int *ierr )
   return;
 }
 
+// 2016/01/22 FEAST add.s
+////////////////////////////////////////////////////////////////////////////////
+/** 自ランクの頂点数を取得
+ *  - GetLocalNodeSizeのFortranインターフェイス関数
+ *  @param[in]  procGrpNo プロセスグループ番号
+ *  @param[out] lsz       自ランクの頂点数(3wordの整数配列)
+ *  @param[out] ierr      終了コード(0=正常終了、0以外=cpm_ErrorCodeの値)
+ */
+CPM_EXTERN
+void
+cpm_GetLocalNodeSize_( int *lsz, int *procGrpNo, int *ierr )
+{
+  if( !procGrpNo || !lsz || !ierr )
+  {
+    if( ierr ) *ierr = CPM_ERROR_INVALID_PTR;
+    return;
+  }
+
+  lsz[0] = lsz[1] = lsz[2] = 0;
+
+  // インスタンス取得
+  cpm_ParaManager *paraMngr = cpm_ParaManager::get_instance();
+  if( !paraMngr )
+  {
+    *ierr = CPM_ERROR_PM_INSTANCE;
+    return;
+  }
+
+  const int *sz = paraMngr->GetLocalNodeSize( *procGrpNo );
+  if( !sz )
+  {
+    *ierr = CPM_ERROR_GET_LOCALNODESIZE;
+    return;
+  }
+
+  lsz[0] = sz[0];
+  lsz[1] = sz[1];
+  lsz[2] = sz[2];
+
+  *ierr = CPM_SUCCESS;
+  return;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+/** 自ランクのボクセル数または頂点数を取得
+ *  - FVMのときはボクセル数、FDMのときは頂点数
+ *  - GetLocalArraySizeのFortranインターフェイス関数
+ *  @param[in]  procGrpNo プロセスグループ番号
+ *  @param[out] lsz       自ランクの頂点数(3wordの整数配列)
+ *  @param[out] ierr      終了コード(0=正常終了、0以外=cpm_ErrorCodeの値)
+ */
+CPM_EXTERN
+void
+cpm_GetLocalArraySize_( int *lsz, int *procGrpNo, int *ierr )
+{
+  if( !procGrpNo || !lsz || !ierr )
+  {
+    if( ierr ) *ierr = CPM_ERROR_INVALID_PTR;
+    return;
+  }
+
+  lsz[0] = lsz[1] = lsz[2] = 0;
+
+  // インスタンス取得
+  cpm_ParaManager *paraMngr = cpm_ParaManager::get_instance();
+  if( !paraMngr )
+  {
+    *ierr = CPM_ERROR_PM_INSTANCE;
+    return;
+  }
+
+  const int *sz = paraMngr->GetLocalArraySize( *procGrpNo );
+  if( !sz )
+  {
+    *ierr = CPM_ERROR_GET_LOCALARRAYSIZE;
+    return;
+  }
+
+  lsz[0] = sz[0];
+  lsz[1] = sz[1];
+  lsz[2] = sz[2];
+
+  *ierr = CPM_SUCCESS;
+  return;
+}
+// 2016/01/22 FEAST add.e
+
 ////////////////////////////////////////////////////////////////////////////////
 /** 自ランクの空間原点を取得
  *  - GetLocalOriginのFortranインターフェイス関数
@@ -622,7 +901,7 @@ cpm_GetLocalRegion_( double *lrgn, int *procGrpNo, int *ierr )
     return;
   }
 
-  const double *rgn = paraMngr->GetLocalOrigin( *procGrpNo );
+  const double *rgn = paraMngr->GetLocalRegion( *procGrpNo );
   if( !rgn )
   {
     *ierr = CPM_ERROR_GET_LOCALREGION;
@@ -764,6 +1043,218 @@ cpm_GetVoxelTailIndex_( int *idx, int *procGrpNo, int *ierr )
   *ierr = CPM_SUCCESS;
   return;
 }
+
+// 2016/01/22 FEAST add.s
+////////////////////////////////////////////////////////////////////////////////
+/** 自ランクの始点頂点の全体空間でのインデクスを取得
+ *  - GetNodeHeadIndexのFortranインターフェイス関数
+ *  - 全体空間の先頭インデクスを0としたC型のインデクス
+ *  @param[in]  procGrpNo プロセスグループ番号
+ *  @param[out] idx       自ランクの始点頂点インデクス(3wordの整数配列)
+ *  @param[out] ierr      終了コード(0=正常終了、0以外=cpm_ErrorCodeの値)
+ */
+CPM_EXTERN
+void
+cpm_GetNodeHeadIndex_( int *idx, int *procGrpNo, int *ierr )
+{
+  if( !procGrpNo || !idx || !ierr )
+  {
+    if( ierr ) *ierr = CPM_ERROR_INVALID_PTR;
+    return;
+  }
+
+  idx[0] = idx[1] = idx[2] = 0;
+
+  // インスタンス取得
+  cpm_ParaManager *paraMngr = cpm_ParaManager::get_instance();
+  if( !paraMngr )
+  {
+    *ierr = CPM_ERROR_PM_INSTANCE;
+    return;
+  }
+
+  const int *id = paraMngr->GetNodeHeadIndex( *procGrpNo );
+  if( !id )
+  {
+    *ierr = CPM_ERROR_GET_HEADINDEX;
+    return;
+  }
+
+  idx[0] = id[0];
+  idx[1] = id[1];
+  idx[2] = id[2];
+
+  *ierr = CPM_SUCCESS;
+
+  return;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+/** 自ランクの終点頂点の全体空間でのインデクスを取得
+ *  - GetNodeTailIndexのFortranインターフェイス関数
+ *  - 全体空間の先頭インデクスを0としたC型のインデクス
+ *  @param[in]  procGrpNo プロセスグループ番号
+ *  @param[out] idx       自ランクの始点頂点インデクス(3wordの整数配列)
+ *  @param[out] ierr      終了コード(0=正常終了、0以外=cpm_ErrorCodeの値)
+ */
+CPM_EXTERN
+void
+cpm_GetNodeTailIndex_( int *idx, int *procGrpNo, int *ierr )
+{
+  if( !procGrpNo || !idx || !ierr )
+  {
+    if( ierr ) *ierr = CPM_ERROR_INVALID_PTR;
+    return;
+  }
+
+  idx[0] = idx[1] = idx[2] = 0;
+
+  // インスタンス取得
+  cpm_ParaManager *paraMngr = cpm_ParaManager::get_instance();
+  if( !paraMngr )
+  {
+    *ierr = CPM_ERROR_PM_INSTANCE;
+    return;
+  }
+
+  const int *id = paraMngr->GetNodeTailIndex( *procGrpNo );
+  if( !id )
+  {
+    *ierr = CPM_ERROR_GET_HEADINDEX;
+    return;
+  }
+
+  idx[0] = id[0];
+  idx[1] = id[1];
+  idx[2] = id[2];
+
+  *ierr = CPM_SUCCESS;
+
+  return;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+/** 自ランクの始点ボクセルまたは頂点の全体空間でのインデクスを取得
+ *  - FVMのときはボクセル、FDMのときは頂点始点インデックスを取得
+ *  - GetArrayHeadIndexのFortranインターフェイス関数
+ *  - 全体空間の先頭インデクスを0としたC型のインデクス
+ *  @param[in]  procGrpNo プロセスグループ番号
+ *  @param[out] idx       自ランクの始点ボクセルまたは頂点インデクス(3wordの整数配列)
+ *  @param[out] ierr      終了コード(0=正常終了、0以外=cpm_ErrorCodeの値)
+ */
+CPM_EXTERN
+void
+cpm_GetArrayHeadIndex_( int *idx, int *procGrpNo, int *ierr )
+{
+  if( !procGrpNo || !idx || !ierr )
+  {
+    if( ierr ) *ierr = CPM_ERROR_INVALID_PTR;
+    return;
+  }
+
+  idx[0] = idx[1] = idx[2] = 0;
+
+  // インスタンス取得
+  cpm_ParaManager *paraMngr = cpm_ParaManager::get_instance();
+  if( !paraMngr )
+  {
+    *ierr = CPM_ERROR_PM_INSTANCE;
+    return;
+  }
+
+  const int *id = paraMngr->GetArrayHeadIndex( *procGrpNo );
+  if( !id )
+  {
+    *ierr = CPM_ERROR_GET_HEADINDEX;
+    return;
+  }
+
+  idx[0] = id[0];
+  idx[1] = id[1];
+  idx[2] = id[2];
+
+  *ierr = CPM_SUCCESS;
+
+  return;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+/** 自ランクの終点ボクセルまたは頂点の全体空間でのインデクスを取得
+ *  - FVMのときはボクセル、FDMのときは頂点終点インデックスを取得
+ *  - GetArrayTailIndexのFortranインターフェイス関数
+ *  - 全体空間の先頭インデクスを0としたC型のインデクス
+ *  @param[in]  procGrpNo プロセスグループ番号
+ *  @param[out] idx       自ランクの終点ボクセルまたは頂点インデクス(3wordの整数配列)
+ *  @param[out] ierr      終了コード(0=正常終了、0以外=cpm_ErrorCodeの値)
+ */
+CPM_EXTERN
+void
+cpm_GetArrayTailIndex_( int *idx, int *procGrpNo, int *ierr )
+{
+  if( !procGrpNo || !idx || !ierr )
+  {
+    if( ierr ) *ierr = CPM_ERROR_INVALID_PTR;
+    return;
+  }
+
+  idx[0] = idx[1] = idx[2] = 0;
+
+  // インスタンス取得
+  cpm_ParaManager *paraMngr = cpm_ParaManager::get_instance();
+  if( !paraMngr )
+  {
+    *ierr = CPM_ERROR_PM_INSTANCE;
+    return;
+  }
+
+  const int *id = paraMngr->GetArrayTailIndex( *procGrpNo );
+  if( !id )
+  {
+    *ierr = CPM_ERROR_GET_HEADINDEX;
+    return;
+  }
+
+  idx[0] = id[0];
+  idx[1] = id[1];
+  idx[2] = id[2];
+
+  *ierr = CPM_SUCCESS;
+
+  return;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+/** 定義点タイプを取得
+ *  - GetDefPointTypeのFortranインターフェイス関数
+ *  - 全体空間の先頭インデクスを0としたC型のインデクス
+ *  @param[in]  procGrpNo プロセスグループ番号
+ *  @param[out] ideftyp   定義点タイプ(-1=未定義、0=FVM、1=FDM )
+ *  @param[out] ierr      終了コード(0=正常終了、0以外=cpm_ErrorCodeの値)
+ */
+CPM_EXTERN
+void
+cpm_GetDefPointType_( int *ideftyp, int *procGrpNo, int *ierr )
+{
+
+  if( !procGrpNo || !ideftyp || !ierr )
+  {
+    if( ierr ) *ierr = CPM_ERROR_INVALID_PTR;
+    return;
+  }
+
+  // インスタンス取得
+  cpm_ParaManager *paraMngr = cpm_ParaManager::get_instance();
+  if( !paraMngr )
+  {
+    *ierr = CPM_ERROR_PM_INSTANCE;
+    return;
+  }
+
+  *ideftyp = paraMngr->GetDefPointType( *procGrpNo );
+
+  return;
+}
+// 2016/01/22 FEAST add.e
 
 ////////////////////////////////////////////////////////////////////////////////
 /** 自ランクの隣接ランク番号を取得
@@ -1566,7 +2057,7 @@ cpm_BndCommS4D_( void *array, int *imax, int *jmax, int *kmax, int *nmax, int *v
   }
 
   // BndCommS4D
-   *ierr = paraMngr->BndCommS4D( dtype, array, *imax, *jmax, *kmax, *nmax, *vc, *vc_comm, *procGrpNo );
+   *ierr = paraMngr->BndCommS4D( dtype, array, *imax, *jmax, *kmax, *nmax, *vc, *vc_comm, false, *procGrpNo );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1615,7 +2106,7 @@ cpm_BndCommS3D_( void *array, int *imax, int *jmax, int *kmax, int *vc, int *vc_
   }
 
   // BndCommS3D
-  *ierr = paraMngr->BndCommS3D( dtype, array, *imax, *jmax, *kmax, *vc, *vc_comm, *procGrpNo );
+  *ierr = paraMngr->BndCommS3D( dtype, array, *imax, *jmax, *kmax, *vc, *vc_comm, *procGrpNo, CPM_PADDING_OFF );
 #endif
 }
 
@@ -1665,7 +2156,7 @@ cpm_BndCommV3D_( void *array, int *imax, int *jmax, int *kmax, int *vc, int *vc_
   }
 
   // BndCommV3D
-  *ierr = paraMngr->BndCommV3D( dtype, array, *imax, *jmax, *kmax, *vc, *vc_comm, *procGrpNo );
+  *ierr = paraMngr->BndCommV3D( dtype, array, *imax, *jmax, *kmax, *vc, *vc_comm, *procGrpNo, CPM_PADDING_OFF );
 #endif
 }
 
@@ -2263,7 +2754,7 @@ cpm_PeriodicCommS4D_( void *array, int *imax, int *jmax, int *kmax, int *nmax, i
 
   // PeriodicCommS4D
   *ierr = paraMngr->PeriodicCommS4D( dtype, array, *imax, *jmax, *kmax, *nmax, *vc, *vc_comm
-                                   , (cpm_DirFlag)*dir, (cpm_PMFlag)*pm, *procGrpNo );
+                                   , (cpm_DirFlag)*dir, (cpm_PMFlag)*pm, *procGrpNo, CPM_PADDING_OFF );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -2331,7 +2822,7 @@ cpm_PeriodicCommS3D_( void *array, int *imax, int *jmax, int *kmax, int *vc, int
 
   // PeriodicCommS3D
   *ierr = paraMngr->PeriodicCommS3D( dtype, array, *imax, *jmax, *kmax, *vc, *vc_comm
-                                   , (cpm_DirFlag)*dir, (cpm_PMFlag)*pm, *procGrpNo );
+                                   , (cpm_DirFlag)*dir, (cpm_PMFlag)*pm, *procGrpNo, CPM_PADDING_OFF );
 #endif
 }
 
@@ -2400,7 +2891,7 @@ cpm_PeriodicCommV3D_( void *array, int *imax, int *jmax, int *kmax, int *vc, int
 
   // PeriodicCommV3D
   *ierr = paraMngr->PeriodicCommV3D( dtype, array, *imax, *jmax, *kmax, *vc, *vc_comm
-                                   , (cpm_DirFlag)*dir, (cpm_PMFlag)*pm, *procGrpNo );
+                                   , (cpm_DirFlag)*dir, (cpm_PMFlag)*pm, *procGrpNo, CPM_PADDING_OFF );
 #endif
 }
 
@@ -2538,139 +3029,6 @@ cpm_PeriodicCommV3DEx_( void *array, int *imax, int *jmax, int *kmax, int *vc, i
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// cpm_Wait
-cpm_ErrorCode
-cpm_ParaManager::cpm_Wait( int reqNo )
-{
-  // MPI_Request
-  MPI_Request *req = m_reqList.Get(reqNo);
-  if( !req )
-  {
-    return CPM_ERROR_INVALID_OBJKEY;
-  }
-
-  // MPI_Wait
-  MPI_Status status;
-  if( MPI_Wait( req, &status ) != MPI_SUCCESS )
-  {
-    return CPM_ERROR_MPI_WAIT;
-  }
-
-  // 削除
-  return m_reqList.Delete(reqNo);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// cpm_Waitall
-cpm_ErrorCode
-cpm_ParaManager::cpm_Waitall( int count, int reqNoList[] )
-{
-  // MPI_Request
-  MPI_Status* stat = new MPI_Status [count];
-  MPI_Request* req = new MPI_Request[count];
-  int cnt = 0;
-  for( int i=0;i<count;i++ )
-  {
-    MPI_Request *r = m_reqList.Get( reqNoList[i] );
-    if( r )
-    {
-      r[cnt++] = *req;
-    }
-  }
-  if( cnt == 0 )
-  {
-    delete [] stat;
-    delete [] req;
-    return CPM_ERROR_INVALID_OBJKEY;
-  }
-
-  // MPI_Waitall
-  if( MPI_Waitall( cnt, req, stat ) != MPI_SUCCESS )
-  {
-    delete [] stat;
-    delete [] req;
-    return CPM_ERROR_MPI_WAITALL;
-  }
-
-  // 削除
-  for( int i=0;i<count;i++ )
-  {
-    m_reqList.Delete( reqNoList[i] );
-  }
-
-  return CPM_SUCCESS;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// cpm_Isend
-cpm_ErrorCode
-cpm_ParaManager::cpm_Isend( void *buf, int count, int datatype, int dest, int *reqNo, int procGrpNo )
-{
-  // MPI_Datatype
-  MPI_Datatype dtype = cpm_ParaManager::GetMPI_Datatype( datatype );
-  if( dtype == MPI_DATATYPE_NULL )
-  {
-    return CPM_ERROR_MPI_INVALID_DATATYPE;
-  }
-
-  // MPI_Request
-  MPI_Request *req = m_reqList.Create();
-  if( !req )
-  {
-    return CPM_ERROR_INVALID_PTR;
-  }
-
-  // Isend
-  cpm_ErrorCode ret = Isend( dtype, buf, count, dest, req, procGrpNo );
-  if( ret != MPI_SUCCESS )
-  {
-    delete req;
-    return ret;
-  }
-
-  // MPI_Requestを登録
-  if( (*reqNo = m_reqList.Add(req) ) < 0 )
-  {
-    delete req;
-    return CPM_ERROR_REGIST_OBJKEY;
-  }
-
-  return CPM_SUCCESS;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// cpm_Irecv
-cpm_ErrorCode
-cpm_ParaManager::cpm_Irecv( void *buf, int count, int datatype, int source, int *reqNo, int procGrpNo )
-{
-  // MPI_Datatype
-  MPI_Datatype dtype = cpm_ParaManager::GetMPI_Datatype( datatype );
-  if( dtype == MPI_DATATYPE_NULL )
-  {
-    return CPM_ERROR_MPI_INVALID_DATATYPE;
-  }
-
-  // Irecv
-  MPI_Request req;
-  cpm_ErrorCode ret = Irecv( dtype, buf, count, source, &req, procGrpNo );
-  if( ret != MPI_SUCCESS )
-  {
-    return ret;
-  }
-
-  // MPI_Requestを登録
-  MPI_Request *r = m_reqList.Create();
-  *r = req;
-  if( (*reqNo = m_reqList.Add(r) ) < 0 )
-  {
-    delete r;
-    return CPM_ERROR_REGIST_OBJKEY;
-  }
-
-  return CPM_SUCCESS;
-}
-
-////////////////////////////////////////////////////////////////////////////////
 // cpm_BndCommS3D_nowait
 cpm_ErrorCode
 cpm_ParaManager::cpm_BndCommS3D_nowait( void *array, int imax, int jmax, int kmax
@@ -2691,7 +3049,7 @@ cpm_ParaManager::cpm_BndCommS3D_nowait( void *array, int imax, int jmax, int kma
 
   // BndCommS3D_nowait
   cpm_ErrorCode ret = BndCommS3D_nowait( dtype, array, imax, jmax, kmax
-                                       , vc, vc_comm, req, procGrpNo );
+                                       , vc, vc_comm, req, procGrpNo, CPM_PADDING_OFF );
   if( ret != MPI_SUCCESS )
   {
     return ret;
@@ -2733,7 +3091,7 @@ cpm_ParaManager::cpm_BndCommV3D_nowait( void *array, int imax, int jmax, int kma
 
   // BndCommV3D_nowait
   cpm_ErrorCode ret = BndCommV3D_nowait( dtype, array, imax, jmax, kmax
-                                       , vc, vc_comm, req, procGrpNo );
+                                       , vc, vc_comm, req, procGrpNo, CPM_PADDING_OFF );
   if( ret != MPI_SUCCESS )
   {
     return ret;
@@ -2772,7 +3130,7 @@ cpm_ParaManager::cpm_BndCommS4D_nowait( void *array, int imax, int jmax, int kma
 
   // BndCommS4D_nowait
   cpm_ErrorCode ret = BndCommS4D_nowait( dtype, array, imax, jmax, kmax, nmax
-                                       , vc, vc_comm, req, procGrpNo );
+                                       , vc, vc_comm, req, false, procGrpNo );
   if( ret != CPM_SUCCESS )
   {
     return ret;
@@ -2822,7 +3180,7 @@ cpm_ParaManager::cpm_wait_BndCommS3D( void *array, int imax, int jmax, int kmax
 
   // wait_BndCommS3D
   cpm_ErrorCode ret = wait_BndCommS3D( dtype, array, imax, jmax, kmax
-                                     , vc, vc_comm, req, procGrpNo );
+                                     , vc, vc_comm, req, procGrpNo, CPM_PADDING_OFF );
   if( ret != CPM_SUCCESS )
   {
     return ret;
@@ -2868,7 +3226,7 @@ cpm_ParaManager::cpm_wait_BndCommV3D( void *array, int imax, int jmax, int kmax
 
   // wait_BndCommV3D
   cpm_ErrorCode ret = wait_BndCommV3D( dtype, array, imax, jmax, kmax
-                                     , vc, vc_comm, req, procGrpNo );
+                                     , vc, vc_comm, req, procGrpNo, CPM_PADDING_OFF );
   if( ret != CPM_SUCCESS )
   {
     return ret;
@@ -2911,7 +3269,7 @@ cpm_ParaManager::cpm_wait_BndCommS4D( void *array, int imax, int jmax, int kmax,
 
   // wait_BndCommS4D
   cpm_ErrorCode ret = wait_BndCommS4D( dtype, array, imax, jmax, kmax, nmax
-                                     , vc, vc_comm, req, procGrpNo );
+                                     , vc, vc_comm, req, false, procGrpNo );
   if( ret != CPM_SUCCESS )
   {
     return ret;

@@ -26,6 +26,14 @@ cpm_VoxelInfo::cpm_VoxelInfo()
     m_voxelHeadIndex[i] = 0;
     m_voxelTailIndex[i] = 0;
   }
+
+// 2016/01/22 FEAST add.s
+  for( int i=0;i<3;i++ )
+  {
+    m_nodeHeadIndex[i] = 0;
+    m_nodeTailIndex[i] = 0;
+  }
+// 2016/01/22 FEAST add.e
  
   m_comm   = MPI_COMM_NULL;
   m_nRank  = 1;
@@ -83,6 +91,34 @@ cpm_VoxelInfo::GetGlobalVoxelSize() const
   return m_globalDomainInfo.GetVoxNum();
 }
 
+// 2016/01/22 FEAST add.s
+
+////////////////////////////////////////////////////////////////////////////////
+// 全体頂点数を取得
+const int*
+cpm_VoxelInfo::GetGlobalNodeSize() const
+{
+  return m_globalDomainInfo.GetNodNum();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// 全体ボクセル数または頂点数を取得
+const int*
+cpm_VoxelInfo::GetGlobalArraySize( cpm_DefPointType dtype ) const
+{
+  //定義点タイプがボクセルのとき
+  if( dtype == CPM_DEFPOINTTYPE_FVM ) {
+    return m_globalDomainInfo.GetVoxNum();
+  }
+  //定義点タイプが頂点のとき
+  if( dtype == CPM_DEFPOINTTYPE_FDM ) {
+    return m_globalDomainInfo.GetNodNum();
+  }
+  return NULL;
+}
+
+// 2016/01/22 FEAST add.e
+
 ////////////////////////////////////////////////////////////////////////////////
 // 全体空間の原点を取得
 const double*
@@ -106,6 +142,34 @@ cpm_VoxelInfo::GetLocalVoxelSize() const
 {
   return m_localDomainInfo.GetVoxNum();
 }
+
+// 2016/01/22 FEAST add.s
+
+////////////////////////////////////////////////////////////////////////////////
+// 自ランクの頂点数を取得
+const int*
+cpm_VoxelInfo::GetLocalNodeSize() const
+{
+  return m_localDomainInfo.GetNodNum();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// 自ランクのボクセル数または頂点数を取得
+const int*
+cpm_VoxelInfo::GetLocalArraySize( cpm_DefPointType dtype ) const
+{
+  //定義点タイプがボクセルのとき
+  if( dtype == CPM_DEFPOINTTYPE_FVM ) {
+    return m_localDomainInfo.GetVoxNum();
+  }
+  //定義点タイプが頂点のとき
+  if( dtype == CPM_DEFPOINTTYPE_FDM ) {
+    return m_localDomainInfo.GetNodNum();
+  }
+  return NULL;
+}
+
+// 2016/01/22 FEAST add.e
 
 ////////////////////////////////////////////////////////////////////////////////
 // 自ランクの空間原点を取得
@@ -131,6 +195,34 @@ cpm_VoxelInfo::GetVoxelHeadIndex() const
   return m_voxelHeadIndex;
 }
 
+// 2016/01/22 FEAST add.s
+
+////////////////////////////////////////////////////////////////////////////////
+// 自ランクの始点VOXELの全体空間でのインデクスを取得
+const int*
+cpm_VoxelInfo::GetNodeHeadIndex() const
+{
+  return m_nodeHeadIndex;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// 自ランクの始点VOXELまたは頂点の全体空間でのインデクスを取得
+const int*
+cpm_VoxelInfo::GetArrayHeadIndex( cpm_DefPointType dtype ) const
+{
+  //定義点タイプがボクセルのとき
+  if( dtype == CPM_DEFPOINTTYPE_FVM ) {
+    return m_voxelHeadIndex;
+  }
+  //定義点タイプが頂点のとき
+  if( dtype == CPM_DEFPOINTTYPE_FDM ) {
+    return m_nodeHeadIndex;
+  }
+  return NULL;
+}
+
+// 2016/01/22 FEAST add.e
+
 ////////////////////////////////////////////////////////////////////////////////
 // 自ランクの終点VOXELの全体空間でのインデクスを取得
 const int*
@@ -138,6 +230,34 @@ cpm_VoxelInfo::GetVoxelTailIndex() const
 {
   return m_voxelTailIndex;
 }
+
+// 2016/01/22 FEAST add.s
+
+////////////////////////////////////////////////////////////////////////////////
+// 自ランクの終点頂点の全体空間でのインデクスを取得
+const int*
+cpm_VoxelInfo::GetNodeTailIndex() const
+{
+  return m_nodeTailIndex;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// 自ランクの終点頂点の全体空間でのインデクスを取得
+const int*
+cpm_VoxelInfo::GetArrayTailIndex( cpm_DefPointType dtype ) const
+{
+  //定義点タイプがボクセルのとき
+  if( dtype == CPM_DEFPOINTTYPE_FVM ) {
+    return m_voxelTailIndex;
+  }
+  //定義点タイプが頂点のとき
+  if( dtype == CPM_DEFPOINTTYPE_FDM ) {
+    return m_nodeTailIndex;
+  }
+  return NULL;
+}
+
+// 2016/01/22 FEAST add.e
 
 ////////////////////////////////////////////////////////////////////////////////
 // 自ランクの隣接ランク番号を取得
@@ -153,32 +273,6 @@ const int*
 cpm_VoxelInfo::GetPeriodicRankID() const
 {
   return m_periodicRankID;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// 指定面における自ランクの隣接ランク番号を取得
-const int*
-cpm_VoxelInfo::GetNeighborRankList( cpm_FaceFlag face, int &num ) const
-{
-  num = 1;
-  return &(m_neighborRankID[face]);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// 指定面における自ランクの周期境界の隣接ランク番号を取得
-const int*
-cpm_VoxelInfo::GetPeriodicRankList( cpm_FaceFlag face, int &num ) const
-{
-  num = 1;
-  return &(m_periodicRankID[face]);
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// 指定面におけるレベル差を取得
-int
-cpm_VoxelInfo::GetNeighborLevelDiff( cpm_FaceFlag face ) const
-{
-  return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

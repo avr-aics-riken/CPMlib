@@ -36,6 +36,10 @@ int main( int argc, char **argv )
 {
   int ret = 0;
 
+  // パディングフラグ
+//  CPM_PADDING padding = CPM_PADDING_OFF;
+  CPM_PADDING padding = CPM_PADDING_ON;
+
   // 並列管理クラスのインスタンスと初期化
   cpm_ParaManager *paraMngr = cpm_ParaManager::get_instance(argc,argv);
   if( !paraMngr ) return CPM_ERROR_PM_INSTANCE;

@@ -10,11 +10,15 @@
  */
 
 #include "cpm_ParaManager.h"
+// 2016/01/22 FEAST mod.s
+#include "cpm_ParaManagerLMR.h"
+// 2016/01/22 FEAST mod.e
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <fstream>
 #include "cpm_TextParserDomain.h"
+
 
 using namespace std;
 
@@ -33,8 +37,13 @@ int main( int argc, char **argv )
   int ret = 0;
 
   // 並列管理クラスのインスタンスと初期化
-  cpm_ParaManager *paraMngr = cpm_ParaManager::get_instance(argc,argv,CPM_DOMAIN_LMR);
-  if( !paraMngr ) return CPM_ERROR_PM_INSTANCE;
+//cpm_ParaManager *paraMngr = cpm_ParaManager::get_instance(argc,argv,CPM_DOMAIN_LMR);
+  cpm_ParaManagerLMR *paraMngr = cpm_ParaManagerLMR::get_instance(argc,argv);
+//if( !paraMngr ) return CPM_ERROR_PM_INSTANCE;
+  if( !paraMngr ) {
+    cout << "ERROR CODE : " << CPM_ERROR_PM_INSTANCE << endl;
+    return CPM_ERROR_PM_INSTANCE;
+  }
 
   // 時間計測開始
   double ts = cpm_Base::GetWTime();

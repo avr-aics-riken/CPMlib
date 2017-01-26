@@ -30,6 +30,7 @@ exampleCXX_SOURCES = \
 
 exampleCXX_CXXFLAGS = \
     -I$(top_srcdir)/include \
+    -I$(top_srcdir)/include/LMR \
     @MPICH_CFLAGS@ \
     @TP_CFLAGS@ \
     @REALOPT@

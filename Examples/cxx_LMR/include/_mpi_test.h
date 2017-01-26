@@ -292,7 +292,7 @@
 #endif
 
     // GetBndIndexExtGc
-#if 1
+#if 0
     {
       // process group 0
       int rank = paraMngr->GetMyRankID();
@@ -302,6 +302,8 @@
       int jmax = sz[1];
       int kmax = sz[2];
       int vc = 6;
+
+      int pad_size[3]={0,0,0};
       int *mid = paraMngr->AllocIntS3D(vc);
       for( int k=-vc;k<kmax+vc;k++ ){
       for( int j=-vc;j<jmax+vc;j++ ){
@@ -322,7 +324,8 @@
 
       int ista, jsta, ksta, ilen, jlen, klen;
       if( paraMngr->GetBndIndexExtGc( id, mid, imax, jmax, kmax, vc
-                                    , ista, jsta, ksta, ilen, jlen, klen ) )
+                                    , ista, jsta, ksta, ilen, jlen, klen
+                                    , pad_size ) )
       {
         ofs << "  set id(" << id << ") local  index = " << ii << ", " << jj << ", " << kk << endl;
         ofs << "  set id(" << id << ") global index = " << ii+hidx[0] << ", " << jj+hidx[1] << ", " << kk+hidx[2] << endl;
@@ -340,7 +343,7 @@
 
 //#define _NOWAIT_TEST_
 
-#define _PRINT_S4D(_OFS,_TITLE,_IMAX,_JMAX,_KMAX,_NMAX,_VC,_N) \
+#define _PRINT_S4D(_OFS,_TITLE,_PP,_IMAX,_JMAX,_KMAX,_NMAX,_VC,_N,_IL) \
 { \
     _OFS << endl; \
     _OFS << "#### " << _TITLE << " I-J ####" << endl; \
@@ -350,9 +353,9 @@
       for( int j=_JMAX+_VC-1;j>=0-_VC;j-- ){ \
       stringstream ss; \
       for( int i=0-_VC;i<_IMAX+_VC;i++ ){ \
-        size_t idx = _IDX_S4D(i,j,k,_N,_IMAX,_JMAX,_KMAX,_VC); \
+        size_t idx = _IDX_S4D_LMR(i,j,k,_N,_IL,_IMAX,_JMAX,_KMAX,_NMAX,_VC); \
         ss.width(www); \
-        ss << pp[idx]; \
+        ss << _PP[idx]; \
         if( i<_IMAX+_VC-1 ) ss << ", "; \
       } \
       _OFS << ss.str(); \
@@ -369,9 +372,9 @@
       for( int k=_KMAX+_VC-1;k>=0-_VC;k-- ){ \
       stringstream ss; \
       for( int j=0-_VC;j<_JMAX+_VC;j++ ){ \
-        size_t idx = _IDX_S4D(i,j,k,_N,_IMAX,_JMAX,_KMAX,_VC); \
+        size_t idx = _IDX_S4D_LMR(i,j,k,_N,_IL,_IMAX,_JMAX,_KMAX,_NMAX,_VC); \
         ss.width(www); \
-        ss << pp[idx]; \
+        ss << _PP[idx]; \
         if( j<_JMAX+_VC-1 ) ss << ", "; \
       } \
       _OFS << ss.str(); \
@@ -381,7 +384,7 @@
     } \
 }
 
-#define _PRINT_S4DEX(_OFS,_TITLE,_NMAX,_IMAX,_JMAX,_KMAX,_VC,_N) \
+#define _PRINT_S4DEX(_OFS,_TITLE,_PP,_NMAX,_IMAX,_JMAX,_KMAX,_VC,_N,_IL) \
 { \
     _OFS << endl; \
     _OFS << "#### " << _TITLE << " I-J ####" << endl; \
@@ -391,9 +394,9 @@
       for( int j=_JMAX+_VC-1;j>=0-_VC;j-- ){ \
       stringstream ss; \
       for( int i=0-_VC;i<_IMAX+_VC;i++ ){ \
-        size_t idx = _IDX_S4DEX(_N,i,j,k,_NMAX,_IMAX,_JMAX,_KMAX,_VC); \
+        size_t idx = _IDX_S4DEX_LMR(_N,i,j,k,_IL,_NMAX,_IMAX,_JMAX,_KMAX,_VC); \
         ss.width(www); \
-        ss << pp[idx]; \
+        ss << _PP[idx]; \
         if( i<_IMAX+_VC-1 ) ss << ", "; \
       } \
       _OFS << ss.str(); \
@@ -410,9 +413,9 @@
       for( int k=_KMAX+_VC-1;k>=0-_VC;k-- ){ \
       stringstream ss; \
       for( int j=0-_VC;j<_JMAX+_VC;j++ ){ \
-        size_t idx = _IDX_S4DEX(_N,i,j,k,_NMAX,_IMAX,_JMAX,_KMAX,_VC); \
+        size_t idx = _IDX_S4DEX_LMR(_N,i,j,k,_IL,_NMAX,_IMAX,_JMAX,_KMAX,_VC); \
         ss.width(www); \
-        ss << pp[idx]; \
+        ss << _PP[idx]; \
         if( j<_JMAX+_VC-1 ) ss << ", "; \
       } \
       _OFS << ss.str(); \
@@ -422,10 +425,11 @@
     } \
 }
 
-  // BndComm, PeriodicComm(S3D)
+  // BndComm, PeriodicComm(S3D) -> (imax,jmax,kmax,nLeaf)
 #if 1
   {
     int rank = paraMngr->GetMyRankID();
+    std::vector<int> vecLeafIDs = paraMngr->GetLocalLeafIDs();
     const int *sz = paraMngr->GetLocalVoxelSize();
     int imax = sz[0];
     int jmax = sz[1];
@@ -434,365 +438,606 @@
     size_t nw = size_t(imax+2*vc) * size_t(jmax+2*vc) * size_t(kmax+2*vc);
 
     double *pp = paraMngr->AllocDoubleS3D(vc);
-    for( int k=0-vc;k<kmax+vc;k++ ){
-    for( int j=0-vc;j<jmax+vc;j++ ){
-    for( int i=0-vc;i<imax+vc;i++ ){
-      pp[_IDX_S3D(i,j,k,imax,jmax,kmax,vc)] = -(rank+1);
-    }}}
-    int cnt = 0;
-    for( int k=0;k<kmax;k++ ){
-    for( int j=0;j<jmax;j++ ){
-    for( int i=0;i<imax;i++ ){
-      cnt++;
-      pp[_IDX_S3D(i,j,k,imax,jmax,kmax,vc)] = cnt + (rank+1)*1000;
-    }}}
+    for( int l=0;l<vecLeafIDs.size();l++)
+    {
+      int leafID = vecLeafIDs[l];
+      for( int k=0-vc;k<kmax+vc;k++ ){
+      for( int j=0-vc;j<jmax+vc;j++ ){
+      for( int i=0-vc;i<imax+vc;i++ ){
+        pp[_IDX_S3D_LMR(i,j,k,l,imax,jmax,kmax,vc)] = -(leafID+1);
+      }}}
+      int cnt = 0;
+      for( int k=0;k<kmax;k++ ){
+      for( int j=0;j<jmax;j++ ){
+      for( int i=0;i<imax;i++ ){
+        cnt++;
+        pp[_IDX_S3D_LMR(i,j,k,l,imax,jmax,kmax,vc)] = cnt + (leafID+1)*1000;
+      }}}
+    }
 
-    char fname[512];
-    sprintf ( fname, "commS3D_%04d.log", rank );
-    std::ofstream ofs( fname );
+    int n=0;     //ログ出力する成分のインデクス
+    int www = 6; //ログ出力する実数の桁数
+
+    for( int l=0;l<vecLeafIDs.size();l++)
+    {
+      int leafID = vecLeafIDs[l];
+      char fname[512];
+      sprintf ( fname, "commS3D_%04d.log", leafID );
+      std::ofstream ofs( fname );
 #ifdef _NOWAIT_TEST_
-    ofs << "#### commS3D nowait test ####" << endl << endl;
-    if( rank==0 ) cout << "#### commS3D nowait test ####" << endl << endl;
+      ofs << "#### commS3D nowait test ####" << endl << endl;
+      if( rank==0 && l==0 ) cout << "#### commS3D nowait test ####" << endl << endl;
 #else
-    ofs << "#### commS3D test ####" << endl << endl;
-    if( rank==0 ) cout << "#### commS3D test ####" << endl << endl;
+      ofs << "#### commS3D test ####" << endl << endl;
+      if( rank==0 && l==0 ) cout << "#### commS3D test ####" << endl << endl;
 #endif
 
-    size_t mem = paraMngr->GetBndCommBufferSize(-1);
-    ofs << "buff mem = " << cpm_Base::GetMemString(mem) << endl;
+      ofs << "rankID = " << rank << endl;
+      ofs << "leafID = " << leafID << endl;
 
+      size_t mem = paraMngr->GetBndCommBufferSize(-1);
+      ofs << "buff mem = " << cpm_Base::GetMemString(mem) << endl;
 
-    int n=0;
-    int www = 6;
-    ofs << "n=" << n << endl;
+      ofs << "n=" << n << endl;
 
-    _PRINT_S4D(ofs,"before comm",imax,jmax,kmax,1,vc,n);
+      _PRINT_S4D(ofs,"before comm",pp,imax,jmax,kmax,1,vc,n,l);
+    }
 
 #ifndef _NOWAIT_TEST_
     paraMngr->BndCommS3D( pp, imax, jmax, kmax, vc, vc_comm );
 #else
-    MPI_Request req[48];
-    paraMngr->BndCommS3D_nowait( pp, imax, jmax, kmax, vc, vc_comm, req );
-    paraMngr->wait_BndCommS3D( pp, imax, jmax, kmax, vc, vc_comm, req );
+    paraMngr->BndCommS3D_nowait( pp, imax, jmax, kmax, vc, vc_comm );
+    paraMngr->wait_BndCommS3D( pp, imax, jmax, kmax, vc, vc_comm );
 #endif
 
-    _PRINT_S4D(ofs,"after BndComm",imax,jmax,kmax,1,vc,n);
+    for( int l=0;l<vecLeafIDs.size();l++)
+    {
+      int leafID = vecLeafIDs[l];
+      char fname[512];
+      sprintf ( fname, "commS3D_%04d.log", leafID );
+      std::ofstream ofs( fname, ios::app );
+
+      _PRINT_S4D(ofs,"after BndComm",pp,imax,jmax,kmax,1,vc,n,l);
+    }
+
+    cpm_PMFlag pm = BOTH;
+    //cpm_PMFlag pm = MINUS2PLUS;
+    //cpm_PMFlag pm = PLUS2MINUS;
 
     // PeriodicCommX
-    paraMngr->PeriodicCommS3D( pp, imax, jmax, kmax, vc, vc_comm, X_DIR, BOTH );
+    paraMngr->PeriodicCommS3D( pp, imax, jmax, kmax, vc, vc_comm, X_DIR, pm );
 
-    _PRINT_S4D(ofs,"after PeriodicCommX",imax,jmax,kmax,1,vc,n);
+    for( int l=0;l<vecLeafIDs.size();l++)
+    {
+      int leafID = vecLeafIDs[l];
+      char fname[512];
+      sprintf ( fname, "commS3D_%04d.log", leafID );
+      std::ofstream ofs( fname, ios::app );
+
+      _PRINT_S4D(ofs,"after PeriodicCommX",pp,imax,jmax,kmax,1,vc,n,l);
+    }
 
     // PeriodicCommY
-    paraMngr->PeriodicCommS3D( pp, imax, jmax, kmax, vc, vc_comm, Y_DIR, BOTH );
+    paraMngr->PeriodicCommS3D( pp, imax, jmax, kmax, vc, vc_comm, Y_DIR, pm );
 
-    _PRINT_S4D(ofs,"after PeriodicCommY",imax,jmax,kmax,1,vc,n);
+    for( int l=0;l<vecLeafIDs.size();l++)
+    {
+      int leafID = vecLeafIDs[l];
+      char fname[512];
+      sprintf ( fname, "commS3D_%04d.log", leafID );
+      std::ofstream ofs( fname, ios::app );
+
+      _PRINT_S4D(ofs,"after PeriodicCommY",pp,imax,jmax,kmax,1,vc,n,l);
+    }
 
     // PeriodicCommZ
-    paraMngr->PeriodicCommS3D( pp, imax, jmax, kmax, vc, vc_comm, Z_DIR, BOTH );
+    paraMngr->PeriodicCommS3D( pp, imax, jmax, kmax, vc, vc_comm, Z_DIR, pm );
 
-    _PRINT_S4D(ofs,"after PeriodicCommZ",imax,jmax,kmax,1,vc,n);
+    for( int l=0;l<vecLeafIDs.size();l++)
+    {
+      int leafID = vecLeafIDs[l];
+      char fname[512];
+      sprintf ( fname, "commS3D_%04d.log", leafID );
+      std::ofstream ofs( fname, ios::app );
+
+      _PRINT_S4D(ofs,"after PeriodicCommZ",pp,imax,jmax,kmax,1,vc,n,l);
+    }
   }
 #endif
 
-  // BndComm, PeriodicComm(V3D)
+  // BndComm, PeriodicComm(V3D) -> (imax,jmax,kmax,3,nLeaf)
 #if 1
   {
     int rank = paraMngr->GetMyRankID();
+    std::vector<int> vecLeafIDs = paraMngr->GetLocalLeafIDs();
     const int *sz = paraMngr->GetLocalVoxelSize();
     int imax = sz[0];
     int jmax = sz[1];
     int kmax = sz[2];
     int nmax = 3;
-    int vc  = 6;
-    size_t nw = size_t(imax+2*vc) * size_t(jmax+2*vc) * size_t(kmax+2*vc) * size_t(nmax);
+    int vc = 6;
+    size_t nw = size_t(imax+2*vc) * size_t(jmax+2*vc) * size_t(kmax+2*vc);
+    nw *= nmax;
 
     double *pp = paraMngr->AllocDoubleV3D(vc);
-    for( int n=0;n<nmax;n++ ){
-    for( int k=0-vc;k<kmax+vc;k++ ){
-    for( int j=0-vc;j<jmax+vc;j++ ){
-    for( int i=0-vc;i<imax+vc;i++ ){
-      pp[_IDX_V3D(i,j,k,n,imax,jmax,kmax,vc)] = -(rank+1);
-    }}}}
-    int cnt = 0;
-    for( int n=0;n<nmax;n++ ){
-    for( int k=0;k<kmax;k++ ){
-    for( int j=0;j<jmax;j++ ){
-    for( int i=0;i<imax;i++ ){
-      cnt++;
-      pp[_IDX_V3D(i,j,k,n,imax,jmax,kmax,vc)] = n + cnt * 10 + (rank+1)*10000;
-    }}}}
+    for( int l=0;l<vecLeafIDs.size();l++)
+    {
+      int leafID = vecLeafIDs[l];
+      for( int n=0;n<3;n++ ){
+      for( int k=0-vc;k<kmax+vc;k++ ){
+      for( int j=0-vc;j<jmax+vc;j++ ){
+      for( int i=0-vc;i<imax+vc;i++ ){
+        pp[_IDX_V3D_LMR(i,j,k,n,l,imax,jmax,kmax,vc)] = -(leafID+1);
+      }}}}
+      int cnt = 0;
+      for( int n=0;n<3;n++ ){
+      for( int k=0;k<kmax;k++ ){
+      for( int j=0;j<jmax;j++ ){
+      for( int i=0;i<imax;i++ ){
+        cnt++;
+        pp[_IDX_V3D_LMR(i,j,k,n,l,imax,jmax,kmax,vc)] = n + cnt * 10 + (leafID+1)*10000;
+      }}}}
+    }
 
-    char fname[512];
-    sprintf ( fname, "commV3D_%04d.log", rank );
-    std::ofstream ofs( fname );
+    int n=1;     //ログ出力する成分のインデクス
+    int www = 6; //ログ出力する実数の桁数
+
+    for( int l=0;l<vecLeafIDs.size();l++)
+    {
+      int leafID = vecLeafIDs[l];
+      char fname[512];
+      sprintf ( fname, "commV3D_%04d.log", leafID );
+      std::ofstream ofs( fname );
 #ifdef _NOWAIT_TEST_
-    ofs << "#### commV3D nowait test ####" << endl << endl;
-    if( rank==0 ) cout << "#### commV3D nowait test ####" << endl << endl;
+      ofs << "#### commV3D nowait test ####" << endl << endl;
+      if( rank==0 && l==0 ) cout << "#### commV3D nowait test ####" << endl << endl;
 #else
-    ofs << "#### commV3D test ####" << endl << endl;
-    if( rank==0 ) cout << "#### commV3D test ####" << endl << endl;
+      ofs << "#### commV3D test ####" << endl << endl;
+      if( rank==0 && l==0 ) cout << "#### commV3D test ####" << endl << endl;
 #endif
 
-    size_t mem = paraMngr->GetBndCommBufferSize(-1);
-    ofs << "buff mem = " << cpm_Base::GetMemString(mem) << endl;
+      ofs << "rankID = " << rank << endl;
+      ofs << "leafID = " << leafID << endl;
 
-    int n=1;
-    int www = 6;
-    ofs << "n=" << n << endl;
+      size_t mem = paraMngr->GetBndCommBufferSize(-1);
+      ofs << "buff mem = " << cpm_Base::GetMemString(mem) << endl;
 
-    _PRINT_S4D(ofs,"before comm",imax,jmax,kmax,nmax,vc,n);
+      ofs << "n=" << n << endl;
+
+      _PRINT_S4D(ofs,"before comm",pp,imax,jmax,kmax,nmax,vc,n,l);
+    }
 
 #ifndef _NOWAIT_TEST_
     paraMngr->BndCommV3D( pp, imax, jmax, kmax, vc, vc_comm );
 #else
-    MPI_Request req[48];
-    paraMngr->BndCommV3D_nowait( pp, imax, jmax, kmax, vc, vc_comm, req );
-    paraMngr->wait_BndCommV3D( pp, imax, jmax, kmax, vc, vc_comm, req );
+    paraMngr->BndCommV3D_nowait( pp, imax, jmax, kmax, vc, vc_comm );
+    paraMngr->wait_BndCommV3D( pp, imax, jmax, kmax, vc, vc_comm );
 #endif
 
-    _PRINT_S4D(ofs,"after BndComm",imax,jmax,kmax,nmax,vc,n);
+    for( int l=0;l<vecLeafIDs.size();l++)
+    {
+      int leafID = vecLeafIDs[l];
+      char fname[512];
+      sprintf ( fname, "commV3D_%04d.log", leafID );
+      std::ofstream ofs( fname, ios::app );
+
+      _PRINT_S4D(ofs,"after BndComm",pp,imax,jmax,kmax,nmax,vc,n,l);
+    }
+
+    cpm_PMFlag pm = BOTH;
+    //cpm_PMFlag pm = MINUS2PLUS;
+    //cpm_PMFlag pm = PLUS2MINUS;
 
     // PeriodicCommX
-    paraMngr->PeriodicCommV3D( pp, imax, jmax, kmax, vc, vc_comm, X_DIR, BOTH );
+    paraMngr->PeriodicCommV3D( pp, imax, jmax, kmax, vc, vc_comm, X_DIR, pm );
 
-    _PRINT_S4D(ofs,"after PeriodicCommX",imax,jmax,kmax,nmax,vc,n);
+    for( int l=0;l<vecLeafIDs.size();l++)
+    {
+      int leafID = vecLeafIDs[l];
+      char fname[512];
+      sprintf ( fname, "commV3D_%04d.log", leafID );
+      std::ofstream ofs( fname, ios::app );
+
+      _PRINT_S4D(ofs,"after PeriodicCommX",pp,imax,jmax,kmax,nmax,vc,n,l);
+    }
 
     // PeriodicCommY
-    paraMngr->PeriodicCommV3D( pp, imax, jmax, kmax, vc, vc_comm, Y_DIR, BOTH );
+    paraMngr->PeriodicCommV3D( pp, imax, jmax, kmax, vc, vc_comm, Y_DIR, pm );
 
-    _PRINT_S4D(ofs,"after PeriodicCommY",imax,jmax,kmax,nmax,vc,n);
+    for( int l=0;l<vecLeafIDs.size();l++)
+    {
+      int leafID = vecLeafIDs[l];
+      char fname[512];
+      sprintf ( fname, "commV3D_%04d.log", leafID );
+      std::ofstream ofs( fname, ios::app );
+
+      _PRINT_S4D(ofs,"after PeriodicCommY",pp,imax,jmax,kmax,nmax,vc,n,l);
+    }
 
     // PeriodicCommZ
-    paraMngr->PeriodicCommV3D( pp, imax, jmax, kmax, vc, vc_comm, Z_DIR, BOTH );
+    paraMngr->PeriodicCommV3D( pp, imax, jmax, kmax, vc, vc_comm, Z_DIR, pm );
 
-    _PRINT_S4D(ofs,"after PeriodicCommZ",imax,jmax,kmax,nmax,vc,n);
+    for( int l=0;l<vecLeafIDs.size();l++)
+    {
+      int leafID = vecLeafIDs[l];
+      char fname[512];
+      sprintf ( fname, "commV3D_%04d.log", leafID );
+      std::ofstream ofs( fname, ios::app );
+
+      _PRINT_S4D(ofs,"after PeriodicCommZ",pp,imax,jmax,kmax,nmax,vc,n,l);
+    }
   }
 #endif
 
-  // BndComm, PeriodicComm(S4D)
+  // BndComm, PeriodicComm(S4D) -> (imax,jmax,kmax,nmax,nLeaf)
 #if 1
   {
     int rank = paraMngr->GetMyRankID();
+    std::vector<int> vecLeafIDs = paraMngr->GetLocalLeafIDs();
     const int *sz = paraMngr->GetLocalVoxelSize();
     int imax = sz[0];
     int jmax = sz[1];
     int kmax = sz[2];
     int nmax = 5;
-    int vc  = 6;
-    size_t nw = size_t(imax+2*vc) * size_t(jmax+2*vc) * size_t(kmax+2*vc) * size_t(nmax);
+    int vc = 6;
+    size_t nw = size_t(imax+2*vc) * size_t(jmax+2*vc) * size_t(kmax+2*vc);
+    nw *= nmax;
 
     double *pp = paraMngr->AllocDoubleS4D(nmax,vc);
-    for( int n=0;n<nmax;n++ ){
-    for( int k=0-vc;k<kmax+vc;k++ ){
-    for( int j=0-vc;j<jmax+vc;j++ ){
-    for( int i=0-vc;i<imax+vc;i++ ){
-      pp[_IDX_S4D(i,j,k,n,imax,jmax,kmax,vc)] = -(rank+1);
-    }}}}
-    int cnt = 0;
-    for( int n=0;n<nmax;n++ ){
-    for( int k=0;k<kmax;k++ ){
-    for( int j=0;j<jmax;j++ ){
-    for( int i=0;i<imax;i++ ){
-      cnt++;
-      pp[_IDX_S4D(i,j,k,n,imax,jmax,kmax,vc)] = n + cnt * 10 + (rank+1)*10000;
-    }}}}
+    for( int l=0;l<vecLeafIDs.size();l++)
+    {
+      int leafID = vecLeafIDs[l];
+      for( int n=0;n<nmax;n++ ){
+      for( int k=0-vc;k<kmax+vc;k++ ){
+      for( int j=0-vc;j<jmax+vc;j++ ){
+      for( int i=0-vc;i<imax+vc;i++ ){
+        pp[_IDX_S4D_LMR(i,j,k,n,l,imax,jmax,kmax,nmax,vc)] = -(leafID+1);
+      }}}}
+      int cnt = 0;
+      for( int n=0;n<nmax;n++ ){
+      for( int k=0;k<kmax;k++ ){
+      for( int j=0;j<jmax;j++ ){
+      for( int i=0;i<imax;i++ ){
+        cnt++;
+        pp[_IDX_S4D_LMR(i,j,k,n,l,imax,jmax,kmax,nmax,vc)] = n + cnt * 10 + (leafID+1)*10000;
+      }}}}
+    }
 
-    char fname[512];
-    sprintf ( fname, "commS4D_%04d.log", rank );
-    std::ofstream ofs( fname );
+    int n=3;     //ログ出力する成分のインデクス
+    int www = 6; //ログ出力する実数の桁数
+
+    for( int l=0;l<vecLeafIDs.size();l++)
+    {
+      int leafID = vecLeafIDs[l];
+      char fname[512];
+      sprintf ( fname, "commS4D_%04d.log", leafID );
+      std::ofstream ofs( fname );
 #ifdef _NOWAIT_TEST_
-    ofs << "#### commS4D nowait test ####" << endl << endl;
-    if( rank==0 ) cout << "#### commS4D nowait test ####" << endl << endl;
+      ofs << "#### commS4D nowait test ####" << endl << endl;
+      if( rank==0 && l==0 ) cout << "#### commS4D nowait test ####" << endl << endl;
 #else
-    ofs << "#### commS4D test ####" << endl << endl;
-    if( rank==0 ) cout << "#### commS4D test ####" << endl << endl;
+      ofs << "#### commS4D test ####" << endl << endl;
+      if( rank==0 && l==0 ) cout << "#### commS4D test ####" << endl << endl;
 #endif
 
-    size_t mem = paraMngr->GetBndCommBufferSize(-1);
-    ofs << "buff mem = " << cpm_Base::GetMemString(mem) << endl;
+      ofs << "rankID = " << rank << endl;
+      ofs << "leafID = " << leafID << endl;
 
-    int n=3;
-    int www = 6;
-    ofs << "n=" << n << endl;
+      size_t mem = paraMngr->GetBndCommBufferSize(-1);
+      ofs << "buff mem = " << cpm_Base::GetMemString(mem) << endl;
 
-    _PRINT_S4D(ofs,"before comm",imax,jmax,kmax,nmax,vc,n);
+      ofs << "n=" << n << endl;
+
+      _PRINT_S4D(ofs,"before comm",pp,imax,jmax,kmax,nmax,vc,n,l);
+    }
 
 #ifndef _NOWAIT_TEST_
     paraMngr->BndCommS4D( pp, imax, jmax, kmax, nmax, vc, vc_comm );
 #else
-    MPI_Request req[48];
-    paraMngr->BndCommS4D_nowait( pp, imax, jmax, kmax, nmax, vc, vc_comm, req );
-    paraMngr->wait_BndCommS4D( pp, imax, jmax, kmax, nmax, vc, vc_comm, req );
+    paraMngr->BndCommS4D_nowait( pp, imax, jmax, kmax, nmax, vc, vc_comm );
+    paraMngr->wait_BndCommS4D( pp, imax, jmax, kmax, nmax, vc, vc_comm );
 #endif
 
-    _PRINT_S4D(ofs,"after BndComm",imax,jmax,kmax,nmax,vc,n);
+    for( int l=0;l<vecLeafIDs.size();l++)
+    {
+      int leafID = vecLeafIDs[l];
+      char fname[512];
+      sprintf ( fname, "commS4D_%04d.log", leafID );
+      std::ofstream ofs( fname, ios::app );
+
+      _PRINT_S4D(ofs,"after BndComm",pp,imax,jmax,kmax,nmax,vc,n,l);
+    }
+
+    cpm_PMFlag pm = BOTH;
+    //cpm_PMFlag pm = MINUS2PLUS;
+    //cpm_PMFlag pm = PLUS2MINUS;
 
     // PeriodicCommX
-    paraMngr->PeriodicCommS4D( pp, imax, jmax, kmax, nmax, vc, vc_comm, X_DIR, BOTH );
+    paraMngr->PeriodicCommS4D( pp, imax, jmax, kmax, nmax, vc, vc_comm, X_DIR, pm );
 
-    _PRINT_S4D(ofs,"after PeriodicCommX",imax,jmax,kmax,nmax,vc,n);
+    for( int l=0;l<vecLeafIDs.size();l++)
+    {
+      int leafID = vecLeafIDs[l];
+      char fname[512];
+      sprintf ( fname, "commS4D_%04d.log", leafID );
+      std::ofstream ofs( fname, ios::app );
+
+      _PRINT_S4D(ofs,"after PeriodicCommX",pp,imax,jmax,kmax,nmax,vc,n,l);
+    }
 
     // PeriodicCommY
-    paraMngr->PeriodicCommS4D( pp, imax, jmax, kmax, nmax, vc, vc_comm, Y_DIR, BOTH );
+    paraMngr->PeriodicCommS4D( pp, imax, jmax, kmax, nmax, vc, vc_comm, Y_DIR, pm );
 
-    _PRINT_S4D(ofs,"after PeriodicCommY",imax,jmax,kmax,nmax,vc,n);
+    for( int l=0;l<vecLeafIDs.size();l++)
+    {
+      int leafID = vecLeafIDs[l];
+      char fname[512];
+      sprintf ( fname, "commS4D_%04d.log", leafID );
+      std::ofstream ofs( fname, ios::app );
+
+      _PRINT_S4D(ofs,"after PeriodicCommY",pp,imax,jmax,kmax,nmax,vc,n,l);
+    }
 
     // PeriodicCommZ
-    paraMngr->PeriodicCommS4D( pp, imax, jmax, kmax, nmax, vc, vc_comm, Z_DIR, BOTH );
+    paraMngr->PeriodicCommS4D( pp, imax, jmax, kmax, nmax, vc, vc_comm, Z_DIR, pm );
 
-    _PRINT_S4D(ofs,"after PeriodicCommZ",imax,jmax,kmax,nmax,vc,n);
+    for( int l=0;l<vecLeafIDs.size();l++)
+    {
+      int leafID = vecLeafIDs[l];
+      char fname[512];
+      sprintf ( fname, "commS4D_%04d.log", leafID );
+      std::ofstream ofs( fname, ios::app );
+
+      _PRINT_S4D(ofs,"after PeriodicCommZ",pp,imax,jmax,kmax,nmax,vc,n,l);
+    }
   }
 #endif
 
-  // BndComm, PeriodicComm(V3DEx)
+  // BndComm, PeriodicComm(V3DEx) -> (3,imax,jmax,kmax,nLeaf)
 #if 1
   {
     int rank = paraMngr->GetMyRankID();
+    std::vector<int> vecLeafIDs = paraMngr->GetLocalLeafIDs();
     const int *sz = paraMngr->GetLocalVoxelSize();
     int imax = sz[0];
     int jmax = sz[1];
     int kmax = sz[2];
     int nmax = 3;
-    int vc  = 6;
-    size_t nw = size_t(imax+2*vc) * size_t(jmax+2*vc) * size_t(kmax+2*vc) * size_t(nmax);
+    int vc = 6;
+    size_t nw = size_t(imax+2*vc) * size_t(jmax+2*vc) * size_t(kmax+2*vc);
+    nw *= nmax;
 
     double *pp = paraMngr->AllocDoubleV3DEx(vc);
-    for( int k=0-vc;k<kmax+vc;k++ ){
-    for( int j=0-vc;j<jmax+vc;j++ ){
-    for( int i=0-vc;i<imax+vc;i++ ){
-    for( int n=0;n<nmax;n++ ){
-      pp[_IDX_V3DEX(n,i,j,k,imax,jmax,kmax,vc)] = -(rank+1);
-    }}}}
-    int cnt = 0;
-    for( int k=0;k<kmax;k++ ){
-    for( int j=0;j<jmax;j++ ){
-    for( int i=0;i<imax;i++ ){
-    for( int n=0;n<nmax;n++ ){
-      cnt++;
-      pp[_IDX_V3DEX(n,i,j,k,imax,jmax,kmax,vc)] = n + cnt * 10 + (rank+1)*10000;
-    }}}}
+    for( int l=0;l<vecLeafIDs.size();l++)
+    {
+      int leafID = vecLeafIDs[l];
+      for( int k=0-vc;k<kmax+vc;k++ ){
+      for( int j=0-vc;j<jmax+vc;j++ ){
+      for( int i=0-vc;i<imax+vc;i++ ){
+      for( int n=0;n<3;n++ ){
+        pp[_IDX_V3DEX_LMR(n,i,j,k,l,imax,jmax,kmax,vc)] = -(leafID+1);
+      }}}}
+      int cnt = 0;
+      for( int k=0;k<kmax;k++ ){
+      for( int j=0;j<jmax;j++ ){
+      for( int i=0;i<imax;i++ ){
+      for( int n=0;n<3;n++ ){
+        cnt++;
+        pp[_IDX_V3DEX_LMR(n,i,j,k,l,imax,jmax,kmax,vc)] = n + cnt * 10 + (leafID+1)*10000;
+      }}}}
+    }
 
-    char fname[512];
-    sprintf ( fname, "commV3DEx_%04d.log", rank );
-    std::ofstream ofs( fname );
+    int n=1;     //ログ出力する成分のインデクス
+    int www = 6; //ログ出力する実数の桁数
+
+    for( int l=0;l<vecLeafIDs.size();l++)
+    {
+      int leafID = vecLeafIDs[l];
+      char fname[512];
+      sprintf ( fname, "commV3DEx_%04d.log", leafID );
+      std::ofstream ofs( fname );
 #ifdef _NOWAIT_TEST_
-    ofs << "#### commV3DEx nowait test ####" << endl << endl;
-    if( rank==0 ) cout << "#### commV3DEx nowait test ####" << endl << endl;
+      ofs << "#### commV3DEx nowait test ####" << endl << endl;
+      if( rank==0 && l==0 ) cout << "#### commV3DEx nowait test ####" << endl << endl;
 #else
-    ofs << "#### commV3DEx test ####" << endl << endl;
-    if( rank==0 ) cout << "#### commV3DEx test ####" << endl << endl;
+      ofs << "#### commV3DEx test ####" << endl << endl;
+      if( rank==0 && l==0 ) cout << "#### commV3DEx test ####" << endl << endl;
 #endif
 
-    size_t mem = paraMngr->GetBndCommBufferSize(-1);
-    ofs << "buff mem = " << cpm_Base::GetMemString(mem) << endl;
+      ofs << "rankID = " << rank << endl;
+      ofs << "leafID = " << leafID << endl;
 
-    int n=2;
-    int www = 6;
-    ofs << "n=" << n << endl;
+      size_t mem = paraMngr->GetBndCommBufferSize(-1);
+      ofs << "buff mem = " << cpm_Base::GetMemString(mem) << endl;
 
-    _PRINT_S4DEX(ofs,"before comm",nmax,imax,jmax,kmax,vc,n);
+      ofs << "n=" << n << endl;
+
+      _PRINT_S4DEX(ofs,"before comm",pp,nmax,imax,jmax,kmax,vc,n,l);
+    }
 
 #ifndef _NOWAIT_TEST_
     paraMngr->BndCommV3DEx( pp, imax, jmax, kmax, vc, vc_comm );
 #else
-    MPI_Request req[48];
-    paraMngr->BndCommV3DEx_nowait( pp, imax, jmax, kmax, vc, vc_comm, req );
-    paraMngr->wait_BndCommV3DEx( pp, imax, jmax, kmax, vc, vc_comm, req );
+    paraMngr->BndCommV3DEx_nowait( pp, imax, jmax, kmax, vc, vc_comm );
+    paraMngr->wait_BndCommV3DEx( pp, imax, jmax, kmax, vc, vc_comm );
 #endif
 
-    _PRINT_S4DEX(ofs,"after BndComm",nmax,imax,jmax,kmax,vc,n);
+    for( int l=0;l<vecLeafIDs.size();l++)
+    {
+      int leafID = vecLeafIDs[l];
+      char fname[512];
+      sprintf ( fname, "commV3DEx_%04d.log", leafID );
+      std::ofstream ofs( fname, ios::app );
+
+      _PRINT_S4DEX(ofs,"after BndComm",pp,nmax,imax,jmax,kmax,vc,n,l);
+    }
+
+    cpm_PMFlag pm = BOTH;
+    //cpm_PMFlag pm = MINUS2PLUS;
+    //cpm_PMFlag pm = PLUS2MINUS;
 
     // PeriodicCommX
-    paraMngr->PeriodicCommV3DEx( pp, imax, jmax, kmax, vc, vc_comm, X_DIR, BOTH );
+    paraMngr->PeriodicCommV3DEx( pp, imax, jmax, kmax, vc, vc_comm, X_DIR, pm );
 
-    _PRINT_S4DEX(ofs,"after PeriodicCommX",nmax,imax,jmax,kmax,vc,n);
+    for( int l=0;l<vecLeafIDs.size();l++)
+    {
+      int leafID = vecLeafIDs[l];
+      char fname[512];
+      sprintf ( fname, "commV3DEx_%04d.log", leafID );
+      std::ofstream ofs( fname, ios::app );
+
+      _PRINT_S4DEX(ofs,"after PeriodicCommX",pp,nmax,imax,jmax,kmax,vc,n,l);
+    }
 
     // PeriodicCommY
-    paraMngr->PeriodicCommV3DEx( pp, imax, jmax, kmax, vc, vc_comm, Y_DIR, BOTH );
+    paraMngr->PeriodicCommV3DEx( pp, imax, jmax, kmax, vc, vc_comm, Y_DIR, pm );
 
-    _PRINT_S4DEX(ofs,"after PeriodicCommY",nmax,imax,jmax,kmax,vc,n);
+    for( int l=0;l<vecLeafIDs.size();l++)
+    {
+      int leafID = vecLeafIDs[l];
+      char fname[512];
+      sprintf ( fname, "commV3DEx_%04d.log", leafID );
+      std::ofstream ofs( fname, ios::app );
+
+      _PRINT_S4DEX(ofs,"after PeriodicCommY",pp,nmax,imax,jmax,kmax,vc,n,l);
+    }
 
     // PeriodicCommZ
-    paraMngr->PeriodicCommV3DEx( pp, imax, jmax, kmax, vc, vc_comm, Z_DIR, BOTH );
+    paraMngr->PeriodicCommV3DEx( pp, imax, jmax, kmax, vc, vc_comm, Z_DIR, pm );
 
-    _PRINT_S4DEX(ofs,"after PeriodicCommZ",nmax,imax,jmax,kmax,vc,n);
+    for( int l=0;l<vecLeafIDs.size();l++)
+    {
+      int leafID = vecLeafIDs[l];
+      char fname[512];
+      sprintf ( fname, "commV3DEx_%04d.log", leafID );
+      std::ofstream ofs( fname, ios::app );
+
+      _PRINT_S4DEX(ofs,"after PeriodicCommZ",pp,nmax,imax,jmax,kmax,vc,n,l);
+    }
   }
 #endif
 
-  // BndComm, PeriodicComm(S4DEx)
+  // BndComm, PeriodicComm(S4DEx) -> (nmax,imax,jmax,kmax,nLeaf)
 #if 1
   {
     int rank = paraMngr->GetMyRankID();
+    std::vector<int> vecLeafIDs = paraMngr->GetLocalLeafIDs();
     const int *sz = paraMngr->GetLocalVoxelSize();
     int imax = sz[0];
     int jmax = sz[1];
     int kmax = sz[2];
-    int nmax = 6;
-    int vc  = 6;
-    size_t nw = size_t(imax+2*vc) * size_t(jmax+2*vc) * size_t(kmax+2*vc) * size_t(nmax);
+    int nmax = 5;
+    int vc = 6;
+    size_t nw = size_t(imax+2*vc) * size_t(jmax+2*vc) * size_t(kmax+2*vc);
+    nw *= nmax;
 
     double *pp = paraMngr->AllocDoubleS4DEx(nmax,vc);
-    for( int k=0-vc;k<kmax+vc;k++ ){
-    for( int j=0-vc;j<jmax+vc;j++ ){
-    for( int i=0-vc;i<imax+vc;i++ ){
-    for( int n=0;n<nmax;n++ ){
-      pp[_IDX_S4DEX(n,i,j,k,nmax,imax,jmax,kmax,vc)] = -(rank+1);
-    }}}}
-    int cnt = 0;
-    for( int k=0;k<kmax;k++ ){
-    for( int j=0;j<jmax;j++ ){
-    for( int i=0;i<imax;i++ ){
-    for( int n=0;n<nmax;n++ ){
-      cnt++;
-      pp[_IDX_S4DEX(n,i,j,k,nmax,imax,jmax,kmax,vc)] = n + cnt * 10 + (rank+1)*10000;
-    }}}}
+    for( int l=0;l<vecLeafIDs.size();l++)
+    {
+      int leafID = vecLeafIDs[l];
+      for( int k=0-vc;k<kmax+vc;k++ ){
+      for( int j=0-vc;j<jmax+vc;j++ ){
+      for( int i=0-vc;i<imax+vc;i++ ){
+      for( int n=0;n<nmax;n++ ){
+        pp[_IDX_S4DEX_LMR(n,i,j,k,l,nmax,imax,jmax,kmax,vc)] = -(leafID+1);
+      }}}}
+      int cnt = 0;
+      for( int k=0;k<kmax;k++ ){
+      for( int j=0;j<jmax;j++ ){
+      for( int i=0;i<imax;i++ ){
+      for( int n=0;n<nmax;n++ ){
+        cnt++;
+        pp[_IDX_S4DEX_LMR(n,i,j,k,l,nmax,imax,jmax,kmax,vc)] = n + cnt * 10 + (leafID+1)*10000;
+      }}}}
+    }
 
-    char fname[512];
-    sprintf ( fname, "commS4DEx_%04d.log", rank );
-    std::ofstream ofs( fname );
+    int n=3;     //ログ出力する成分のインデクス
+    int www = 6; //ログ出力する実数の桁数
+
+    for( int l=0;l<vecLeafIDs.size();l++)
+    {
+      int leafID = vecLeafIDs[l];
+      char fname[512];
+      sprintf ( fname, "commS4DEx_%04d.log", leafID );
+      std::ofstream ofs( fname );
 #ifdef _NOWAIT_TEST_
-    ofs << "#### commS4DEx nowait test ####" << endl << endl;
-    if( rank==0 ) cout << "#### commS4DEx nowait test ####" << endl << endl;
+      ofs << "#### commS4DEx nowait test ####" << endl << endl;
+      if( rank==0 && l==0 ) cout << "#### commS4DEx nowait test ####" << endl << endl;
 #else
-    ofs << "#### commS4DEx test ####" << endl << endl;
-    if( rank==0 ) cout << "#### commS4DEx test ####" << endl << endl;
+      ofs << "#### commS4DEx test ####" << endl << endl;
+      if( rank==0 && l==0 ) cout << "#### commS4DEx test ####" << endl << endl;
 #endif
 
-    size_t mem = paraMngr->GetBndCommBufferSize(-1);
-    ofs << "buff mem = " << cpm_Base::GetMemString(mem) << endl;
+      ofs << "rankID = " << rank << endl;
+      ofs << "leafID = " << leafID << endl;
 
-    int n=4;
-    int www = 6;
-    ofs << "n=" << n << endl;
+      size_t mem = paraMngr->GetBndCommBufferSize(-1);
+      ofs << "buff mem = " << cpm_Base::GetMemString(mem) << endl;
 
-    _PRINT_S4DEX(ofs,"before comm",nmax,imax,jmax,kmax,vc,n);
+      ofs << "n=" << n << endl;
+
+      _PRINT_S4DEX(ofs,"before comm",pp,nmax,imax,jmax,kmax,vc,n,l);
+    }
 
 #ifndef _NOWAIT_TEST_
-//    paraMngr->BndCommS4DEx( pp, nmax, imax, jmax, kmax, vc, 2 );
-    ofs << "err=" << paraMngr->BndCommS4DEx( pp, nmax, imax, jmax, kmax, vc, vc_comm ) << endl;
+    paraMngr->BndCommS4DEx( pp, nmax,imax, jmax, kmax, vc, vc_comm );
 #else
-    MPI_Request req[48];
-    paraMngr->BndCommS4DEx_nowait( pp, nmax, imax, jmax, kmax, vc, vc_comm, req );
-    paraMngr->wait_BndCommS4DEx( pp, nmax, imax, jmax, kmax, vc, vc_comm, req );
+    paraMngr->BndCommS4DEx_nowait( pp, nmax, imax, jmax, kmax, vc, vc_comm );
+    paraMngr->wait_BndCommS4DEx( pp, nmax, imax, jmax, kmax, vc, vc_comm );
 #endif
 
-    _PRINT_S4DEX(ofs,"after BndComm",nmax,imax,jmax,kmax,vc,n);
+    for( int l=0;l<vecLeafIDs.size();l++)
+    {
+      int leafID = vecLeafIDs[l];
+      char fname[512];
+      sprintf ( fname, "commS4DEx_%04d.log", leafID );
+      std::ofstream ofs( fname, ios::app );
+
+      _PRINT_S4DEX(ofs,"after BndComm",pp,nmax,imax,jmax,kmax,vc,n,l);
+    }
+
+    cpm_PMFlag pm = BOTH;
+    //cpm_PMFlag pm = MINUS2PLUS;
+    //cpm_PMFlag pm = PLUS2MINUS;
 
     // PeriodicCommX
-    paraMngr->PeriodicCommS4DEx( pp, nmax, imax, jmax, kmax, vc, vc_comm, X_DIR, BOTH );
+    paraMngr->PeriodicCommS4DEx( pp, nmax, imax, jmax, kmax, vc, vc_comm, X_DIR, pm );
 
-    _PRINT_S4DEX(ofs,"after PeriodicCommX",nmax,imax,jmax,kmax,vc,n);
+    for( int l=0;l<vecLeafIDs.size();l++)
+    {
+      int leafID = vecLeafIDs[l];
+      char fname[512];
+      sprintf ( fname, "commS4DEx_%04d.log", leafID );
+      std::ofstream ofs( fname, ios::app );
+
+      _PRINT_S4DEX(ofs,"after PeriodicCommX",pp,nmax,imax,jmax,kmax,vc,n,l);
+    }
 
     // PeriodicCommY
-    paraMngr->PeriodicCommS4DEx( pp, nmax, imax, jmax, kmax, vc, vc_comm, Y_DIR, BOTH );
+    paraMngr->PeriodicCommS4DEx( pp, nmax, imax, jmax, kmax, vc, vc_comm, Y_DIR, pm );
 
-    _PRINT_S4DEX(ofs,"after PeriodicCommY",nmax,imax,jmax,kmax,vc,n);
+    for( int l=0;l<vecLeafIDs.size();l++)
+    {
+      int leafID = vecLeafIDs[l];
+      char fname[512];
+      sprintf ( fname, "commS4DEx_%04d.log", leafID );
+      std::ofstream ofs( fname, ios::app );
+
+      _PRINT_S4DEX(ofs,"after PeriodicCommY",pp,nmax,imax,jmax,kmax,vc,n,l);
+    }
 
     // PeriodicCommZ
-    paraMngr->PeriodicCommS4DEx( pp, nmax, imax, jmax, kmax, vc, vc_comm, Z_DIR, BOTH );
+    paraMngr->PeriodicCommS4DEx( pp, nmax, imax, jmax, kmax, vc, vc_comm, Z_DIR, pm );
 
-    _PRINT_S4DEX(ofs,"after PeriodicCommZ",nmax,imax,jmax,kmax,vc,n);
+    for( int l=0;l<vecLeafIDs.size();l++)
+    {
+      int leafID = vecLeafIDs[l];
+      char fname[512];
+      sprintf ( fname, "commS4DEx_%04d.log", leafID );
+      std::ofstream ofs( fname, ios::app );
+
+      _PRINT_S4DEX(ofs,"after PeriodicCommZ",pp,nmax,imax,jmax,kmax,vc,n,l);
+    }
   }
 #endif
 

@@ -1,5 +1,5 @@
 #include "cpm_Base.h"
-#include "cpm_ParaManager.h"
+#include "cpm_ParaManagerLMR.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -28,7 +28,7 @@ int main( int argc, char **argv )
   int ret = 0;
 
   // 並列管理クラスのインスタンスと初期化
-  cpm_ParaManager *paraMngr = cpm_ParaManager::get_instance(argc,argv,CPM_DOMAIN_LMR);
+  cpm_ParaManagerLMR *paraMngr = cpm_ParaManagerLMR::get_instance(argc,argv);
   if( !paraMngr ) return CPM_ERROR_PM_INSTANCE;
 
   // 引数のチェック
@@ -66,24 +66,6 @@ int main( int argc, char **argv )
     return ret;
   }
 
-  // 自ランクの情報を取得
-  int myrank = paraMngr->GetMyRankID();
-  int nrank  = paraMngr->GetNumRank();
-  const int    *vox = paraMngr->GetLocalVoxelSize();
-  const double *pch = paraMngr->GetPitch();
-/*
-  _FLUSH(cout);
-  for( int i=0;i<nrank;i++ )
-  {
-    if( i==myrank )
-    {
-      cout << "[" << myrank << "/" << nrank << "] voxel size  = " << vox[0] << "," << vox[1] << "," << vox[2] << endl
-           << "[" << myrank << "/" << nrank << "] voxel pitch = " << pch[0] << "," << pch[1] << "," << pch[2] << endl;
-    }
-    _FLUSH(cout);
-  }
-*/
-
   // parameter
   string scheme = input.GetString("/MCONV/Scheme");
   int    stpMax = input.GetInt   ("/MCONV/stpMax");
@@ -100,23 +82,6 @@ int main( int argc, char **argv )
     eps    = input.GetDouble("/MCONV/eps");
     omg    = input.GetDouble("/MCONV/omg");
   }
-/*
-  if( myrank == 0 )
-  {
-    cout << "tp file : " << tpFile << endl;
-    cout << "scheme  : " << scheme << endl;
-    cout << "stpMax  : " << stpMax << endl;
-    cout << "dt      : " << dt << endl;
-    cout << "cf      : " << cf << endl;
-    if( ischeme == 2 )
-    {
-      cout << "itrMax  : " << itrMax << endl;
-      cout << "eps     : " << eps << endl;
-      cout << "omg     : " << omg << endl;
-    } 
-  }
-*/
-  _FLUSH(cout);
 
   // diffusion
   diffusion_( &ischeme, &stpMax, &dt, &cf, &itrMax, &eps, &omg, &ret );

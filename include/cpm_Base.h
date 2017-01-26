@@ -60,6 +60,7 @@ public:
   }
 
   /** NULLのランクかどうかを確認
+   *  @param[in] rankNo ランクID
    *  @retval true  NULL
    *  @retval false NULLではない
    */
@@ -100,8 +101,8 @@ public:
 #endif
   }
 
-	/** 時刻の取得(gettimeofday版)
-   *  @retrun 時刻
+  /** 時刻の取得(gettimeofday版)
+   *  @return 時刻
    */
   CPM_INLINE
   static double GetTime()
@@ -124,9 +125,10 @@ public:
     return GetTime() - before;
   }
 
-	/** 時刻の取得(MPI_Wtime版)
-   *  @retrun 時刻
-   */
+  /** 時刻の取得(MPI_Wtime版)
+   *
+   *   @return 時刻
+   */ 
   CPM_INLINE
   static double GetWTime()
   {

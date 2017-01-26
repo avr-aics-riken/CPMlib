@@ -6,7 +6,7 @@
 # Copyright (C) 2012-2014 Institute of Industrial Science, The University of Tokyo.
 # All right reserved.
 #
-# Copyright (c) 2014-2015 Advanced Institute for Computational Science, RIKEN.
+# Copyright (c) 2014-2016 Advanced Institute for Computational Science, RIKEN.
 # All rights reserved.
 #
 ###################################################################################
@@ -17,14 +17,14 @@
 
 AC_PREREQ([2.57])
 
-AC_INIT([CPMlib],[2.1.2],[keno@{iis.u-tokyo.ac, riken}.jp],[CPMlib])
+AC_INIT([CPMlib],[2.1.5],[keno@{iis.u-tokyo.ac, riken}.jp],[CPMlib])
 
 echo "----------------------------------------"
 echo "Running CPMlib Configure Script"
 echo "----------------------------------------"
 
 
-AC_CONFIG_SRCDIR([src/cpm_ParaManager.cpp])
+AC_CONFIG_SRCDIR([src/cpm_BaseParaManager.cpp])
 
 
 #
@@ -66,7 +66,7 @@ AM_INIT_AUTOMAKE()
 #
 # revision No.
 #
-CPM_REVISION="20151128_1730"
+CPM_REVISION="20161031_0900"
 AC_SUBST(CPM_REVISION)
 
 
@@ -325,19 +325,21 @@ elif test x"$with_comp" = x"GNU" ; then
   CPM_LIBS="$CPM_LIBS"" -lstdc++"
 fi
 
+CPMLMR_LIBS="-lCPMLMR "$CPM_LIBS""
+AC_SUBST(CPMLMR_LIBS)
 
 #
 # MAKE_SUB_DIRS
 #
 AC_SUBST(MAKE_SUB_DIRS)
-MAKE_SUB_DIRS="src doc"
+MAKE_SUB_DIRS="src src/LMR doc"
 
 if test x"$with_f90example" = x"yes" ; then
-  MAKE_SUB_DIRS="$MAKE_SUB_DIRS"" Examples/f90 Examples/mconvp_LMR"
+  MAKE_SUB_DIRS="$MAKE_SUB_DIRS"" Examples/f90 Examples/mconvp_LMR Examples/code_array"
 fi
 
 if test x"$with_example" = x"yes" ; then
-  MAKE_SUB_DIRS="$MAKE_SUB_DIRS"" Examples/cxx Examples/cxx_LMR"
+  MAKE_SUB_DIRS="$MAKE_SUB_DIRS"" Examples/cxx Examples/cxx_FDM Examples/cxx_LMR"
 fi
 
 
@@ -383,18 +385,22 @@ AC_CHECK_FUNCS([gethostname \
 
 AC_CONFIG_FILES([Makefile \
                  src/Makefile \
+                 src/LMR/Makefile \
                  doc/Makefile \
                  cpm-config \
                  include/cpm_Version.h \
                  Examples/cxx/Makefile \
+                 Examples/cxx_FDM/Makefile \
                  Examples/cxx_LMR/Makefile \
                  Examples/f90/Makefile \
                  Examples/mconvp_LMR/Makefile \
+                 Examples/code_array/Makefile \
                 ])
 
 AC_OUTPUT
 
 chmod +x ./cpm-config
+cp include/cpm_Version.h ../include/cpm_Version.h
 
 echo "---------------------------------------------"
 echo "Finished Running CPMlib Configure Script"

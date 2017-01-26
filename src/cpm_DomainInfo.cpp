@@ -41,6 +41,10 @@ cpm_DomainInfo::clear()
     m_region[i] = 0.0;
     m_pitch[i]  = 0.0;
     m_voxNum[i] = 0;
+// 2016/01/22 FEAST add.s
+    m_nodNum[i] = 0;
+// 2016/01/22 FEAST add.e
+
   }
 }
 
@@ -106,6 +110,12 @@ cpm_DomainInfo::SetVoxNum( int vox[3] )
   m_voxNum[0] = vox[0];
   m_voxNum[1] = vox[1];
   m_voxNum[2] = vox[2];
+
+// 2016/01/22 FEAST add.s
+  m_nodNum[0] = vox[0] + 1;
+  m_nodNum[1] = vox[1] + 1;
+  m_nodNum[2] = vox[2] + 1;
+// 2016/01/22 FEAST add.e
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -115,6 +125,30 @@ cpm_DomainInfo::GetVoxNum() const
 {
   return m_voxNum;
 }
+
+// 2016/01/22 FEAST add.s
+////////////////////////////////////////////////////////////////////////////////
+// 頂点数のセット
+void
+cpm_DomainInfo::SetNodNum( int nod[3] )
+{
+  m_nodNum[0] = nod[0];
+  m_nodNum[1] = nod[1];
+  m_nodNum[2] = nod[2];
+
+  m_voxNum[0] = nod[0] - 1;
+  m_voxNum[1] = nod[1] - 1;
+  m_voxNum[2] = nod[2] - 1;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// 頂点数の取得
+const int*
+cpm_DomainInfo::GetNodNum() const
+{
+  return m_nodNum;
+}
+// 2016/01/22 FEAST add.e
 
 ////////////////////////////////////////////////////////////////////////////////
 // 領域情報のチェック

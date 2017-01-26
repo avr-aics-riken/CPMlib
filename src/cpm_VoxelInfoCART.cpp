@@ -332,6 +332,15 @@ cpm_VoxelInfoCART::CreateLocalDomainInfo()
     m_voxelTailIndex[n] = head[n] + lvox[n] - 1;
   }
 
+// 2016/01/22 FEAST add.s
+  // 頂点のHeadIndexとTailindexをセット
+  for( int n=0;n<3;n++ )
+  { 
+    m_nodeHeadIndex[n] = m_voxelHeadIndex[n];
+    m_nodeTailIndex[n] = m_voxelTailIndex[n] + 1;
+  }
+// 2016/01/22 FEAST add.e
+
   // ローカルの原点、ピッチ、空間サイズをセット
   const double *gorg = m_globalDomainInfo.GetOrigin();
   const double *gpch = m_globalDomainInfo.GetPitch();

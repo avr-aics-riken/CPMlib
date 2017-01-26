@@ -78,8 +78,21 @@ public:
    */
   const int* GetVoxNum() const;
 
-  /** 領域情報のチェック
-   *  VoxelInitを実行する上で必要な情報がセットされているかをチェックする。
+// 2016/01/22 FEAST add.s
+  /** 頂点数のセット
+   *  @param[in] nod 頂点数情報
+   */
+  void SetNodNum( int nod[3] );
+
+  /** 頂点数の取得
+   *  @return 頂点数情報整数配列のポインタ
+   */
+  const int* GetNodNum() const;  
+// 2016/01/22 FEAST add.e
+
+  /** 領域情報のチェック \n
+   *  - VoxelInitを実行する上で必要な情報がセットされているかをチェックする。
+   *
    *  @return   終了コード(CPM_SUCCESS=正常終了)
    */
   cpm_ErrorCode CheckData();
@@ -99,6 +112,9 @@ private:
   double m_pitch[3];  ///< ピッチ
   int    m_voxNum[3]; ///< VOXEL数
 
+// 2016/01/22 FEAST add.s
+  int    m_nodNum[3]; ///< 頂点数
+// 2016/01/22 FESAT add.e
 
 };
 
@@ -204,14 +220,17 @@ public:
   bool AddSubdomain( cpm_ActiveSubdomainInfo subDomain );
 
   /** 活性サブドメインの数を取得
-   *  活性サブドメインの数＝活性サブドメイン情報配列のサイズだが、
+   *  - 活性サブドメインの数＝活性サブドメイン情報配列のサイズだが、
    *  この配列が空のとき、領域分割数でサブドメイン数を決定して返す
+   *
    *  @return 活性サブドメインの数
    */
   int GetSubdomainNum() const;
 
   /** 活性サブドメインの数を取得(情報数)
-   *  活性サブドメインの数＝活性サブドメイン情報配列のサイズ
+   *  - 活性サブドメインの数＝活性サブドメイン情報配列のサイズ
+   *
+   *  @return 活性サブドメイン情報配列サイズ
    */
   int GetSubdomainArraySize() const;
 
@@ -222,23 +241,26 @@ public:
   const cpm_ActiveSubdomainInfo* GetSubdomainInfo( size_t idx ) const;
 
   /** 領域情報のチェック
-   *  VoxelInitを実行する上で必要な情報がセットされているかをチェックする。
-   *  活性サブドメイン配列が空のとき、全領域が活性サブドメインになるため、
+   *  - VoxelInitを実行する上で必要な情報がセットされているかをチェックする。
+   *   活性サブドメイン配列が空のとき、全領域が活性サブドメインになるため、
    *  このチェック関数内で活性サブドメイン情報を生成する。
+   *
    *  @param[in] nRank 並列プロセス数
    *  @return   終了コード(CPM_SUCCESS=正常終了)
    */
   cpm_ErrorCode CheckData( int nRank );
 
   /** ActiveSubdomainファイルの読み込み
-   *  ActiveSubdomainファイルを読み込み、活性ドメイン情報を生成する
+   *  - ActiveSubdomainファイルを読み込み、活性ドメイン情報を生成する
+   *
    *  @param[in]  subDomainFile ActiveSubdomainファイル名
    *  @return   終了コード(CPM_SUCCESS=正常終了)
    */
   cpm_ErrorCode ReadActiveSubdomainFile( std::string subDomainFile );
 
   /** ActiveSubdomainファイルの読み込み(static関数)
-   *  ActiveSubdomainファイルを読み込み、活性ドメイン情報を生成する
+   *  - ActiveSubdomainファイルを読み込み、活性ドメイン情報を生成する
+   *
    *  @param[in]  subDomainFile ActiveSubdomainファイル名
    *  @param[out] subDomainInfo 活性ドメイン情報
    *  @param[out] div           ActiveSubdiomainファイル中の領域分割数
@@ -249,7 +271,8 @@ public:
                                               , int div[3] );
 
   /** ActiveSubdomainファイルのエンディアンチェック
-   *  ActiveSubdomainファイルのエンディアンをチェック
+   *  - ActiveSubdomainファイルのエンディアンをチェック
+   *
    *  @param[in]  ident               ActiveSubdomainファイルのIdentifier
    *  @retval     CPM_ENDIAN::Match   一致
    *  @retval     CPM_ENDIAN::UnMatch 不一致

@@ -13,15 +13,17 @@ Usage: cpm-config [OPTION]
 
 Known values for OPTION are:
 
-  --cxx       print C++ compiler command
-  --fc        print Fortran90 compiler command
-  --fclink    print Fortran90 program linker command
-  --cflags    print C/C++ pre-processor and compiler flags
-  --fcflags   print Fortran90 pre-processor and compiler flags
-  --libs      print library linking information for C++ program
-  --fclibs    print library linking information for Fortran90 program
-  --help      display this help and exit
-  --version   output version information
+  --cxx          print C++ compiler command
+  --fc           print Fortran90 compiler command
+  --fclink       print Fortran90 program linker command
+  --cflags       print C/C++ pre-processor and compiler flags
+  --fcflags      print Fortran90 pre-processor and compiler flags
+  --libs         print library linking information for C++ program
+  --fclibs       print library linking information for Fortran90 program
+  --libs_LMR     print LMR library linking information for C++ program
+  --fclibs_LMR   print LMRlibrary linking information for Fortran90 program
+  --help         display this help and exit
+  --version      output version information
 
 EOF
 
@@ -87,6 +89,14 @@ EOF
 
     --fclibs)
       echo @CPM_LDFLAGS@ @CPM_LIBS@ @MPICH_LDFLAGS@ @MPICH_FCLIBS@
+      ;;
+
+    --libs_LMR)
+      echo @CPM_LDFLAGS@ @CPMLMR_LIBS@ @MPICH_LDFLAGS@ @MPICH_LIBS@
+      ;;
+
+    --fclibs_LMR)
+      echo @CPM_LDFLAGS@ @CPMLMR_LIBS@ @MPICH_LDFLAGS@ @MPICH_FCLIBS@
       ;;
 
     *)

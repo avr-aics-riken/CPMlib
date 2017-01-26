@@ -24,19 +24,24 @@ mconvp_LMR_SOURCES = \
     mconvp_LMR_main.h \
     mconvp_LMR.f90 \
     README \
-    ./data/mconv.tp \
+    ./data/mconv_ftcs.tp \
+    ./data/mconv_jacobi.tp \
     ./data/leaf15.oct \
-    ./data/run.sh
+    ./data/run_ftcs.sh \
+    ./data/run_jacobi.sh
 
 
 mconvp_LMR_CXXFLAGS = \
     -I$(top_srcdir)/include \
+    -I$(top_srcdir)/include/LMR \
+    -I$(top_srcdir)/include/LMR/BCM \
     @MPICH_CFLAGS@ \
     @TP_CFLAGS@ \
     @REALOPT@
 
 mconvp_LMR_FCFLAGS = \
     -I$(top_srcdir)/include \
+    @FCFLAGS@ \
     @MPICH_CFLAGS@ \
     @FREALOPT@
 
@@ -46,7 +51,8 @@ mconvp_LMR_FCFLAGS = \
 
 mconvp_LMR_LDADD = \
     -L$(top_builddir)/src \
-    @CPM_LIBS@ \
+    -L$(top_builddir)/src/LMR \
+    @CPMLMR_LIBS@ \
     @MPICH_LDFLAGS@ \
     @MPICH_FCLIBS@ \
     @TP_LDFLAGS@ \

@@ -40,6 +40,7 @@ mconvp_CPM_LINK = @CPM_FC_LD@ -o $@
 
 mconvp_CPM_LDADD = \
     -L$(top_builddir)/src \
+    $(LDFLAGS) \
     @CPM_LIBS@ \
     @MPICH_LDFLAGS@ \
     @MPICH_FCLIBS@ \

@@ -300,18 +300,20 @@
       int jmax = sz[1];
       int kmax = sz[2];
       int vc = 3;
-      int *mid = paraMngr->AllocIntS3D(vc);
-      for( int k=-vc;k<kmax+vc;k++ ){
-      for( int j=-vc;j<jmax+vc;j++ ){
-      for( int i=-vc;i<imax+vc;i++ ){
-        mid[_IDX_S3D(i,j,k,imax,jmax,kmax,vc)] = 0;
+
+      int pad_size[3];
+      int *mid = paraMngr->AllocIntS3D(vc,padding,pad_size);
+      for( int k=-vc;k<kmax+vc+pad_size[2];k++ ){
+      for( int j=-vc;j<jmax+vc+pad_size[1];j++ ){
+      for( int i=-vc;i<imax+vc+pad_size[0];i++ ){
+        mid[_IDX_S3D_PAD(i,j,k,imax,jmax,kmax,vc,pad_size[0],pad_size[1],pad_size[2])] = 0;
       }}}
 
       int id = 1;
       int ii = imax/2;
       int jj = jmax/2;
       int kk = kmax/2;
-      mid[_IDX_S3D(ii,jj,kk,imax,jmax,kmax,vc)] = id;
+      mid[_IDX_S3D_PAD(ii,jj,kk,imax,jmax,kmax,vc,pad_size[0],pad_size[1],pad_size[2])] = id;
 
       if( rank==0 ) cout << endl << "***** GetBndIndexExtGc test pg[" << 0 << "]" << endl;
       ofs << endl << "***** GetBndIndexExtGc test pg[" << 0 << "]" << endl;
@@ -320,7 +322,8 @@
 
       int ista, jsta, ksta, ilen, jlen, klen;
       if( paraMngr->GetBndIndexExtGc( id, mid, imax, jmax, kmax, vc
-                                    , ista, jsta, ksta, ilen, jlen, klen ) )
+                                    , ista, jsta, ksta, ilen, jlen, klen
+                                    , pad_size ) )
       {
         ofs << "  set id(" << id << ") local  index = " << ii << ", " << jj << ", " << kk << endl;
         ofs << "  set id(" << id << ") global index = " << ii+hidx[0] << ", " << jj+hidx[1] << ", " << kk+hidx[2] << endl;
@@ -338,20 +341,20 @@
 
 //#define _NOWAIT_TEST_
 
-#define _PRINT_S4D(_OFS,_TITLE,_IMAX,_JMAX,_KMAX,_NMAX,_VC,_N) \
+#define _PRINT_S4D(_OFS,_TITLE,_IMAX,_JMAX,_KMAX,_NMAX,_VC,_N,_IP,_JP,_KP) \
 { \
     _OFS << endl; \
     _OFS << "#### " << _TITLE << " I-J ####" << endl; \
     { \
       _OFS << "J |" << endl; \
       int k=_KMAX/2; \
-      for( int j=_JMAX+_VC-1;j>=0-_VC;j-- ){ \
+      for( int j=_JMAX+_VC+_JP-1;j>=0-_VC;j-- ){ \
       stringstream ss; \
-      for( int i=0-_VC;i<_IMAX+_VC;i++ ){ \
-        size_t idx = _IDX_S4D(i,j,k,_N,_IMAX,_JMAX,_KMAX,_VC); \
+      for( int i=0-_VC;i<_IMAX+_VC+_IP;i++ ){ \
+        size_t idx = _IDX_S4D_PAD(i,j,k,_N,_IMAX,_JMAX,_KMAX,_VC,_IP,_JP,_KP); \
         ss.width(www); \
         ss << pp[idx]; \
-        if( i<_IMAX+_VC-1 ) ss << ", "; \
+        if( i<_IMAX+_VC+_IP-1 ) ss << ", "; \
       } \
       _OFS << ss.str(); \
       if( j==0-_VC ) _OFS << "  -> I"; \
@@ -364,13 +367,13 @@
     { \
       _OFS << "K |" << endl; \
       int i=_IMAX/2; \
-      for( int k=_KMAX+_VC-1;k>=0-_VC;k-- ){ \
+      for( int k=_KMAX+_VC+_KP-1;k>=0-_VC;k-- ){ \
       stringstream ss; \
-      for( int j=0-_VC;j<_JMAX+_VC;j++ ){ \
-        size_t idx = _IDX_S4D(i,j,k,_N,_IMAX,_JMAX,_KMAX,_VC); \
+      for( int j=0-_VC;j<_JMAX+_VC+_JP;j++ ){ \
+        size_t idx = _IDX_S4D_PAD(i,j,k,_N,_IMAX,_JMAX,_KMAX,_VC,_IP,_JP,_KP); \
         ss.width(www); \
         ss << pp[idx]; \
-        if( j<_JMAX+_VC-1 ) ss << ", "; \
+        if( j<_JMAX+_VC+_JP-1 ) ss << ", "; \
       } \
       _OFS << ss.str(); \
       if( k==0-_VC ) _OFS << "  -> J"; \
@@ -379,20 +382,20 @@
     } \
 }
 
-#define _PRINT_S4DEX(_OFS,_TITLE,_NMAX,_IMAX,_JMAX,_KMAX,_VC,_N) \
+#define _PRINT_S4DEX(_OFS,_TITLE,_NMAX,_IMAX,_JMAX,_KMAX,_VC,_N,_NP,_IP,_JP,_KP) \
 { \
     _OFS << endl; \
     _OFS << "#### " << _TITLE << " I-J ####" << endl; \
     { \
       _OFS << "J |" << endl; \
       int k=_KMAX/2; \
-      for( int j=_JMAX+_VC-1;j>=0-_VC;j-- ){ \
+      for( int j=_JMAX+_VC+_JP-1;j>=0-_VC;j-- ){ \
       stringstream ss; \
-      for( int i=0-_VC;i<_IMAX+_VC;i++ ){ \
-        size_t idx = _IDX_S4DEX(_N,i,j,k,_NMAX,_IMAX,_JMAX,_KMAX,_VC); \
+      for( int i=0-_VC;i<_IMAX+_VC+_IP;i++ ){ \
+        size_t idx = _IDX_S4DEX_PAD(_N,i,j,k,_NMAX,_IMAX,_JMAX,_KMAX,_VC,_NP,_IP,_JP,_KP); \
         ss.width(www); \
         ss << pp[idx]; \
-        if( i<_IMAX+_VC-1 ) ss << ", "; \
+        if( i<_IMAX+_VC+_IP-1 ) ss << ", "; \
       } \
       _OFS << ss.str(); \
       if( j==0-_VC ) _OFS << "  -> I"; \
@@ -405,13 +408,13 @@
     { \
       _OFS << "K |" << endl; \
       int i=_IMAX/2; \
-      for( int k=_KMAX+_VC-1;k>=0-_VC;k-- ){ \
+      for( int k=_KMAX+_VC+_KP-1;k>=0-_VC;k-- ){ \
       stringstream ss; \
-      for( int j=0-_VC;j<_JMAX+_VC;j++ ){ \
-        size_t idx = _IDX_S4DEX(_N,i,j,k,_NMAX,_IMAX,_JMAX,_KMAX,_VC); \
+      for( int j=0-_VC;j<_JMAX+_VC+_JP;j++ ){ \
+        size_t idx = _IDX_S4DEX_PAD(_N,i,j,k,_NMAX,_IMAX,_JMAX,_KMAX,_VC,_NP,_IP,_JP,_KP); \
         ss.width(www); \
         ss << pp[idx]; \
-        if( j<_JMAX+_VC-1 ) ss << ", "; \
+        if( j<_JMAX+_VC+_JP-1 ) ss << ", "; \
       } \
       _OFS << ss.str(); \
       if( k==0-_VC ) _OFS << "  -> J"; \
@@ -431,18 +434,19 @@
     int vc  = 3;
     size_t nw = size_t(imax+2*vc) * size_t(jmax+2*vc) * size_t(kmax+2*vc);
 
-    double *pp = paraMngr->AllocDoubleS3D(vc);
-    for( int k=0-vc;k<kmax+vc;k++ ){
-    for( int j=0-vc;j<jmax+vc;j++ ){
-    for( int i=0-vc;i<imax+vc;i++ ){
-      pp[_IDX_S3D(i,j,k,imax,jmax,kmax,vc)] = -(rank+1);
+    int pad_size[3];
+    double *pp = paraMngr->AllocDoubleS3D(vc,padding,pad_size);
+    for( int k=0-vc;k<kmax+vc+pad_size[2];k++ ){
+    for( int j=0-vc;j<jmax+vc+pad_size[1];j++ ){
+    for( int i=0-vc;i<imax+vc+pad_size[0];i++ ){
+      pp[_IDX_S3D_PAD(i,j,k,imax,jmax,kmax,vc,pad_size[0],pad_size[1],pad_size[2])] = -(rank+1);
     }}}
     int cnt = 0;
     for( int k=0;k<kmax;k++ ){
     for( int j=0;j<jmax;j++ ){
     for( int i=0;i<imax;i++ ){
       cnt++;
-      pp[_IDX_S3D(i,j,k,imax,jmax,kmax,vc)] = cnt + (rank+1)*1000;
+      pp[_IDX_S3D_PAD(i,j,k,imax,jmax,kmax,vc,pad_size[0],pad_size[1],pad_size[2])] = cnt + (rank+1)*1000;
     }}}
 
     char fname[512];
@@ -455,6 +459,8 @@
     ofs << "#### commS3D test ####" << endl << endl;
     if( rank==0 ) cout << "#### commS3D test ####" << endl << endl;
 #endif
+    ofs << "padding size = " << pad_size[0] << ", " << pad_size[1] << ", " << pad_size[2] << endl;
+    if( rank==0 ) cout << "padding size = " << pad_size[0] << ", " << pad_size[1] << ", " << pad_size[2] << endl;
 
     size_t mem = paraMngr->GetBndCommBufferSize(-1);
     ofs << "buff mem = " << cpm_Base::GetMemString(mem) << endl;
@@ -464,32 +470,32 @@
     int www = 6;
     ofs << "n=" << n << endl;
 
-    _PRINT_S4D(ofs,"before comm",imax,jmax,kmax,1,vc,n);
+    _PRINT_S4D(ofs,"before comm",imax,jmax,kmax,1,vc,n,pad_size[0],pad_size[1],pad_size[2]);
 
 #ifndef _NOWAIT_TEST_
-    paraMngr->BndCommS3D( pp, imax, jmax, kmax, vc, 2 );
+    paraMngr->BndCommS3D( pp, imax, jmax, kmax, vc, 2, 0, padding );
 #else
     MPI_Request req[12];
-    paraMngr->BndCommS3D_nowait( pp, imax, jmax, kmax, vc, 2, req );
-    paraMngr->wait_BndCommS3D( pp, imax, jmax, kmax, vc, 2, req );
+    paraMngr->BndCommS3D_nowait( pp, imax, jmax, kmax, vc, 2, req, 0, padding );
+    paraMngr->wait_BndCommS3D( pp, imax, jmax, kmax, vc, 2, req, 0, padding );
 #endif
 
-    _PRINT_S4D(ofs,"after BndComm",imax,jmax,kmax,1,vc,n);
+    _PRINT_S4D(ofs,"after BndComm",imax,jmax,kmax,1,vc,n,pad_size[0],pad_size[1],pad_size[2]);
 
     // PeriodicCommX
-    paraMngr->PeriodicCommS3D( pp, imax, jmax, kmax, vc, 2, X_DIR, BOTH );
+    paraMngr->PeriodicCommS3D( pp, imax, jmax, kmax, vc, 2, X_DIR, BOTH, 0, padding );
 
-    _PRINT_S4D(ofs,"after PeriodicCommX",imax,jmax,kmax,1,vc,n);
+    _PRINT_S4D(ofs,"after PeriodicCommX",imax,jmax,kmax,1,vc,n,pad_size[0],pad_size[1],pad_size[2]);
 
     // PeriodicCommY
-    paraMngr->PeriodicCommS3D( pp, imax, jmax, kmax, vc, 2, Y_DIR, BOTH );
+    paraMngr->PeriodicCommS3D( pp, imax, jmax, kmax, vc, 2, Y_DIR, BOTH, 0, padding );
 
-    _PRINT_S4D(ofs,"after PeriodicCommY",imax,jmax,kmax,1,vc,n);
+    _PRINT_S4D(ofs,"after PeriodicCommY",imax,jmax,kmax,1,vc,n,pad_size[0],pad_size[1],pad_size[2]);
 
     // PeriodicCommZ
-    paraMngr->PeriodicCommS3D( pp, imax, jmax, kmax, vc, 2, Z_DIR, BOTH );
+    paraMngr->PeriodicCommS3D( pp, imax, jmax, kmax, vc, 2, Z_DIR, BOTH, 0, padding );
 
-    _PRINT_S4D(ofs,"after PeriodicCommZ",imax,jmax,kmax,1,vc,n);
+    _PRINT_S4D(ofs,"after PeriodicCommZ",imax,jmax,kmax,1,vc,n,pad_size[0],pad_size[1],pad_size[2]);
   }
 #endif
 
@@ -505,12 +511,13 @@
     int vc  = 3;
     size_t nw = size_t(imax+2*vc) * size_t(jmax+2*vc) * size_t(kmax+2*vc) * size_t(nmax);
 
-    double *pp = paraMngr->AllocDoubleV3D(vc);
-    for( int n=0;n<nmax;n++ ){
-    for( int k=0-vc;k<kmax+vc;k++ ){
-    for( int j=0-vc;j<jmax+vc;j++ ){
-    for( int i=0-vc;i<imax+vc;i++ ){
-      pp[_IDX_V3D(i,j,k,n,imax,jmax,kmax,vc)] = -(rank+1);
+    int pad_size[4];
+    double *pp = paraMngr->AllocDoubleV3D(vc,padding,pad_size);
+    for( int n=0;n<nmax+pad_size[3];n++ ){
+    for( int k=0-vc;k<kmax+vc+pad_size[2];k++ ){
+    for( int j=0-vc;j<jmax+vc+pad_size[1];j++ ){
+    for( int i=0-vc;i<imax+vc+pad_size[0];i++ ){
+      pp[_IDX_V3D_PAD(i,j,k,n,imax,jmax,kmax,vc,pad_size[0],pad_size[1],pad_size[2])] = -(rank+1);
     }}}}
     int cnt = 0;
     for( int n=0;n<nmax;n++ ){
@@ -518,7 +525,7 @@
     for( int j=0;j<jmax;j++ ){
     for( int i=0;i<imax;i++ ){
       cnt++;
-      pp[_IDX_V3D(i,j,k,n,imax,jmax,kmax,vc)] = n + cnt * 10 + (rank+1)*10000;
+      pp[_IDX_V3D_PAD(i,j,k,n,imax,jmax,kmax,vc,pad_size[0],pad_size[1],pad_size[2])] = n + cnt * 10 + (rank+1)*10000;
     }}}}
 
     char fname[512];
@@ -531,6 +538,8 @@
     ofs << "#### commV3D test ####" << endl << endl;
     if( rank==0 ) cout << "#### commV3D test ####" << endl << endl;
 #endif
+    ofs << "padding size = " << pad_size[0] << ", " << pad_size[1] << ", " << pad_size[2] << ", " << pad_size[3] << endl;
+    if( rank==0 ) cout << "padding size = " << pad_size[0] << ", " << pad_size[1] << ", " << pad_size[2] << ", " << pad_size[3] << endl;
 
     size_t mem = paraMngr->GetBndCommBufferSize(-1);
     ofs << "buff mem = " << cpm_Base::GetMemString(mem) << endl;
@@ -539,32 +548,32 @@
     int www = 6;
     ofs << "n=" << n << endl;
 
-    _PRINT_S4D(ofs,"before comm",imax,jmax,kmax,nmax,vc,n);
+    _PRINT_S4D(ofs,"before comm",imax,jmax,kmax,nmax,vc,n,pad_size[0],pad_size[1],pad_size[2]);
 
 #ifndef _NOWAIT_TEST_
-    paraMngr->BndCommV3D( pp, imax, jmax, kmax, vc, 2 );
+    paraMngr->BndCommV3D( pp, imax, jmax, kmax, vc, 2, 0, padding );
 #else
     MPI_Request req[12];
-    paraMngr->BndCommV3D_nowait( pp, imax, jmax, kmax, vc, 2, req );
-    paraMngr->wait_BndCommV3D( pp, imax, jmax, kmax, vc, 2, req );
+    paraMngr->BndCommV3D_nowait( pp, imax, jmax, kmax, vc, 2, req, 0, padding );
+    paraMngr->wait_BndCommV3D( pp, imax, jmax, kmax, vc, 2, req, 0, padding );
 #endif
 
-    _PRINT_S4D(ofs,"after BndComm",imax,jmax,kmax,nmax,vc,n);
+    _PRINT_S4D(ofs,"after BndComm",imax,jmax,kmax,nmax,vc,n,pad_size[0],pad_size[1],pad_size[2]);
 
     // PeriodicCommX
-    paraMngr->PeriodicCommV3D( pp, imax, jmax, kmax, vc, 2, X_DIR, BOTH );
+    paraMngr->PeriodicCommV3D( pp, imax, jmax, kmax, vc, 2, X_DIR, BOTH, 0, padding );
 
-    _PRINT_S4D(ofs,"after PeriodicCommX",imax,jmax,kmax,nmax,vc,n);
+    _PRINT_S4D(ofs,"after PeriodicCommX",imax,jmax,kmax,nmax,vc,n,pad_size[0],pad_size[1],pad_size[2]);
 
     // PeriodicCommY
-    paraMngr->PeriodicCommV3D( pp, imax, jmax, kmax, vc, 2, Y_DIR, BOTH );
+    paraMngr->PeriodicCommV3D( pp, imax, jmax, kmax, vc, 2, Y_DIR, BOTH, 0, padding );
 
-    _PRINT_S4D(ofs,"after PeriodicCommY",imax,jmax,kmax,nmax,vc,n);
+    _PRINT_S4D(ofs,"after PeriodicCommY",imax,jmax,kmax,nmax,vc,n,pad_size[0],pad_size[1],pad_size[2]);
 
     // PeriodicCommZ
-    paraMngr->PeriodicCommV3D( pp, imax, jmax, kmax, vc, 2, Z_DIR, BOTH );
+    paraMngr->PeriodicCommV3D( pp, imax, jmax, kmax, vc, 2, Z_DIR, BOTH, 0, padding );
 
-    _PRINT_S4D(ofs,"after PeriodicCommZ",imax,jmax,kmax,nmax,vc,n);
+    _PRINT_S4D(ofs,"after PeriodicCommZ",imax,jmax,kmax,nmax,vc,n,pad_size[0],pad_size[1],pad_size[2]);
   }
 #endif
 
@@ -580,12 +589,13 @@
     int vc  = 3;
     size_t nw = size_t(imax+2*vc) * size_t(jmax+2*vc) * size_t(kmax+2*vc) * size_t(nmax);
 
-    double *pp = paraMngr->AllocDoubleS4D(nmax,vc);
-    for( int n=0;n<nmax;n++ ){
-    for( int k=0-vc;k<kmax+vc;k++ ){
-    for( int j=0-vc;j<jmax+vc;j++ ){
-    for( int i=0-vc;i<imax+vc;i++ ){
-      pp[_IDX_S4D(i,j,k,n,imax,jmax,kmax,vc)] = -(rank+1);
+    int pad_size[4];
+    double *pp = paraMngr->AllocDoubleS4D(nmax,vc,padding,pad_size);
+    for( int n=0;n<nmax+pad_size[3];n++ ){
+    for( int k=0-vc;k<kmax+vc+pad_size[2];k++ ){
+    for( int j=0-vc;j<jmax+vc+pad_size[1];j++ ){
+    for( int i=0-vc;i<imax+vc+pad_size[0];i++ ){
+      pp[_IDX_S4D_PAD(i,j,k,n,imax,jmax,kmax,vc,pad_size[0],pad_size[1],pad_size[2])] = -(rank+1);
     }}}}
     int cnt = 0;
     for( int n=0;n<nmax;n++ ){
@@ -593,7 +603,7 @@
     for( int j=0;j<jmax;j++ ){
     for( int i=0;i<imax;i++ ){
       cnt++;
-      pp[_IDX_S4D(i,j,k,n,imax,jmax,kmax,vc)] = n + cnt * 10 + (rank+1)*10000;
+      pp[_IDX_S4D_PAD(i,j,k,n,imax,jmax,kmax,vc,pad_size[0],pad_size[1],pad_size[2])] = n + cnt * 10 + (rank+1)*10000;
     }}}}
 
     char fname[512];
@@ -606,6 +616,8 @@
     ofs << "#### commS4D test ####" << endl << endl;
     if( rank==0 ) cout << "#### commS4D test ####" << endl << endl;
 #endif
+    ofs << "padding size = " << pad_size[0] << ", " << pad_size[1] << ", " << pad_size[2] << ", " << pad_size[3] << endl;
+    if( rank==0 ) cout << "padding size = " << pad_size[0] << ", " << pad_size[1] << ", " << pad_size[2] << ", " << pad_size[3] << endl;
 
     size_t mem = paraMngr->GetBndCommBufferSize(-1);
     ofs << "buff mem = " << cpm_Base::GetMemString(mem) << endl;
@@ -614,32 +626,32 @@
     int www = 6;
     ofs << "n=" << n << endl;
 
-    _PRINT_S4D(ofs,"before comm",imax,jmax,kmax,nmax,vc,n);
+    _PRINT_S4D(ofs,"before comm",imax,jmax,kmax,nmax,vc,n,pad_size[0],pad_size[1],pad_size[2]);
 
 #ifndef _NOWAIT_TEST_
-    paraMngr->BndCommS4D( pp, imax, jmax, kmax, nmax, vc, 2 );
+    paraMngr->BndCommS4D( pp, imax, jmax, kmax, nmax, vc, 2, 0, padding );
 #else
     MPI_Request req[12];
-    paraMngr->BndCommS4D_nowait( pp, imax, jmax, kmax, nmax, vc, 2, req );
-    paraMngr->wait_BndCommS4D( pp, imax, jmax, kmax, nmax, vc, 2, req );
+    paraMngr->BndCommS4D_nowait( pp, imax, jmax, kmax, nmax, vc, 2, req, 0, padding );
+    paraMngr->wait_BndCommS4D( pp, imax, jmax, kmax, nmax, vc, 2, req, 0, padding );
 #endif
 
-    _PRINT_S4D(ofs,"after BndComm",imax,jmax,kmax,nmax,vc,n);
+    _PRINT_S4D(ofs,"after BndComm",imax,jmax,kmax,nmax,vc,n,pad_size[0],pad_size[1],pad_size[2]);
 
     // PeriodicCommX
-    paraMngr->PeriodicCommS4D( pp, imax, jmax, kmax, nmax, vc, 2, X_DIR, BOTH );
+    paraMngr->PeriodicCommS4D( pp, imax, jmax, kmax, nmax, vc, 2, X_DIR, BOTH, 0, padding );
 
-    _PRINT_S4D(ofs,"after PeriodicCommX",imax,jmax,kmax,nmax,vc,n);
+    _PRINT_S4D(ofs,"after PeriodicCommX",imax,jmax,kmax,nmax,vc,n,pad_size[0],pad_size[1],pad_size[2]);
 
     // PeriodicCommY
-    paraMngr->PeriodicCommS4D( pp, imax, jmax, kmax, nmax, vc, 2, Y_DIR, BOTH );
+    paraMngr->PeriodicCommS4D( pp, imax, jmax, kmax, nmax, vc, 2, Y_DIR, BOTH, 0, padding );
 
-    _PRINT_S4D(ofs,"after PeriodicCommY",imax,jmax,kmax,nmax,vc,n);
+    _PRINT_S4D(ofs,"after PeriodicCommY",imax,jmax,kmax,nmax,vc,n,pad_size[0],pad_size[1],pad_size[2]);
 
     // PeriodicCommZ
-    paraMngr->PeriodicCommS4D( pp, imax, jmax, kmax, nmax, vc, 2, Z_DIR, BOTH );
+    paraMngr->PeriodicCommS4D( pp, imax, jmax, kmax, nmax, vc, 2, Z_DIR, BOTH, 0, padding );
 
-    _PRINT_S4D(ofs,"after PeriodicCommZ",imax,jmax,kmax,nmax,vc,n);
+    _PRINT_S4D(ofs,"after PeriodicCommZ",imax,jmax,kmax,nmax,vc,n,pad_size[0],pad_size[1],pad_size[2]);
   }
 #endif
 
@@ -655,12 +667,13 @@
     int vc  = 3;
     size_t nw = size_t(imax+2*vc) * size_t(jmax+2*vc) * size_t(kmax+2*vc) * size_t(nmax);
 
-    double *pp = paraMngr->AllocDoubleV3DEx(vc);
-    for( int k=0-vc;k<kmax+vc;k++ ){
-    for( int j=0-vc;j<jmax+vc;j++ ){
-    for( int i=0-vc;i<imax+vc;i++ ){
-    for( int n=0;n<nmax;n++ ){
-      pp[_IDX_V3DEX(n,i,j,k,imax,jmax,kmax,vc)] = -(rank+1);
+    int pad_size[4];
+    double *pp = paraMngr->AllocDoubleV3DEx(vc,padding,pad_size);
+    for( int k=0-vc;k<kmax+vc+pad_size[3];k++ ){
+    for( int j=0-vc;j<jmax+vc+pad_size[2];j++ ){
+    for( int i=0-vc;i<imax+vc+pad_size[1];i++ ){
+    for( int n=0;n<nmax+pad_size[0];n++ ){
+      pp[_IDX_V3DEX_PAD(n,i,j,k,imax,jmax,kmax,vc,pad_size[0],pad_size[1],pad_size[2],pad_size[3])] = -(rank+1);
     }}}}
     int cnt = 0;
     for( int k=0;k<kmax;k++ ){
@@ -668,7 +681,7 @@
     for( int i=0;i<imax;i++ ){
     for( int n=0;n<nmax;n++ ){
       cnt++;
-      pp[_IDX_V3DEX(n,i,j,k,imax,jmax,kmax,vc)] = n + cnt * 10 + (rank+1)*10000;
+      pp[_IDX_V3DEX_PAD(n,i,j,k,imax,jmax,kmax,vc,pad_size[0],pad_size[1],pad_size[2],pad_size[3])] = n + cnt * 10 + (rank+1)*10000;
     }}}}
 
     char fname[512];
@@ -681,6 +694,8 @@
     ofs << "#### commV3DEx test ####" << endl << endl;
     if( rank==0 ) cout << "#### commV3DEx test ####" << endl << endl;
 #endif
+    ofs << "padding size = " << pad_size[0] << ", " << pad_size[1] << ", " << pad_size[2] << ", " << pad_size[3] << endl;
+    if( rank==0 ) cout << "padding size = " << pad_size[0] << ", " << pad_size[1] << ", " << pad_size[2] << ", " << pad_size[3] << endl;
 
     size_t mem = paraMngr->GetBndCommBufferSize(-1);
     ofs << "buff mem = " << cpm_Base::GetMemString(mem) << endl;
@@ -689,32 +704,32 @@
     int www = 6;
     ofs << "n=" << n << endl;
 
-    _PRINT_S4DEX(ofs,"before comm",nmax,imax,jmax,kmax,vc,n);
+    _PRINT_S4DEX(ofs,"before comm",nmax,imax,jmax,kmax,vc,n,pad_size[0],pad_size[1],pad_size[2],pad_size[3]);
 
 #ifndef _NOWAIT_TEST_
-    paraMngr->BndCommV3DEx( pp, imax, jmax, kmax, vc, 2 );
+    paraMngr->BndCommV3DEx( pp, imax, jmax, kmax, vc, 2, 0, padding );
 #else
     MPI_Request req[12];
-    paraMngr->BndCommV3DEx_nowait( pp, imax, jmax, kmax, vc, 2, req );
-    paraMngr->wait_BndCommV3DEx( pp, imax, jmax, kmax, vc, 2, req );
+    paraMngr->BndCommV3DEx_nowait( pp, imax, jmax, kmax, vc, 2, req, 0, padding );
+    paraMngr->wait_BndCommV3DEx( pp, imax, jmax, kmax, vc, 2, req, 0, padding );
 #endif
 
-    _PRINT_S4DEX(ofs,"after BndComm",nmax,imax,jmax,kmax,vc,n);
+    _PRINT_S4DEX(ofs,"after BndComm",nmax,imax,jmax,kmax,vc,n,pad_size[0],pad_size[1],pad_size[2],pad_size[3]);
 
     // PeriodicCommX
-    paraMngr->PeriodicCommV3DEx( pp, imax, jmax, kmax, vc, 2, X_DIR, BOTH );
+    paraMngr->PeriodicCommV3DEx( pp, imax, jmax, kmax, vc, 2, X_DIR, BOTH, 0, padding );
 
-    _PRINT_S4DEX(ofs,"after PeriodicCommX",nmax,imax,jmax,kmax,vc,n);
+    _PRINT_S4DEX(ofs,"after PeriodicCommX",nmax,imax,jmax,kmax,vc,n,pad_size[0],pad_size[1],pad_size[2],pad_size[3]);
 
     // PeriodicCommY
-    paraMngr->PeriodicCommV3DEx( pp, imax, jmax, kmax, vc, 2, Y_DIR, BOTH );
+    paraMngr->PeriodicCommV3DEx( pp, imax, jmax, kmax, vc, 2, Y_DIR, BOTH, 0, padding );
 
-    _PRINT_S4DEX(ofs,"after PeriodicCommY",nmax,imax,jmax,kmax,vc,n);
+    _PRINT_S4DEX(ofs,"after PeriodicCommY",nmax,imax,jmax,kmax,vc,n,pad_size[0],pad_size[1],pad_size[2],pad_size[3]);
 
     // PeriodicCommZ
-    paraMngr->PeriodicCommV3DEx( pp, imax, jmax, kmax, vc, 2, Z_DIR, BOTH );
+    paraMngr->PeriodicCommV3DEx( pp, imax, jmax, kmax, vc, 2, Z_DIR, BOTH, 0, padding );
 
-    _PRINT_S4DEX(ofs,"after PeriodicCommZ",nmax,imax,jmax,kmax,vc,n);
+    _PRINT_S4DEX(ofs,"after PeriodicCommZ",nmax,imax,jmax,kmax,vc,n,pad_size[0],pad_size[1],pad_size[2],pad_size[3]);
   }
 #endif
 
@@ -730,12 +745,13 @@
     int vc  = 3;
     size_t nw = size_t(imax+2*vc) * size_t(jmax+2*vc) * size_t(kmax+2*vc) * size_t(nmax);
 
-    double *pp = paraMngr->AllocDoubleS4DEx(nmax,vc);
-    for( int k=0-vc;k<kmax+vc;k++ ){
-    for( int j=0-vc;j<jmax+vc;j++ ){
-    for( int i=0-vc;i<imax+vc;i++ ){
-    for( int n=0;n<nmax;n++ ){
-      pp[_IDX_S4DEX(n,i,j,k,nmax,imax,jmax,kmax,vc)] = -(rank+1);
+    int pad_size[4];
+    double *pp = paraMngr->AllocDoubleS4DEx(nmax,vc,padding,pad_size);
+    for( int k=0-vc;k<kmax+vc+pad_size[3];k++ ){
+    for( int j=0-vc;j<jmax+vc+pad_size[2];j++ ){
+    for( int i=0-vc;i<imax+vc+pad_size[1];i++ ){
+    for( int n=0;n<nmax+pad_size[0];n++ ){
+      pp[_IDX_S4DEX_PAD(n,i,j,k,nmax,imax,jmax,kmax,vc,pad_size[0],pad_size[1],pad_size[2],pad_size[3])] = -(rank+1);
     }}}}
     int cnt = 0;
     for( int k=0;k<kmax;k++ ){
@@ -743,7 +759,7 @@
     for( int i=0;i<imax;i++ ){
     for( int n=0;n<nmax;n++ ){
       cnt++;
-      pp[_IDX_S4DEX(n,i,j,k,nmax,imax,jmax,kmax,vc)] = n + cnt * 10 + (rank+1)*10000;
+      pp[_IDX_S4DEX_PAD(n,i,j,k,nmax,imax,jmax,kmax,vc,pad_size[0],pad_size[1],pad_size[2],pad_size[3])] = n + cnt * 10 + (rank+1)*10000;
     }}}}
 
     char fname[512];
@@ -756,6 +772,8 @@
     ofs << "#### commS4DEx test ####" << endl << endl;
     if( rank==0 ) cout << "#### commS4DEx test ####" << endl << endl;
 #endif
+    ofs << "padding size = " << pad_size[0] << ", " << pad_size[1] << ", " << pad_size[2] << ", " << pad_size[3] << endl;
+    if( rank==0 ) cout << "padding size = " << pad_size[0] << ", " << pad_size[1] << ", " << pad_size[2] << ", " << pad_size[3] << endl;
 
     size_t mem = paraMngr->GetBndCommBufferSize(-1);
     ofs << "buff mem = " << cpm_Base::GetMemString(mem) << endl;
@@ -764,33 +782,33 @@
     int www = 6;
     ofs << "n=" << n << endl;
 
-    _PRINT_S4DEX(ofs,"before comm",nmax,imax,jmax,kmax,vc,n);
+    _PRINT_S4DEX(ofs,"before comm",nmax,imax,jmax,kmax,vc,n,pad_size[0],pad_size[1],pad_size[2],pad_size[3]);
 
 #ifndef _NOWAIT_TEST_
 //    paraMngr->BndCommS4DEx( pp, nmax, imax, jmax, kmax, vc, 2 );
-    ofs << "err=" << paraMngr->BndCommS4DEx( pp, nmax, imax, jmax, kmax, vc, 2 ) << endl;
+    ofs << "err=" << paraMngr->BndCommS4DEx( pp, nmax, imax, jmax, kmax, vc, 2, 0, padding ) << endl;
 #else
     MPI_Request req[12];
-    paraMngr->BndCommS4DEx_nowait( pp, nmax, imax, jmax, kmax, vc, 2, req );
-    paraMngr->wait_BndCommS4DEx( pp, nmax, imax, jmax, kmax, vc, 2, req );
+    paraMngr->BndCommS4DEx_nowait( pp, nmax, imax, jmax, kmax, vc, 2, req, 0, padding );
+    paraMngr->wait_BndCommS4DEx( pp, nmax, imax, jmax, kmax, vc, 2, req, 0, padding );
 #endif
 
-    _PRINT_S4DEX(ofs,"after BndComm",nmax,imax,jmax,kmax,vc,n);
+    _PRINT_S4DEX(ofs,"after BndComm",nmax,imax,jmax,kmax,vc,n,pad_size[0],pad_size[1],pad_size[2],pad_size[3]);
 
     // PeriodicCommX
-    paraMngr->PeriodicCommS4DEx( pp, nmax, imax, jmax, kmax, vc, 2, X_DIR, BOTH );
+    paraMngr->PeriodicCommS4DEx( pp, nmax, imax, jmax, kmax, vc, 2, X_DIR, BOTH, 0, padding );
 
-    _PRINT_S4DEX(ofs,"after PeriodicCommX",nmax,imax,jmax,kmax,vc,n);
+    _PRINT_S4DEX(ofs,"after PeriodicCommX",nmax,imax,jmax,kmax,vc,n,pad_size[0],pad_size[1],pad_size[2],pad_size[3]);
 
     // PeriodicCommY
-    paraMngr->PeriodicCommS4DEx( pp, nmax, imax, jmax, kmax, vc, 2, Y_DIR, BOTH );
+    paraMngr->PeriodicCommS4DEx( pp, nmax, imax, jmax, kmax, vc, 2, Y_DIR, BOTH, 0, padding );
 
-    _PRINT_S4DEX(ofs,"after PeriodicCommY",nmax,imax,jmax,kmax,vc,n);
+    _PRINT_S4DEX(ofs,"after PeriodicCommY",nmax,imax,jmax,kmax,vc,n,pad_size[0],pad_size[1],pad_size[2],pad_size[3]);
 
     // PeriodicCommZ
-    paraMngr->PeriodicCommS4DEx( pp, nmax, imax, jmax, kmax, vc, 2, Z_DIR, BOTH );
+    paraMngr->PeriodicCommS4DEx( pp, nmax, imax, jmax, kmax, vc, 2, Z_DIR, BOTH, 0, padding );
 
-    _PRINT_S4DEX(ofs,"after PeriodicCommZ",nmax,imax,jmax,kmax,vc,n);
+    _PRINT_S4DEX(ofs,"after PeriodicCommZ",nmax,imax,jmax,kmax,vc,n,pad_size[0],pad_size[1],pad_size[2],pad_size[3]);
   }
 #endif
 

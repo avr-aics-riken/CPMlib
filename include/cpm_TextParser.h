@@ -42,6 +42,7 @@ protected:
 
   /** 読み込み処理
    *  - ユーザは直接コールできない
+   *
    *  @param[in] filename 読み込むファイル名
    *  @return    TextParserクラスの終了コード
    */

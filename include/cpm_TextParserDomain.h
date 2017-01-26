@@ -38,6 +38,7 @@ public:
   /** 読み込み処理
    *  - TextParserクラスを用いて領域分割情報ファイルを読み込む
    *  - TextParserクラスのインスタンスはクリア(remove)される
+   *
    *  @param[in]  filename 読み込むファイル名
    *  @param[out] errorcode CPMエラーコード
    *  @return 領域情報ポインタ
@@ -49,6 +50,7 @@ private:
   /** 読み込み処理のメイン
    *  - TextParserクラスを用いて領域分割情報ファイルを読み込む
    *  - TextParserクラスのインスタンスはクリア(remove)される
+   *
    *  @param[in]  filename 読み込むファイル名
    *  @param[out] errorcode CPMエラーコード
    *  @return 領域情報ポインタ

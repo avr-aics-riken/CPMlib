@@ -46,8 +46,27 @@
  *  @return 1次元インデクス
  */
 #define _IDX_S3D(_I,_J,_K,_NI,_NJ,_NK,_VC) \
-( (long long)(_K+_VC) * (long long)(_NI+2*_VC) * (long long)(_NJ+2*_VC) \
-+ (long long)(_J+_VC) * (long long)(_NI+2*_VC) \
+( (long long)(_K+(_VC)) * (long long)(_NI+2*(_VC)) * (long long)(_NJ+2*(_VC)) \
++ (long long)(_J+(_VC)) * (long long)(_NI+2*(_VC)) \
++ (long long)(_I+(_VC)) \
+)
+
+/** 3次元インデクス(i,j,k) -> 1次元インデクス変換マクロ(パディング対応)
+ *  @param[in] _I  i方向インデクス
+ *  @param[in] _J  j方向インデクス
+ *  @param[in] _K  k方向インデクス
+ *  @param[in] _NI i方向インデクスサイズ
+ *  @param[in] _NJ j方向インデクスサイズ
+ *  @param[in] _NK k方向インデクスサイズ
+ *  @param[in] _VC 仮想セル数
+ *  @param[in] _IP i方向パディング数
+ *  @param[in] _JP j方向パディング数
+ *  @param[in] _KP k方向パディング数
+ *  @return 1次元インデクス
+ */
+#define _IDX_S3D_PAD(_I,_J,_K,_NI,_NJ,_NK,_VC,_IP,_JP,_KP) \
+( (long long)(_K+_VC) * (long long)(_NI+2*(_VC)+_IP) * (long long)(_NJ+2*(_VC)+_JP) \
++ (long long)(_J+_VC) * (long long)(_NI+2*(_VC)+_IP) \
 + (long long)(_I+_VC) \
 )
 
@@ -63,8 +82,27 @@
  *  @return 1次元インデクス
  */
 #define _IDX_S4D(_I,_J,_K,_N,_NI,_NJ,_NK,_VC) \
-( (long long)(_N) * (long long)(_NI+2*_VC) * (long long)(_NJ+2*_VC) * (long long)(_NK+2*_VC) \
+( (long long)(_N) * (long long)(_NI+2*(_VC)) * (long long)(_NJ+2*(_VC)) * (long long)(_NK+2*(_VC)) \
 + _IDX_S3D(_I,_J,_K,_NI,_NJ,_NK,_VC) \
+)
+
+/** 4次元インデクス(i,j,k,n) -> 1次元インデクス変換マクロ(パディング対応)
+ *  @param[in] _I  i方向インデクス
+ *  @param[in] _J  j方向インデクス
+ *  @param[in] _K  k方向インデクス
+ *  @param[in] _N  成分インデクス
+ *  @param[in] _NI i方向インデクスサイズ
+ *  @param[in] _NJ j方向インデクスサイズ
+ *  @param[in] _NK k方向インデクスサイズ
+ *  @param[in] _VC 仮想セル数
+ *  @param[in] _IP i方向パディング数
+ *  @param[in] _JP j方向パディング数
+ *  @param[in] _KP k方向パディング数
+ *  @return 1次元インデクス
+ */
+#define _IDX_S4D_PAD(_I,_J,_K,_N,_NI,_NJ,_NK,_VC,_IP,_JP,_KP) \
+( (long long)(_N) * (long long)(_NI+2*(_VC)+_IP) * (long long)(_NJ+2*(_VC)+_JP) * (long long)(_NK+2*(_VC)+_KP) \
++ _IDX_S3D_PAD(_I,_J,_K,_NI,_NJ,_NK,_VC,_IP,_JP,_KP) \
 )
 
 /** 3次元インデクス(i,j,k,3) -> 1次元インデクス変換マクロ
@@ -78,6 +116,21 @@
  *  @param[in] _VC 仮想セル数
  */
 #define _IDX_V3D(_I,_J,_K,_N,_NI,_NJ,_NK,_VC) (_IDX_S4D(_I,_J,_K,_N,_NI,_NJ,_NK,_VC))
+
+/** 3次元インデクス(i,j,k,3) -> 1次元インデクス変換マクロ(パディング対応)
+ *  @param[in] _I  i方向インデクス
+ *  @param[in] _J  j方向インデクス
+ *  @param[in] _K  k方向インデクス
+ *  @param[in] _N  成分インデクス
+ *  @param[in] _NI i方向インデクスサイズ
+ *  @param[in] _NJ j方向インデクスサイズ
+ *  @param[in] _NK k方向インデクスサイズ
+ *  @param[in] _VC 仮想セル数
+ *  @param[in] _IP i方向パディング数
+ *  @param[in] _JP j方向パディング数
+ *  @param[in] _KP k方向パディング数
+ */
+#define _IDX_V3D_PAD(_I,_J,_K,_N,_NI,_NJ,_NK,_VC,_IP,_JP,_KP) (_IDX_S4D_PAD(_I,_J,_K,_N,_NI,_NJ,_NK,_VC,_IP,_JP,_KP))
 
 /** 4次元インデクス(n,i,j,k) -> 1次元インデクス変換マクロ
  *  @param[in] _N  成分インデクス
@@ -95,6 +148,26 @@
 ( (long long)(_NN) * _IDX_S3D(_I,_J,_K,_NI,_NJ,_NK,_VC) \
 + (long long)(_N) )
 
+/** 4次元インデクス(n,i,j,k) -> 1次元インデクス変換マクロ(パディング対応)
+ *  @param[in] _N  成分インデクス
+ *  @param[in] _I  i方向インデクス
+ *  @param[in] _J  j方向インデクス
+ *  @param[in] _K  k方向インデクス
+ *  @param[in] _NN 成分数
+ *  @param[in] _NI i方向インデクスサイズ
+ *  @param[in] _NJ j方向インデクスサイズ
+ *  @param[in] _NK k方向インデクスサイズ
+ *  @param[in] _VC 仮想セル数
+ *  @param[in] _NP 成分パディング数
+ *  @param[in] _IP i方向パディング数
+ *  @param[in] _JP j方向パディング数
+ *  @param[in] _KP k方向パディング数
+ *  @return 1次元インデクス
+ */
+#define _IDX_S4DEX_PAD(_N,_I,_J,_K,_NN,_NI,_NJ,_NK,_VC,_NP,_IP,_JP,_KP) \
+( (long long)(_NN+_NP) * _IDX_S3D_PAD(_I,_J,_K,_NI,_NJ,_NK,_VC,_IP,_JP,_KP) \
++ (long long)(_N) )
+
 /** 3次元インデクス(3,i,j,k) -> 1次元インデクス変換マクロ
  *  @param[in] _N  成分インデクス
  *  @param[in] _I  i方向インデクス
@@ -104,8 +177,36 @@
  *  @param[in] _NJ j方向インデクスサイズ
  *  @param[in] _NK k方向インデクスサイズ
  *  @param[in] _VC 仮想セル数
+ *  @return 1次元インデクス
  */
 #define _IDX_V3DEX(_N,_I,_J,_K,_NI,_NJ,_NK,_VC) (_IDX_S4DEX(_N,_I,_J,_K,3,_NI,_NJ,_NK,_VC))
+
+/** 3次元インデクス(3,i,j,k) -> 1次元インデクス変換マクロ(パディング対応)
+ *  @param[in] _N  成分インデクス
+ *  @param[in] _I  i方向インデクス
+ *  @param[in] _J  j方向インデクス
+ *  @param[in] _K  k方向インデクス
+ *  @param[in] _NI i方向インデクスサイズ
+ *  @param[in] _NJ j方向インデクスサイズ
+ *  @param[in] _NK k方向インデクスサイズ
+ *  @param[in] _VC 仮想セル数
+ *  @param[in] _NP 成分パディング数
+ *  @param[in] _IP i方向パディング数
+ *  @param[in] _JP j方向パディング数
+ *  @param[in] _KP k方向パディング数
+ *  @return 1次元インデクス
+ */
+#define _IDX_V3DEX_PAD(_N,_I,_J,_K,_NI,_NJ,_NK,_VC,_NP,_IP,_JP,_KP) (_IDX_S4DEX_PAD(_N,_I,_J,_K,3,_NI,_NJ,_NK,_VC,_NP,_IP,_JP,_KP))
+
+// 2016/01/22 FESAT add.s 
+/** 定義点タイプ */
+enum cpm_DefPointType
+{
+  CPM_DEFPOINTTYPE_UNKNOWN = -1 ///< 未定義
+, CPM_DEFPOINTTYPE_FVM     = 0  ///< ボクセル
+, CPM_DEFPOINTTYPE_FDM     = 1  ///< ノード
+};
+// 2016/01/22 FEAST add.e
 
 /** 領域分割タイプ */
 enum cpm_DomainType
@@ -200,15 +301,25 @@ enum cpm_ErrorCode
 , CPM_ERROR_MISMATCH_DIV_SUBDOMAIN = 3018 ///< 領域分割数がActiveSubdomainファイルと一致していない
 , CPM_ERROR_DECIDE_DIV_PATTERN    = 3019 ///< 自動領域分割が不可能なパターン
 
-, CPM_ERROR_VOXELINIT_LMR         = 3100 ///< VoxelInit_LMRでエラー
-, CPM_ERROR_LMR_OPEN_OCTFILE      = 3101 ///< LMR用木情報ファイルオープンエラー
-, CPM_ERROR_LMR_INVALID_OCTFILE   = 3102 ///< LMR用木情報ファイルのエンディアン識別子が不正
-, CPM_ERROR_LMR_READ_OCT_HEADER   = 3103 ///< LMR用木情報ファイルのヘッダー情報読み込みエラー
-, CPM_ERROR_LMR_READ_OCT_PEDIGREE = 3104 ///< LMR用木情報ファイルのぺディグリー情報読み込みエラー
-, CPM_ERROR_LMR_MISMATCH_NP_NUMLEAF = 3105 ///< LMRでリーフ数と並列数が一致しない
+// 2016/01/22 FEAST add.s 
+, CPM_ERROR_ALREADY_NODEINIT         = 3020 ///< 指定されたプロセスグループが既に領域分割済み:
+, CPM_ERROR_INVALID_NODESIZE         = 3021 ///< 頂点数が不正
+, CPM_ERROR_INSERT_DEFPOINTTYPEMAP   = 3022 ///< 定義点管理のマップへの登録失敗
+// 2016/01/22 FEAST adde
 
 , CPM_ERROR_DOMAINTYPE_VOXELINIT     = 3100 ///< 領域分割タイプと対応しないVoxelInitがコールされた
 , CPM_ERROR_DOMAINTYPE_SETBNDCOMMBUF = 3101 ///< 領域分割タイプと対応しないSetBndCommBufferがコールされた
+
+// 2016/01/22 FEAST add.s
+, CPM_ERROR_DOMAINTYPE_NODEINIT      = 3102 ///< 領域分割タイプと対応しないNodeInitがコールされた
+// 2016/01/22 FEAST add.e
+
+, CPM_ERROR_VOXELINIT_LMR         = 3200 ///< VoxelInit_LMRでエラー
+, CPM_ERROR_LMR_OPEN_OCTFILE      = 3201 ///< LMR用木情報ファイルオープンエラー
+, CPM_ERROR_LMR_INVALID_OCTFILE   = 3202 ///< LMR用木情報ファイルのエンディアン識別子が不正
+, CPM_ERROR_LMR_READ_OCT_HEADER   = 3203 ///< LMR用木情報ファイルのヘッダー情報読み込みエラー
+, CPM_ERROR_LMR_READ_OCT_PEDIGREE = 3204 ///< LMR用木情報ファイルのぺディグリー情報読み込みエラー
+, CPM_ERROR_LMR_MISMATCH_NP_NUMLEAF = 3205 ///< LMRでリーフ数と並列数が一致しない
 
 , CPM_ERROR_GET_INFO              = 4000 ///< 情報取得系関数でエラー
 , CPM_ERROR_GET_DIVNUM            = 4001 ///< 領域分割数の取得エラー
@@ -227,6 +338,13 @@ enum cpm_ErrorCode
 
 , CPM_ERROR_GET_MYRANK            = 4015 ///< ランク番号の取得エラー
 , CPM_ERROR_GET_NUMRANK           = 4016 ///< ランク数の取得エラー
+
+// 2016/01/22 FEAST add.s
+, CPM_ERROR_GET_GLOBALNODESIZE    = 4017 ///< 全体頂点数の取得エラー
+, CPM_ERROR_GET_GLOBALARRAYSIZE   = 4018 ///< 全体ボクセル数または頂点数の取得エラー
+, CPM_ERROR_GET_LOCALNODESIZE     = 4019 ///< 自ランクの頂点数の取得エラー
+, CPM_ERROR_GET_LOCALARRAYSIZE    = 4020 ///< 自ランクのボクセル数または頂点数の取得エラー
+// 2016/01/22 FEAST add.e
 
 , CPM_ERROR_MPI                   = 9000 ///< MPIのエラー
 , CPM_ERROR_NO_MPI_INIT           = 9001 ///< MPI_Initがコールされていない
@@ -303,6 +421,23 @@ enum CPM_Op
 , CPM_BXOR   = 109 ///< ビット演算の排他的論理和
 , CPM_MINLOC = 110 ///< 最大値と位置(not support)
 , CPM_MAXLOC = 111 ///< 最小値と位置(not support)
+};
+
+/** 配列形状タイプ */
+enum CPM_ARRAY_SHAPE
+{
+  CPM_ARRAY_UNKNOWN = -1 ///< 不定
+, CPM_ARRAY_S3D     = 0  ///< Scalar3D   {imax,jmax,kmax}
+, CPM_ARRAY_V3D     = 1  ///< Vector3D   {imax,jmax,kmax,3}
+, CPM_ARRAY_V3DEX   = 2  ///< Vector3DEx {3,imax,jmax,kmax}
+, CPM_ARRAY_S4D     = 3  ///< Scalar4D   {imax,jmax,kmax,n}
+, CPM_ARRAY_S4DEX   = 4  ///< Scalar4DEx {n,imax,jmax,kmax}
+};
+
+enum CPM_PADDING
+{
+  CPM_PADDING_ON  = true,
+  CPM_PADDING_OFF = false,
 };
 
 /** デバッグライト用 */

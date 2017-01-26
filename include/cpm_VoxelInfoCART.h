@@ -41,10 +41,9 @@ protected:
 
   /** CPM領域分割情報の生成
    *  - MPI_COMM_WORLDを使用した領域を生成する。
+   *
    *  @param[in]  comm  MPIコミュニケータ
    *  @param[in]  dInfo 領域分割情報
-   *  @param[in]  maxVC 最大の袖数(袖通信用)
-   *  @param[in]  maxN  最大の成分数(袖通信用)
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
   cpm_ErrorCode Init( MPI_Comm comm, cpm_GlobalDomainInfo* dInfo );

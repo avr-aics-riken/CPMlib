@@ -26,14 +26,16 @@ exampleCXX_LMR_SOURCES = \
 
 exampleCXX_LMR_CXXFLAGS = \
     -I$(top_srcdir)/include \
-    -I$(top_srcdir)/include/BCM \
+    -I$(top_srcdir)/include/LMR \
+    -I$(top_srcdir)/include/LMR/BCM \
     @MPICH_CFLAGS@ \
     @TP_CFLAGS@ \
     @REALOPT@
 
 exampleCXX_LMR_LDADD = \
     -L$(top_builddir)/src \
-    @CPM_LIBS@ \
+    -L$(top_builddir)/src/LMR \
+    @CPMLMR_LIBS@ \
     @MPICH_LDFLAGS@ \
     @MPICH_LIBS@ \
     @TP_LDFLAGS@
