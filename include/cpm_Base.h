@@ -1,12 +1,18 @@
 /*
- * CPMlib - Cartesian Partition Manager Library
- *
- * Copyright (C) 2012-2014 Institute of Industrial Science, The University of Tokyo.
- * All rights reserved.
- *
- * Copyright (c) 2014-2015 Advanced Institute for Computational Science, RIKEN.
- * All rights reserved.
- *
+###################################################################################
+#
+# CPMlib - Computational space Partitioning Management library
+#
+# Copyright (c) 2012-2014 Institute of Industrial Science (IIS), The University of Tokyo.
+# All rights reserved.
+#
+# Copyright (c) 2014-2016 Advanced Institute for Computational Science (AICS), RIKEN.
+# All rights reserved.
+#
+# Copyright (c) 2016-2017 Research Institute for Information Technology (RIIT), Kyushu University.
+# All rights reserved.
+#
+###################################################################################
  */
 
 /**
@@ -128,7 +134,7 @@ public:
   /** 時刻の取得(MPI_Wtime版)
    *
    *   @return 時刻
-   */ 
+   */
   CPM_INLINE
   static double GetWTime()
   {
@@ -221,7 +227,7 @@ public:
     return cpm_strCompare(s1,s2,ignorecase);
   }
 
-  
+
   /** バージョンを情報を返す
    */
   static std::string getVersionInfo()
@@ -229,7 +235,7 @@ public:
     std::string str(CPM_VERSION_NO);
     return str;
   }
-  
+
   /** リビジョンを情報を返す
    */
   static std::string getRevisionInfo()
@@ -237,7 +243,7 @@ public:
     std::string str(CPM_REVISION);
     return str;
   }
-  
+
 protected:
   /** コンストラクタ */
   cpm_Base(){};
@@ -257,4 +263,3 @@ protected:
 };
 
 #endif /* _CPM_BASE_H_ */
-

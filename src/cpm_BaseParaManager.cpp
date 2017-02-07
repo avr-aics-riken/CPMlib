@@ -1,12 +1,18 @@
 /*
- * CPMlib - Cartesian Partition Manager Library
- *
- * Copyright (C) 2012-2014 Institute of Industrial Science, The University of Tokyo.
- * All rights reserved.
- *
- * Copyright (c) 2014-2015 Advanced Institute for Computational Science, RIKEN.
- * All rights reserved.
- *
+###################################################################################
+#
+# CPMlib - Computational space Partitioning Management library
+#
+# Copyright (c) 2012-2014 Institute of Industrial Science (IIS), The University of Tokyo.
+# All rights reserved.
+#
+# Copyright (c) 2014-2016 Advanced Institute for Computational Science (AICS), RIKEN.
+# All rights reserved.
+#
+# Copyright (c) 2016-2017 Research Institute for Information Technology (RIIT), Kyushu University.
+# All rights reserved.
+#
+###################################################################################
  */
 
 /**
@@ -247,7 +253,7 @@ cpm_BaseParaManager::GetGlobalArraySize( int procGrpNo )
   {
     return GetGlobalVoxelSize(procGrpNo);
   }
-  
+
   //定義点がNODEのとき頂点数を取得
   if( GetDefPointType(procGrpNo) == CPM_DEFPOINTTYPE_FDM )
   {
@@ -314,7 +320,7 @@ cpm_BaseParaManager::GetLocalArraySize( int procGrpNo )
   if( GetDefPointType(procGrpNo) == CPM_DEFPOINTTYPE_FVM ) {
     return GetLocalVoxelSize(procGrpNo);
   }
-  
+
   //定義点がNODEのとき頂点数を取得
   if( GetDefPointType(procGrpNo) == CPM_DEFPOINTTYPE_FDM ) {
     return GetLocalNodeSize(procGrpNo);
@@ -340,7 +346,7 @@ cpm_BaseParaManager::GetNeighborLevelDiff( cpm_FaceFlag face, int procGrpNo )
 ////////////////////////////////////////////////////////////////////////////////
 // パディングサイズ取得処理(静的関数)
 // 暫定対応として、偶数のときに+1するものとする
-int 
+int
 cpm_BaseParaManager::GetPaddingSize1D( const int size, const int vc )
 {
   int npad = 0;
@@ -434,7 +440,7 @@ cpm_BaseParaManager::printVoxelInfo(int myrank)
           const double *grgn = pV->GetGlobalRegion();
           const int    *gvox = pV->GetGlobalVoxelSize();
           const int    *gnod = pV->GetGlobalNodeSize();
-          cpm_DefPointType dtype = GetDefPointType(); 
+          cpm_DefPointType dtype = GetDefPointType();
           const int    *gary = pV->GetGlobalArraySize(dtype);
           std::cout << "  +----------------------------------" << std::endl;
           std::cout << "  global div  = " << gdiv[0] << "," << gdiv[1] << "," << gdiv[2] << std::endl;

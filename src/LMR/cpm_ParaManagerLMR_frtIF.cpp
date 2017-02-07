@@ -1,12 +1,18 @@
 /*
- * CPMlib - Cartesian Partition Manager Library
- *
- * Copyright (C) 2012-2014 Institute of Industrial Science, The University of Tokyo.
- * All rights reserved.
- *
- * Copyright (c) 2014-2015 Advanced Institute for Computational Science, RIKEN.
- * All rights reserved.
- *
+###################################################################################
+#
+# CPMlib - Computational space Partitioning Management library
+#
+# Copyright (c) 2012-2014 Institute of Industrial Science (IIS), The University of Tokyo.
+# All rights reserved.
+#
+# Copyright (c) 2014-2016 Advanced Institute for Computational Science (AICS), RIKEN.
+# All rights reserved.
+#
+# Copyright (c) 2016-2017 Research Institute for Information Technology (RIIT), Kyushu University.
+# All rights reserved.
+#
+###################################################################################
  */
 
 /**
@@ -1375,7 +1381,6 @@ cpm_GetNeighborLeafList_LMR_( int *leafIndex, int *face, int *leafList, int *num
   return;
 }
 
-  #define cpm_GetPeriodicLeafList_LMR_ CPM_GETPERIODICLEAFLIST_LMR
 
 ////////////////////////////////////////////////////////////////////////////////
 /** 指定リーフの指定面における周期境界の隣接リーフ番号を取得
@@ -2562,4 +2567,3 @@ cpm_PeriodicCommV3DEx_LMR_( void *array, int *imax, int *jmax, int *kmax, int *v
                                      , (cpm_DirFlag)*dir, (cpm_PMFlag)*pm, *procGrpNo );
 #endif
 }
-

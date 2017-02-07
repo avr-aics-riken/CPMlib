@@ -1,3 +1,18 @@
+!###################################################################################
+!
+! CPMlib - Computational space Partitioning Management library
+!
+! Copyright (c) 2012-2014 Institute of Industrial Science (IIS), The University of Tokyo.
+! All rights reserved.
+!
+! Copyright (c) 2014-2016 Advanced Institute for Computational Science (AICS), RIKEN.
+! All rights reserved.
+!
+! Copyright (c) 2016-2017 Research Institute for Information Technology (RIIT), Kyushu University.
+! All rights reserved.
+!
+!###################################################################################
+
 !   *********************************************************
 !   ***      Sample code of porting
 !   ***      2010 keno@VCAD, RIKEN
@@ -184,7 +199,7 @@
     implicit none
     integer :: status
     integer :: nx, ny, nz, nLeaf, gc
-    
+
     allocate ( p(1-gc:nx+gc, 1-gc:ny+gc, 1-gc:nz+gc, nLeaf) , stat=status )
     allocate ( w(1-gc:nx+gc, 1-gc:ny+gc, 1-gc:nz+gc, nLeaf) , stat=status )
     allocate ( q(1-gc:nx+gc, 1-gc:ny+gc, 1-gc:nz+gc, nLeaf) , stat=status )
@@ -258,7 +273,7 @@
       ddy = cf*dt/(dy*dy)
       ddz = cf*dt/(dz*dz)
       cpd=1.0/(1.0+2.0*ddx+2.0*ddy+2.0*ddz)
-    
+
       do k=1,nz
       do j=1,ny
       do i=1,nx
@@ -280,10 +295,10 @@
     er_buf = er
     call cpm_Allreduce_LMR(er_buf,er,1,CPM_REAL,CPM_SUM,pg,ierr)
     er = sqrt(er)
-    
+
     return
     end subroutine jacobi
-    
+
 !   ***************************************
     subroutine ftcs (nx, ny, nz, nLeaf, gc, p, q, cf, dt, er)
     implicit none
@@ -312,7 +327,7 @@
       ddx=cf*dt/(dx*dx)
       ddy=cf*dt/(dy*dy)
       ddz=cf*dt/(dz*dz)
-    
+
       do k=1,nz
       do j=1,ny
       do i=1,nx
@@ -336,10 +351,10 @@
     er_buf = er
     call cpm_Allreduce_LMR(er_buf,er,1,CPM_REAL,CPM_SUM,pg,ierr)
     er = sqrt(er)
-    
+
     return
     end subroutine ftcs
-    
+
 !   **************************
     subroutine pbc (nx, ny, nz, nLeaf, gc, p)
 
@@ -479,4 +494,3 @@
 
     return
     end subroutine fileout
-

@@ -1,12 +1,18 @@
 /*
- * CPMlib - Cartesian Partition Manager Library
- *
- * Copyright (C) 2012-2014 Institute of Industrial Science, The University of Tokyo.
- * All rights reserved.
- *
- * Copyright (c) 2014-2015 Advanced Institute for Computational Science, RIKEN.
- * All rights reserved.
- *
+###################################################################################
+#
+# CPMlib - Computational space Partitioning Management library
+#
+# Copyright (c) 2012-2014 Institute of Industrial Science (IIS), The University of Tokyo.
+# All rights reserved.
+#
+# Copyright (c) 2014-2016 Advanced Institute for Computational Science (AICS), RIKEN.
+# All rights reserved.
+#
+# Copyright (c) 2016-2017 Research Institute for Information Technology (RIIT), Kyushu University.
+# All rights reserved.
+#
+###################################################################################
  */
 
 /**
@@ -34,7 +40,7 @@ cpm_VoxelInfo::cpm_VoxelInfo()
     m_nodeTailIndex[i] = 0;
   }
 // 2016/01/22 FEAST add.e
- 
+
   m_comm   = MPI_COMM_NULL;
   m_nRank  = 1;
   m_rankNo = 0;
@@ -299,7 +305,7 @@ cpm_VoxelInfo::IsOuterBoundary( cpm_FaceFlag face ) const
   if( face == Z_PLUS  && pos[2] == div[2]-1 ) return true;
 
   // ここに到達した場合は内部境界
-  return false; 
+  return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -328,4 +334,3 @@ cpm_VoxelInfo::IsInnerBoundary( cpm_FaceFlag face ) const
   // ここに到達した場合は内部境界
   return true;
 }
-

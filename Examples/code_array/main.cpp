@@ -1,12 +1,18 @@
 /*
- * CPMlib - Cartesian Partition Manager Library
- *
- * Copyright (C) 2012-2014 Institute of Industrial Science, The University of Tokyo.
- * All rights reserved.
- *
- * Copyright (c) 2014-2015 Advanced Institute for Computational Science, RIKEN.
- * All rights reserved.
- *
+###################################################################################
+#
+# CPMlib - Computational space Partitioning Management library
+#
+# Copyright (c) 2012-2014 Institute of Industrial Science (IIS), The University of Tokyo.
+# All rights reserved.
+#
+# Copyright (c) 2014-2016 Advanced Institute for Computational Science (AICS), RIKEN.
+# All rights reserved.
+#
+# Copyright (c) 2016-2017 Research Institute for Information Technology (RIIT), Kyushu University.
+# All rights reserved.
+#
+###################################################################################
  */
 
 #include "cpm_ParaManager.h"
@@ -41,9 +47,9 @@ int main( int argc, char **argv )
   if( !paraMngr ) return CPM_ERROR_PM_INSTANCE;
   if( paraMngr->GetMyRankID() == 0 )
   {
-    cout << "CPMlib Version " << 
+    cout << "CPMlib Version " <<
     cpm_Base::getVersionInfo() << endl;
-    cout << "CPMlib Revision " << 
+    cout << "CPMlib Revision " <<
     cpm_Base::getRevisionInfo() << endl;
   }
 
@@ -315,10 +321,10 @@ int main( int argc, char **argv )
     printf("\tSorry, can't open file.\n");
     assert(0);
   }
-  
+
   fprintf(fp,"Column_Data_00\n");
   fprintf(fp, "Itration          Norm      Residual\n");
-    
+
   // timing
   int num_thread  = omp_get_max_threads();
   PerfMonitor PM;
@@ -326,7 +332,7 @@ int main( int argc, char **argv )
   PM.setRankInfo( myrank );
   PM.setParallelMode("OpenMP", num_thread, nrank);
   set_timing_label(&PM);
-  
+
   // source term
   src_dirichlet_(src0, v_sz, &gc, psz3d, psz4dex, (int *)src_bp, &dh);
 
@@ -344,7 +350,7 @@ int main( int argc, char **argv )
                   vec_cnt);
 
   int loop;
-  
+
   // scheme branch
   switch (ls_type) {
     case JACOBI:
@@ -352,7 +358,7 @@ int main( int argc, char **argv )
       loop = LS.Jacobi(p, src0, wrk, exs, (int*)src_bp, psz3d, psz4dex, ItrMax);
       TIMING_stop(&PM, "Jacobi");
       break;
-      
+
     case SOR:
           TIMING_start(&PM, "PointSOR");
           loop = LS.PointSOR(p, src0, exs, (int*)src_bp, psz3d, psz4dex, ItrMax);
@@ -370,7 +376,7 @@ int main( int argc, char **argv )
           loop = LS.PBiCGstab(p, src0, exs, (int*)src_bp, wrk_x, wrk_b, wrk_q, wrk_r, wrk_r0, wrk_p, pcg_p_, pcg_s, pcg_s_, pcg_t_, psz3d, psz4dex, ItrMax, true);
           TIMING_stop(&PM, "BiCGstab_w_precnd");
       break;
-      
+
     case BICGSTAB:
           TIMING_start(&PM, "BiCGstab");
           loop = LS.PBiCGstab(p, src0, exs, (int*)src_bp, wrk_x, wrk_b, wrk_q, wrk_r, wrk_r0, wrk_p, pcg_p_, pcg_s, pcg_s_, pcg_t_, psz3d, psz4dex, ItrMax, false);
@@ -384,7 +390,7 @@ int main( int argc, char **argv )
 
   // close
   if ( !fp ) fclose(fp);
-  
+
   // file out
   strcpy(fname2, "p.sph");
   //fileout_(v_sz, &gc, psz4dex, p, &dh, org, fname2);
@@ -398,18 +404,18 @@ int main( int argc, char **argv )
     printf("\tSorry, can't open 'profiling.txt' file. Write failed.\n");
     assert(0);
   }
-  
+
   // 測定結果の集計(gathreメソッドは全ノードで呼ぶこと)
   PM.gather();
-  
-  // 結果出力(排他測定のみ)                                                                         
+
+  // 結果出力(排他測定のみ)
   printf("\n===============================\n");
   PM.print(stdout, "hoge", "foo");
   PM.print(fp, "hoge", "foo");
 
   if ( !fp ) fclose(fp);
-  
-  
+
+
   return 0;
 }
 
@@ -424,19 +430,19 @@ void set_label(PerfMonitor* pm, const string label, PerfMonitor::Type type, bool
 {
     // 登録個数のチェック
     order_of_PM_key++;
-    
+
     if ( order_of_PM_key > PM_NUM_MAX )
     {
         printf("\tThe number of labels for Performance monitor goes over limit.\n");
         exit(0);
     }
-    
+
     // 文字数がTM_LABEL_MAX-1を超えるものはカット
     if ( strlen(label.c_str()) > TM_LABEL_MAX-1 )
     {
         printf("\tWarning: Length of timing label must be less than %d\n", TM_LABEL_MAX-1);
     }
-    
+
     // Performance Monitorへの登録
     pm->setProperties(label, type, exclusive);
 }
@@ -452,7 +458,7 @@ void set_timing_label(PerfMonitor* pm)
     set_label(pm, "BiCGstab",         PerfMonitor::CALC, false);
     set_label(pm, "BoundaryCondition",PerfMonitor::CALC, true);
     set_label(pm, "Norm_max",         PerfMonitor::CALC, true);
-    
+
     set_label(pm, "Jacobi_kernel",    PerfMonitor::CALC, true);
     set_label(pm, "Sor_kernel",       PerfMonitor::CALC, true);
     set_label(pm, "Sor2sma_kernel",   PerfMonitor::CALC, true);
@@ -460,7 +466,7 @@ void set_timing_label(PerfMonitor* pm)
     set_label(pm, "Vector_change_p",   PerfMonitor::CALC, true);
     set_label(pm, "Vector_change_b",   PerfMonitor::CALC, true);
     set_label(pm, "Vector_change_exs",   PerfMonitor::CALC, true);
-    
+
     set_label(pm, "Blas_dot1",        PerfMonitor::CALC, true);
     set_label(pm, "Blas_dot2",        PerfMonitor::CALC, true);
     set_label(pm, "Blas_copy",        PerfMonitor::CALC, true);
@@ -470,9 +476,8 @@ void set_timing_label(PerfMonitor* pm)
     set_label(pm, "Blas_bicg2",       PerfMonitor::CALC, true);
     set_label(pm, "Blas_ax",          PerfMonitor::CALC, true);
     set_label(pm, "Blas_triad",       PerfMonitor::CALC, true);
-        
+
     // 共通にまとめて利用
     set_label(pm, "Copy_Array",             PerfMonitor::CALC, true);
     set_label(pm, "assign_Const_to_Array",  PerfMonitor::CALC, true);
 }
-

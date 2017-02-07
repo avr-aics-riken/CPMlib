@@ -1,12 +1,18 @@
 /*
- * CPMlib - Cartesian Partition Manager Library
- *
- * Copyright (C) 2012-2014 Institute of Industrial Science, The University of Tokyo.
- * All rights reserved.
- *
- * Copyright (c) 2014-2015 Advanced Institute for Computational Science, RIKEN.
- * All rights reserved.
- *
+###################################################################################
+#
+# CPMlib - Computational space Partitioning Management library
+#
+# Copyright (c) 2012-2014 Institute of Industrial Science (IIS), The University of Tokyo.
+# All rights reserved.
+#
+# Copyright (c) 2014-2016 Advanced Institute for Computational Science (AICS), RIKEN.
+# All rights reserved.
+#
+# Copyright (c) 2016-2017 Research Institute for Information Technology (RIIT), Kyushu University.
+# All rights reserved.
+#
+###################################################################################
  */
 
 /**
@@ -25,7 +31,7 @@
 // 袖通信(Scalar3D版, MPI_Datatype指定)
 cpm_ErrorCode
 cpm_ParaManagerLMR::BndCommS3D( MPI_Datatype dtype, void *array, int imax, int jmax, int kmax
-                           , int vc, int vc_comm, int procGrpNo ) 
+                           , int vc, int vc_comm, int procGrpNo )
 {
   return BndCommS4D( dtype, array, imax, jmax, kmax, 1, vc, vc_comm, procGrpNo );
 }
@@ -34,7 +40,7 @@ cpm_ParaManagerLMR::BndCommS3D( MPI_Datatype dtype, void *array, int imax, int j
 // 袖通信(Vector3D版, MPI_Datatype指定)
 cpm_ErrorCode
 cpm_ParaManagerLMR::BndCommV3D( MPI_Datatype dtype, void *array, int imax, int jmax, int kmax
-                           , int vc, int vc_comm, int procGrpNo ) 
+                           , int vc, int vc_comm, int procGrpNo )
 {
   return BndCommS4D( dtype, array, imax, jmax, kmax, 3, vc, vc_comm, procGrpNo );
 }
@@ -43,7 +49,7 @@ cpm_ParaManagerLMR::BndCommV3D( MPI_Datatype dtype, void *array, int imax, int j
 // 袖通信(Scalar4D版, MPI_Datatype指定)
 cpm_ErrorCode
 cpm_ParaManagerLMR::BndCommS4D( MPI_Datatype dtype, void *array, int imax, int jmax, int kmax, int nmax
-                           , int vc, int vc_comm, int procGrpNo ) 
+                           , int vc, int vc_comm, int procGrpNo )
 {
   if( dtype == MPI_CHAR )
     return BndCommS4D( (char*)array, imax, jmax, kmax, nmax, vc, vc_comm, procGrpNo );
@@ -87,7 +93,7 @@ cpm_ParaManagerLMR::BndCommS4D( MPI_Datatype dtype, void *array, int imax, int j
 // 非同期版袖通信(Scalar3D版, MPI_Datatype指定)
 cpm_ErrorCode
 cpm_ParaManagerLMR::BndCommS3D_nowait( MPI_Datatype dtype, void *array, int imax, int jmax, int kmax
-                                   , int vc, int vc_comm, int procGrpNo ) 
+                                   , int vc, int vc_comm, int procGrpNo )
 {
   return BndCommS4D_nowait( dtype, array, imax, jmax, kmax, 1, vc, vc_comm, procGrpNo );
 }
@@ -96,7 +102,7 @@ cpm_ParaManagerLMR::BndCommS3D_nowait( MPI_Datatype dtype, void *array, int imax
 // 非同期版袖通信(Vector3D版, MPI_Datatype指定)
 cpm_ErrorCode
 cpm_ParaManagerLMR::BndCommV3D_nowait( MPI_Datatype dtype, void *array, int imax, int jmax, int kmax
-                                   , int vc, int vc_comm, int procGrpNo ) 
+                                   , int vc, int vc_comm, int procGrpNo )
 {
   return BndCommS4D_nowait( dtype, array, imax, jmax, kmax, 3, vc, vc_comm, procGrpNo );
 }
@@ -105,7 +111,7 @@ cpm_ParaManagerLMR::BndCommV3D_nowait( MPI_Datatype dtype, void *array, int imax
 // 非同期版袖通信(Scalar4D版, MPI_Datatype指定)
 cpm_ErrorCode
 cpm_ParaManagerLMR::BndCommS4D_nowait( MPI_Datatype dtype, void *array, int imax, int jmax, int kmax, int nmax
-                                  , int vc, int vc_comm, int procGrpNo ) 
+                                  , int vc, int vc_comm, int procGrpNo )
 {
   if( dtype == MPI_CHAR )
     return BndCommS4D_nowait( (char*)array, imax, jmax, kmax, nmax, vc, vc_comm, procGrpNo );
@@ -258,12 +264,12 @@ cpm_ParaManagerLMR::BndCommS4DEx( MPI_Datatype dtype, void *array, int nmax, int
 
   return CPM_ERROR_MPI_INVALID_DATATYPE;
 }
-  
+
 ////////////////////////////////////////////////////////////////////////////////
 // 非同期版袖通信(Vector3DEx版, MPI_Datatype指定)
 cpm_ErrorCode
 cpm_ParaManagerLMR::BndCommV3DEx_nowait( MPI_Datatype dtype, void *array, int imax, int jmax, int kmax
-                                    , int vc, int vc_comm, int procGrpNo ) 
+                                    , int vc, int vc_comm, int procGrpNo )
 {
   return BndCommS4DEx_nowait( dtype, array, 3, imax, jmax, kmax, vc, vc_comm, procGrpNo );
 }
@@ -272,7 +278,7 @@ cpm_ParaManagerLMR::BndCommV3DEx_nowait( MPI_Datatype dtype, void *array, int im
 // 非同期版袖通信(Scalar4DEx版, MPI_Datatype指定)
 cpm_ErrorCode
 cpm_ParaManagerLMR::BndCommS4DEx_nowait( MPI_Datatype dtype, void *array, int nmax, int imax, int jmax, int kmax
-                                    , int vc, int vc_comm, int procGrpNo ) 
+                                    , int vc, int vc_comm, int procGrpNo )
 {
   if( dtype == MPI_CHAR )
     return BndCommS4DEx_nowait( (char*)array, nmax, imax, jmax, kmax, vc, vc_comm, procGrpNo );
@@ -364,4 +370,3 @@ cpm_ParaManagerLMR::PeriodicCommS4DEx( MPI_Datatype dtype, void *array, int nmax
 
   return CPM_ERROR_MPI_INVALID_DATATYPE;
 }
-

@@ -1,3 +1,19 @@
+/*
+###################################################################################
+#
+# CPMlib - Computational space Partitioning Management library
+#
+# Copyright (c) 2012-2014 Institute of Industrial Science (IIS), The University of Tokyo.
+# All rights reserved.
+#
+# Copyright (c) 2014-2016 Advanced Institute for Computational Science (AICS), RIKEN.
+# All rights reserved.
+#
+# Copyright (c) 2016-2017 Research Institute for Information Technology (RIIT), Kyushu University.
+# All rights reserved.
+#
+###################################################################################
+*/
   int vc_comm = 2;
   ///////////// MPI test /////////////
   {
@@ -9,7 +25,7 @@
 
     std::string hname = paraMngr->GetHostName();
     ofs << "hostname=" << hname << endl;
-  
+
     // Broardcast
 #if 1
     {
@@ -1040,4 +1056,3 @@
     }
   }
 #endif
-

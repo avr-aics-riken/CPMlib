@@ -1,12 +1,18 @@
 /*
- * CPMlib - Cartesian Partition Manager Library
- *
- * Copyright (C) 2012-2014 Institute of Industrial Science, The University of Tokyo.
- * All rights reserved.
- *
- * Copyright (c) 2014-2015 Advanced Institute for Computational Science, RIKEN.
- * All rights reserved.
- *
+###################################################################################
+#
+# CPMlib - Computational space Partitioning Management library
+#
+# Copyright (c) 2012-2014 Institute of Industrial Science (IIS), The University of Tokyo.
+# All rights reserved.
+#
+# Copyright (c) 2014-2016 Advanced Institute for Computational Science (AICS), RIKEN.
+# All rights reserved.
+#
+# Copyright (c) 2016-2017 Research Institute for Information Technology (RIIT), Kyushu University.
+# All rights reserved.
+#
+###################################################################################
  */
 
 /**
@@ -28,7 +34,7 @@ class cpm_VoxelInfo : public cpm_Base
 friend class cpm_BaseParaManager;
 friend class cpm_ParaManagerCART;
 ////////////////////////////////////////////////////////////////////////////////
-// メンバー関数 
+// メンバー関数
 ////////////////////////////////////////////////////////////////////////////////
 public:
 
@@ -82,12 +88,12 @@ public:
   const int* GetGlobalNodeSize() const;
 
   /** 全体ボクセル数または頂点数を取得
-   *  - FVMのときはボクセル数、FDMのときは頂点数を取得 
+   *  - FVMのときはボクセル数、FDMのときは頂点数を取得
    *
    *  @param[in] dtype 定義点タイプ(enum)
    *  @return 全体ボクセル数または頂点数の整数配列ポインタ(3word)
    */
-  const int* GetGlobalArraySize( cpm_DefPointType dtype ) const; 
+  const int* GetGlobalArraySize( cpm_DefPointType dtype ) const;
 
 // 2016/01/22 FEAST add.e
 
@@ -114,12 +120,12 @@ public:
   const int* GetLocalNodeSize() const;
 
   /** 自ランクのボクセル数または頂点数を取得
-   *  - FVMのときはボクセル数、FDMのときは頂点数を取得 
+   *  - FVMのときはボクセル数、FDMのときは頂点数を取得
    *
    *  @param[in] dtype 定義点タイプ(enum)
    *  @return 自ランクのボクセル数または頂点数の整数配列ポインタ(3word)
    */
-  const int* GetLocalArraySize( cpm_DefPointType dtype ) const; 
+  const int* GetLocalArraySize( cpm_DefPointType dtype ) const;
 
 // 2016/01/22 FEAST add.e
 
@@ -148,12 +154,12 @@ public:
   const int* GetNodeHeadIndex() const;
 
   /** 自ランクの始点頂点の全体空間でのインデクスを取得
-   *  - FVMのときはボクセル、FDMのときは頂点の始点インデックスを取得 
+   *  - FVMのときはボクセル、FDMのときは頂点の始点インデックスを取得
    *
    *  @param[in] dtype 定義点タイプ(enum)
    *  @return 自ランクの始点インデクス整数配列のポインタ
    */
-  const int* GetArrayHeadIndex( cpm_DefPointType dtype ) const; 
+  const int* GetArrayHeadIndex( cpm_DefPointType dtype ) const;
 
 // 2016/01/22 FEAST add.e
 
@@ -172,7 +178,7 @@ public:
   const int* GetNodeTailIndex() const;
 
   /** 自ランクの終点頂点の全体空間でのインデクスを取得
-   *  - FVMのときはボクセル、FDMのときは頂点の終点インデックスを取得 
+   *  - FVMのときはボクセル、FDMのときは頂点の終点インデックスを取得
    *
    *  @param[in] dtype 定義点タイプ(enum)
    *  @return 自ランクの終点インデクス整数配列のポインタ
@@ -222,7 +228,7 @@ public:
 protected:
   /**** 全体空間の情報 ****/
   cpm_GlobalDomainInfo m_globalDomainInfo; ///< 空間全体の領域情報
- 
+
   /**** 自ランクの情報 ****/
   cpm_LocalDomainInfo m_localDomainInfo;   ///< 自ランクの領域情報
   int m_voxelHeadIndex[3];                 ///< 自ランクの始点ボクセルインデックス
@@ -242,4 +248,3 @@ protected:
 };
 
 #endif /* _CPM_VOXELINFO_H_ */
-

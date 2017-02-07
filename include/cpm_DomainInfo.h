@@ -1,12 +1,18 @@
 /*
- * CPMlib - Cartesian Partition Manager Library
- *
- * Copyright (C) 2012-2014 Institute of Industrial Science, The University of Tokyo.
- * All rights reserved.
- *
- * Copyright (c) 2014-2015 Advanced Institute for Computational Science, RIKEN.
- * All rights reserved.
- *
+###################################################################################
+#
+# CPMlib - Computational space Partitioning Management library
+#
+# Copyright (c) 2012-2014 Institute of Industrial Science (IIS), The University of Tokyo.
+# All rights reserved.
+#
+# Copyright (c) 2014-2016 Advanced Institute for Computational Science (AICS), RIKEN.
+# All rights reserved.
+#
+# Copyright (c) 2016-2017 Research Institute for Information Technology (RIIT), Kyushu University.
+# All rights reserved.
+#
+###################################################################################
  */
 
 /**
@@ -41,7 +47,7 @@ public:
   /** 原点のセット
    *  @param[in] org 原点情報
    */
-  void SetOrigin( double org[3] ); 
+  void SetOrigin( double org[3] );
 
   /** 原点の取得
    *  @return 原点情報実数配列のポインタ
@@ -51,7 +57,7 @@ public:
   /** ピッチのセット
    *  @param[in] pch ピッチ情報
    */
-  void SetPitch( double pch[3] ); 
+  void SetPitch( double pch[3] );
 
   /** ピッチの取得
    *  @return ピッチ情報実数配列のポインタ
@@ -61,7 +67,7 @@ public:
   /** 空間サイズのセット
    *  @param[in] rgn 空間サイズ情報
    */
-  void SetRegion( double rgn[3] ); 
+  void SetRegion( double rgn[3] );
 
   /** 空間サイズの取得
    *  @return 空間サイズ情報実数配列のポインタ
@@ -71,7 +77,7 @@ public:
   /** VOXEL数のセット
    *  @param[in] vox VOXEL数情報
    */
-  void SetVoxNum( int vox[3] ); 
+  void SetVoxNum( int vox[3] );
 
   /** VOXEL数の取得
    *  @return VOXEL数情報実数配列のポインタ
@@ -87,7 +93,7 @@ public:
   /** 頂点数の取得
    *  @return 頂点数情報整数配列のポインタ
    */
-  const int* GetNodNum() const;  
+  const int* GetNodNum() const;
 // 2016/01/22 FEAST add.e
 
   /** 領域情報のチェック \n
@@ -206,14 +212,14 @@ public:
   const int* GetDivNum() const;
 
   /** 活性サブドメイン情報の存在チェック
-   *  @param[in] subDomain チェックする活性サブドメイン情報 
+   *  @param[in] subDomain チェックする活性サブドメイン情報
    *  @retval    true      存在する
    *  @retval    false     存在しない
    */
   bool IsExistSubdomain( cpm_ActiveSubdomainInfo subDomain );
 
   /** 活性サブドメイン情報の追加
-   *  @param[in] subDomain 追加する活性サブドメイン情報 
+   *  @param[in] subDomain 追加する活性サブドメイン情報
    *  @retval    true      追加した
    *  @retval    false     追加に失敗(同じ領域分割位置で追加済み)
    */
@@ -328,4 +334,3 @@ private:
 };
 
 #endif /* _CPM_DomainInfo_H_ */
-

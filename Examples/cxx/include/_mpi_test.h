@@ -1,3 +1,20 @@
+/*
+###################################################################################
+#
+# CPMlib - Computational space Partitioning Management library
+#
+# Copyright (c) 2012-2014 Institute of Industrial Science (IIS), The University of Tokyo.
+# All rights reserved.
+#
+# Copyright (c) 2014-2016 Advanced Institute for Computational Science (AICS), RIKEN.
+# All rights reserved.
+#
+# Copyright (c) 2016-2017 Research Institute for Information Technology (RIIT), Kyushu University.
+# All rights reserved.
+#
+###################################################################################
+*/
+
   ///////////// MPI test /////////////
   {
     int rank = paraMngr->GetMyRankID();
@@ -7,7 +24,7 @@
 
     std::string hname = paraMngr->GetHostName();
     ofs << "hostname=" << hname << endl;
-  
+
     // Broardcast
 #if 1
     {
@@ -811,4 +828,3 @@
     _PRINT_S4DEX(ofs,"after PeriodicCommZ",nmax,imax,jmax,kmax,vc,n,pad_size[0],pad_size[1],pad_size[2],pad_size[3]);
   }
 #endif
-
