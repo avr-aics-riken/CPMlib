@@ -17,28 +17,17 @@ CPMlib is a C++ class library to efficiently assist the development of unsteady 
 
 ## INGREDIENTS
 ~~~
-ChangeLog         History of development
+ChangeLog.md      History of development
 License.txt       License to apply
-Makefile_hand     Makefile for hand compile
 Readme.md         This document, including the description of build
 cmake/            Modules of cmake
-doc/              Document
-  Doxyfile        Configuration file to generate a doxygen file
-  PMlib.pdf       User's manual (in Japanese)
-  scripts/        Shell script collections for installation/execution
-  tutorial/       Tutorial documents
-example/          Example source codes
+doc/              Documents
+Examples/         Example source codes
 include/          Header files
 src/              Source codes
 ~~~
 
 ## HOW TO BUILD
-
-Typical installation will be composed of three steps.
-
-1. Confirm that the software requirement is met.
-2. Obtain the the package tar ball and unpack it under the temporary directory.
-3. Configure and Make the related files.
 
 ### Build
 
@@ -58,33 +47,35 @@ $ sudo make install
 
 >  Specify the directory that this library will be installed. Built library is installed at `install_directory/lib` and the header files are placed at `install_directory/include`.　The default install directory is `/usr/local/PMlib`.
 
-`-D real_type=(float|double)`
+`-D real_type=` {float | double}
 
 >  Specify the type of floating point. If this option is omitted, the default is float.
 
-`-D enable_LMR=(no|yes)`
+`-D enable_LMR=` {no | yes}
 
 >  This option allows you to use LMR framework. The default is no.
 
-`-D enable_OPENMP=(yes|no)`
+`-D enable_OPENMP=` {yes | no}
 
 >  Enable OpenMP directives. The default is yes
 
-`-D with_MPI=(yes|no)`
+`-D with_MPI=` {yes | no}
 
 >  If you use an MPI library, specify `with_MPI=yes`, the default is yes.
 
-`-D with_TP=_dir_`
+`-D with_example=` {no | yes}
+
+>  This option turns on compiling sample codes. The default is no.
+
+`-D with_TP=` *Installed_directory*
 
 > Specify the directory path that TextParser is installed.
 
-`-D with_PM=_dir_`
+`-D with_PM=` *Installed_directory*
 
 > Specify the directory path that PMlib is installed.
 
-`-D with_example=(no|yes)`
 
->  This option turns on compiling sample codes. The default is no.
 
 
 The default compiler options are described in `cmake/CompilerOptionSelector.cmake` file. See BUILD OPTION section in CMakeLists.txt in detail.
@@ -92,29 +83,29 @@ The default compiler options are described in `cmake/CompilerOptionSelector.cmak
 
 ## Configure Examples
 
+`$ export CMP_HOME=hogehoge`
+
+In following exsmples, assuming that TextParser and PMlib are installed under the CPM_HOME directory. If not, please specify applicable directory paths.
+
 ### INTEL/GNU compiler
 
-	~~~
-	$ cmake -DINSTALL_DIR=${CPM_HOME}/CPMlib -Denable_OPENMP=yes -Dwith_MPI=yes -Dreal_type=float -Denable_LMR=no -Dwith_example=no -Dwith_TP=${CPM_HOME}/TextParser -Dwith_PM=${CPM_HOME}/PMlib ..
-	~~~
+~~~
+$ cmake -DINSTALL_DIR=${CPM_HOME}/CPMlib -Denable_OPENMP=yes -Dwith_MPI=yes -Dreal_type=float -Denable_LMR=no -Dwith_example=no -Dwith_TP=${CPM_HOME}/TextParser -Dwith_PM=${CPM_HOME}/PMlib ..
+~~~
 
 
 ### FUJITSU compiler / FX10 on login nodes (Cross compilation)
 
-*
-
-  ~~~
-  $ cmake -DINSTALL_DIR=${PM_HOME}/PMlib -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain_fx10.cmake -Denable_OPENMP=yes -Dwith_MPI=no -Denable_Fortran=yes -Dwith_example=no  ..
-  ~~~
+~~~
+$ cmake -DINSTALL_DIR=${PM_HOME}/PMlib -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain_fx10.cmake -Denable_OPENMP=yes -Dwith_MPI=no -Denable_Fortran=yes -Dwith_example=no  ..
+~~~
 
 
 ### FUJITSU compiler / K computer on login nodes (Cross compilation)
 
-* Specify
-
-  ~~~
-  $ cmake -DINSTALL_DIR=${PM_HOME}/PMlib -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain_K.cmake -Denable_OPENMP=yes -Dwith_MPI=no -Denable_Fortran=yes -Dwith_example=no ..
-  ~~~
+~~~
+$ cmake -DINSTALL_DIR=${PM_HOME}/PMlib -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain_K.cmake -Denable_OPENMP=yes -Dwith_MPI=no -Denable_Fortran=yes -Dwith_example=no ..
+~~~
 
 
 ##### Note
@@ -143,5 +134,5 @@ Meanwhile, the summary is displayed for stdout.
 
 ## CONTRIBUTORS
 
-* Kenji     Ono      _keno@{cc.kyushu-u.ac, riken}.jp_
+* Kenji     Ono      *keno@{cc.kyushu-u.ac, riken}.jp*
 * Yasuhiro  Kawashima

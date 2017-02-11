@@ -3,6 +3,10 @@
 ## REVISION HISTORY
 
 ---
+- 2017-2-11 Version 2.2.1
+  - modify Readme.md 
+
+---
 - 2017-2-7 Version 2.2.0
   - cmake branch in github
   - change acronym

@@ -22,19 +22,19 @@
 #
 # -D INSTALL_DIR=install_directory
 #
-# -D enable_OPENMP=(yes|no)
+# -D enable_OPENMP={yes|no}
 #
-# -D real_type=(float|double)
+# -D real_type={float|double}
 #
-# -D enable_LMR=(no|yes)
+# -D enable_LMR={no|yes}
 #
-# -D with_MPI=(yes|no)
+# -D with_MPI={yes|no}
 #
-# -D with_TP=installed_directory
+# -D with_example={no|yes}
 #
-# -D with_PM=installed_directory
+# -D with_TP=Installed_directory
 #
-# -D with_example=(no|yes)
+# -D with_PM=Installed_directory
 #
 
 cmake_minimum_required(VERSION 2.8)
@@ -70,8 +70,8 @@ set (CMAKE_INSTALL_PREFIX "${INSTALL_DIR}")
 
 
 #######
-set(PROJECT_VERSION "2.2.0")
-set(LIB_REVISION "20170207_1200")
+set(PROJECT_VERSION "2.2.1")
+set(LIB_REVISION "20170211_2100")
 #######
 
 
@@ -127,7 +127,7 @@ message( STATUS "Example: "                        ${with_example})
 message(" ")
 
 if(CMAKE_CXX_COMPILER MATCHES ".*FCCpx$")
-elseif()
+else()
   if(with_MPI)
     include(FindMPI)
 
@@ -155,7 +155,7 @@ message(" ")
 include_directories(
     ${PROJECT_SOURCE_DIR}/src
     ${PROJECT_SOURCE_DIR}/include
-    )
+)
 
 
 #######
