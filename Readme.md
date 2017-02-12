@@ -45,7 +45,7 @@ $ sudo make install
 
 `-D INSTALL_DIR=install_directory`
 
->  Specify the directory that this library will be installed. Built library is installed at `install_directory/lib` and the header files are placed at `install_directory/include`.　The default install directory is `/usr/local/PMlib`.
+>  Specify the directory that this library will be installed. Built library is installed at `install_directory/lib` and the header files are placed at `install_directory/include`. The default install directory is `/usr/local/PMlib`.
 
 `-D real_type=` {float | double}
 
@@ -97,14 +97,14 @@ $ cmake -DINSTALL_DIR=${CPM_HOME}/CPMlib -Denable_OPENMP=yes -Dwith_MPI=yes -Dre
 ### FUJITSU compiler / FX10 on login nodes (Cross compilation)
 
 ~~~
-$ cmake -DINSTALL_DIR=${PM_HOME}/PMlib -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain_fx10.cmake -Denable_OPENMP=yes -Dwith_MPI=no -Denable_Fortran=yes -Dwith_example=no  ..
+$ cmake -DINSTALL_DIR=${CPM_HOME}/CPMlib -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain_fx10.cmake -Denable_OPENMP=yes -Dwith_MPI=yes -Dreal_type=float -Denable_LMR=no -Dwith_example=no -Dwith_TP=${CPM_HOME}/TextParser -Dwith_PM=${CPM_HOME}/PMlib ..
 ~~~
 
 
 ### FUJITSU compiler / K computer on login nodes (Cross compilation)
 
 ~~~
-$ cmake -DINSTALL_DIR=${PM_HOME}/PMlib -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain_K.cmake -Denable_OPENMP=yes -Dwith_MPI=no -Denable_Fortran=yes -Dwith_example=no ..
+$ cmake -DINSTALL_DIR=${CPM_HOME}/CPMlib -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain_K.cmake -Denable_OPENMP=yes -Dwith_MPI=yes -Dreal_type=float -Denable_LMR=no -Dwith_example=no -Dwith_TP=${CPM_HOME}/TextParser -Dwith_PM=${CPM_HOME}/PMlib ..
 ~~~
 
 
@@ -126,7 +126,7 @@ execute the intrinsic tests by;
 
 	`$ make test` or `$ ctest`
 
-* The detailed results are written in `BUILD/Testing/Temporary/LastTest.log` file.
+* The detailed results are written in `build/Testing/Temporary/LastTest.log` file.
 Meanwhile, the summary is displayed for stdout.
 
 
