@@ -2063,7 +2063,7 @@ cpm_BndCommS4D_( void *array, int *imax, int *jmax, int *kmax, int *nmax, int *v
   }
 
   // BndCommS4D
-   *ierr = paraMngr->BndCommS4D( dtype, array, *imax, *jmax, *kmax, *nmax, *vc, *vc_comm, false, *procGrpNo );
+   *ierr = paraMngr->BndCommS4D( dtype, array, *imax, *jmax, *kmax, *nmax, *vc, *vc_comm, *procGrpNo );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -3135,8 +3135,7 @@ cpm_ParaManager::cpm_BndCommS4D_nowait( void *array, int imax, int jmax, int kma
   MPI_Request req[12];
 
   // BndCommS4D_nowait
-  cpm_ErrorCode ret = BndCommS4D_nowait( dtype, array, imax, jmax, kmax, nmax
-                                       , vc, vc_comm, req, false, procGrpNo );
+  cpm_ErrorCode ret = BndCommS4D_nowait( dtype, array, imax, jmax, kmax, nmax, vc, vc_comm, req, procGrpNo );
   if( ret != CPM_SUCCESS )
   {
     return ret;
@@ -3274,8 +3273,7 @@ cpm_ParaManager::cpm_wait_BndCommS4D( void *array, int imax, int jmax, int kmax,
   }
 
   // wait_BndCommS4D
-  cpm_ErrorCode ret = wait_BndCommS4D( dtype, array, imax, jmax, kmax, nmax
-                                     , vc, vc_comm, req, false, procGrpNo );
+  cpm_ErrorCode ret = wait_BndCommS4D( dtype, array, imax, jmax, kmax, nmax, vc, vc_comm, req, procGrpNo );
   if( ret != CPM_SUCCESS )
   {
     return ret;

@@ -27,7 +27,6 @@ include_directories(
 
 link_directories(
       ${PROJECT_BINARY_DIR}/src
-      ${PROJECT_BINARY_DIR}/src/LMR
       ${TP_LIB}
 )
 
@@ -114,6 +113,7 @@ if(enable_LMR)
         ${PROJECT_SOURCE_DIR}/include/LMR/inline
         ${PROJECT_SOURCE_DIR}/Examples/cxx_LMR/include
   )
+  link_directories(${PROJECT_BINARY_DIR}/src/LMR)
 
   if(with_MPI)
     target_link_libraries(example4 -lCPM_LMRmpi -lCPMmpi -lTPmpi)
@@ -141,6 +141,7 @@ if(enable_LMR)
         ${PROJECT_SOURCE_DIR}/include/LMR/BCM
         ${PROJECT_SOURCE_DIR}/include/LMR/inline
   )
+  link_directories(${PROJECT_BINARY_DIR}/src/LMR)
 
   set_target_properties(example5 PROPERTIES LINKER_LANGUAGE CXX)
 

@@ -3,6 +3,18 @@
 ## REVISION HISTORY
 
 ---
+- 2017-2-15 Version 2.2.3
+  - bug fix : error occurs when GNU compiler is used.
+  	 - `src/cpm_ParaManager_frtIF.cpp`, remove arg `false` at lines 2066, 3138, 3277
+  - Tested
+
+  |Compiler|Serial|Ex.|MPI |Ex.|
+  |:--|:--:|:--:|:--:|:--:|
+  |Intel 17.0.1 |||ok|100%|
+  |GNU 6.2.0    |||ok|66%|
+  |fx10         |||ok|–|
+
+---
 - 2017-2-12 Version 2.2.2
   - modify Readme.md
   - correct fx10 compiler options
@@ -17,13 +29,6 @@
   - change acronym
   - LMR option
   - introduce getarg() for mconvp_CPM.f90
-  - Tested
-
-  |Compiler|Serial|Ex.|MPI |Ex.|
-  |:--|:--:|:--:|:--:|:--:|
-  |Intel 17.0.1 |||ok|100%|
-  |GNU 6.2.0    |||||
-  |fx10         |||||
 
 ---
 - 2016-10-31 Version 2.1.5
