@@ -70,8 +70,8 @@ set (CMAKE_INSTALL_PREFIX "${INSTALL_DIR}")
 
 
 #######
-set(PROJECT_VERSION "2.2.3")
-set(LIB_REVISION "20170215_0900")
+set(PROJECT_VERSION "2.2.4")
+set(LIB_REVISION "20170216_2200")
 #######
 
 
@@ -241,7 +241,7 @@ endif()
 #######
 
 configure_file( config.h.in.cmake config.h )
-configure_file( include/cpm_Version.h.in ${PROJECT_BINARY_DIR}/include/cpm_Version.h)
+configure_file( include/cpm_Version.h.in ${PROJECT_BINARY_DIR}/include/cpm_Version.h @ONLY)
 
 
 #######

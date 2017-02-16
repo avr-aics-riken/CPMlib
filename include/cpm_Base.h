@@ -232,17 +232,10 @@ public:
    */
   static std::string getVersionInfo()
   {
-    std::string str(CPM_VERSION_NO);
+    std::string str(CPM_VERSION);
     return str;
   }
 
-  /** リビジョンを情報を返す
-   */
-  static std::string getRevisionInfo()
-  {
-    std::string str(CPM_REVISION);
-    return str;
-  }
 
 protected:
   /** コンストラクタ */

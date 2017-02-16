@@ -3,6 +3,10 @@
 ## REVISION HISTORY
 
 ---
+- 2017-2-16 Version 2.2.4
+  - enable CPM_VERSION
+
+---
 - 2017-2-15 Version 2.2.3
   - bug fix : error occurs when GNU compiler is used.
   	 - `src/cpm_ParaManager_frtIF.cpp`, remove arg `false` at lines 2066, 3138, 3277

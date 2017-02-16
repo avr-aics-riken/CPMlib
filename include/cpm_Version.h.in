@@ -24,9 +24,6 @@
 #define _CPM_VERSION_H_
 
 /** CPMライブラリのバージョン */
-#define CPM_VERSION_NO  "@PACKAGE_VERSION@"
-
-/** CPMライブラリのリビジョン */
-#define CPM_REVISION    "@CPM_REVISION@"
+#define CPM_VERSION  "@PROJECT_VERSION@"
 
 #endif /* _CPM_VERSION_H_ */
