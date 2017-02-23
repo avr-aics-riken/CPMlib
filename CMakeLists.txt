@@ -34,8 +34,6 @@
 #
 # -D with_TP=Installed_directory
 #
-# -D with_PM=Installed_directory
-#
 
 cmake_minimum_required(VERSION 2.6)
 
@@ -70,8 +68,8 @@ set (CMAKE_INSTALL_PREFIX "${INSTALL_DIR}")
 
 
 #######
-set(PROJECT_VERSION "2.3.0")
-set(LIB_REVISION "20170223_1200")
+set(PROJECT_VERSION "2.3.1")
+set(LIB_REVISION "20170223_1900")
 #######
 
 
@@ -171,20 +169,10 @@ ELSE()
   MESSAGE("Error: can not find TPlib.")
 ENDIF()
 
-# PMlib
-IF(with_PM)
-  SET(PM_DIR "${with_PM}")
-  SET(PM_INC "${PM_DIR}/include")
-  SET(PM_LIB "${PM_DIR}/lib")
-ELSE()
-  MESSAGE("Error: can not find PMlib.")
-ENDIF()
-
 
 add_definitions(-DHAVE_CONFIG_H)
 
 message("TextParser : ${TP_DIR}")
-message("PMlib      : ${PM_DIR}")
 message(" ")
 
 

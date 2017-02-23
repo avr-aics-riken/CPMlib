@@ -21,13 +21,11 @@ include_directories(
        ${PROJECT_SOURCE_DIR}/include/inline
        ${PROJECT_SOURCE_DIR}/include/LMR/BCM
        ${TP_INC}
-       ${PM_INC}
 )
 
 
 link_directories(
       ${TP_LIB}
-      ${PM_LIB}
 )
 
 set(cpm_files

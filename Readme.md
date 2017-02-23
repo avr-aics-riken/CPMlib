@@ -12,7 +12,7 @@ CPMlib is a C++ class library to efficiently assist the development of unsteady 
 - Cmake
 - MPI library
 - TextParser
-- PMlib
+- PMlib(option for a code array example)
 
 
 ## INGREDIENTS
@@ -67,10 +67,6 @@ $ sudo make install
 
 > Specify the directory path that TextParser is installed.
 
-`-D with_PM=` *Installed_directory*
-
-> Specify the directory path that PMlib is installed.
-
 
 
 
@@ -86,21 +82,21 @@ In following exsmples, assuming that TextParser and PMlib are installed under th
 ### INTEL/GNU compiler
 
 ~~~
-$ cmake -DINSTALL_DIR=${CPM_HOME}/CPMlib -Dwith_MPI=yes -Dreal_type=float -Denable_LMR=no -Dwith_example=no -Dwith_TP=${CPM_HOME}/TextParser -Dwith_PM=${CPM_HOME}/PMlib ..
+$ cmake -DINSTALL_DIR=${CPM_HOME}/CPMlib -Dwith_MPI=yes -Dreal_type=float -Denable_LMR=no -Dwith_example=no -Dwith_TP=${CPM_HOME}/TextParser ..
 ~~~
 
 
 ### FUJITSU compiler / FX10 on login nodes (Cross compilation)
 
 ~~~
-$ cmake -DINSTALL_DIR=${CPM_HOME}/CPMlib -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain_fx10.cmake -Dwith_MPI=yes -Dreal_type=float -Denable_LMR=no -Dwith_example=no -Dwith_TP=${CPM_HOME}/TextParser -Dwith_PM=${CPM_HOME}/PMlib ..
+$ cmake -DINSTALL_DIR=${CPM_HOME}/CPMlib -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain_fx10.cmake -Dwith_MPI=yes -Dreal_type=float -Denable_LMR=no -Dwith_example=no -Dwith_TP=${CPM_HOME}/TextParser ..
 ~~~
 
 
 ### FUJITSU compiler / K computer on login nodes (Cross compilation)
 
 ~~~
-$ cmake -DINSTALL_DIR=${CPM_HOME}/CPMlib -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain_K.cmake -Dwith_MPI=yes -Dreal_type=float -Denable_LMR=no -Dwith_example=no -Dwith_TP=${CPM_HOME}/TextParser -Dwith_PM=${CPM_HOME}/PMlib ..
+$ cmake -DINSTALL_DIR=${CPM_HOME}/CPMlib -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain_K.cmake -Dwith_MPI=yes -Dreal_type=float -Denable_LMR=no -Dwith_example=no -Dwith_TP=${CPM_HOME}/TextParser ..
 ~~~
 
 

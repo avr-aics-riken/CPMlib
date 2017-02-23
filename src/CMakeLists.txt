@@ -19,13 +19,11 @@ include_directories(
        ${PROJECT_SOURCE_DIR}/include
        ${PROJECT_SOURCE_DIR}/include/inline
        ${TP_INC}
-       ${PM_INC}
 )
 
 
 link_directories(
       ${TP_LIB}
-      ${PM_LIB}
 )
 
 
@@ -47,12 +45,14 @@ set(cpm_files
 
 if(NOT with_MPI)
   add_library(CPM STATIC ${cpm_files})
-  target_link_libraries(CPM -lTP -lPM)
+  #target_link_libraries(CPM -lTP -lPM)
+  target_link_libraries(CPM -lTP)
   install(TARGETS CPM DESTINATION lib)
 
 else()
   add_library(CPMmpi STATIC ${cpm_files})
-  target_link_libraries(CPMmpi -lTPmpi -lPMmpi)
+  #target_link_libraries(CPMmpi -lTPmpi -lPMmpi)
+  target_link_libraries(CPMmpi -lTPmpi)
   install(TARGETS CPMmpi DESTINATION lib)
 
 endif()

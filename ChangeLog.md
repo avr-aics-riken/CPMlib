@@ -3,9 +3,8 @@
 ## REVISION HISTORY
 
 ---
-- 2017-2-23 Version 2.3.0
-  - modify Toolchain_K.cmake so that user can build with cmake version 2.6 on K.
-  - suppress OpenMP option building for a CPMlib itself, but still enable for examples.
+- 2017-2-23 Version 2.3.1
+  - remove direction that relates PMlib for a CPMlib.
   - Tested.
 
   |Compiler|Serial|Ex.|MPI |Ex.|
@@ -14,7 +13,12 @@
   |GNU 6.2.0    |||ok|66%|
   |fx10         |||ok|–|
   |K            |||ok|–|
-  
+
+---
+- 2017-2-23 Version 2.3.0
+  - modify Toolchain_K.cmake so that user can build with cmake version 2.6 on K.
+  - suppress OpenMP option building for a CPMlib itself, but still enable for examples.
+
 ---
 - 2017-2-16 Version 2.2.4
   - enable CPM_VERSION
