@@ -55,10 +55,6 @@ $ sudo make install
 
 >  This option allows you to use LMR framework. The default is no.
 
-`-D enable_OPENMP=` {yes | no}
-
->  Enable OpenMP directives. The default is yes
-
 `-D with_MPI=` {yes | no}
 
 >  If you use an MPI library, specify `with_MPI=yes`, the default is yes.
@@ -90,21 +86,21 @@ In following exsmples, assuming that TextParser and PMlib are installed under th
 ### INTEL/GNU compiler
 
 ~~~
-$ cmake -DINSTALL_DIR=${CPM_HOME}/CPMlib -Denable_OPENMP=yes -Dwith_MPI=yes -Dreal_type=float -Denable_LMR=no -Dwith_example=no -Dwith_TP=${CPM_HOME}/TextParser -Dwith_PM=${CPM_HOME}/PMlib ..
+$ cmake -DINSTALL_DIR=${CPM_HOME}/CPMlib -Dwith_MPI=yes -Dreal_type=float -Denable_LMR=no -Dwith_example=no -Dwith_TP=${CPM_HOME}/TextParser -Dwith_PM=${CPM_HOME}/PMlib ..
 ~~~
 
 
 ### FUJITSU compiler / FX10 on login nodes (Cross compilation)
 
 ~~~
-$ cmake -DINSTALL_DIR=${CPM_HOME}/CPMlib -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain_fx10.cmake -Denable_OPENMP=yes -Dwith_MPI=yes -Dreal_type=float -Denable_LMR=no -Dwith_example=no -Dwith_TP=${CPM_HOME}/TextParser -Dwith_PM=${CPM_HOME}/PMlib ..
+$ cmake -DINSTALL_DIR=${CPM_HOME}/CPMlib -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain_fx10.cmake -Dwith_MPI=yes -Dreal_type=float -Denable_LMR=no -Dwith_example=no -Dwith_TP=${CPM_HOME}/TextParser -Dwith_PM=${CPM_HOME}/PMlib ..
 ~~~
 
 
 ### FUJITSU compiler / K computer on login nodes (Cross compilation)
 
 ~~~
-$ cmake -DINSTALL_DIR=${CPM_HOME}/CPMlib -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain_K.cmake -Denable_OPENMP=yes -Dwith_MPI=yes -Dreal_type=float -Denable_LMR=no -Dwith_example=no -Dwith_TP=${CPM_HOME}/TextParser -Dwith_PM=${CPM_HOME}/PMlib ..
+$ cmake -DINSTALL_DIR=${CPM_HOME}/CPMlib -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain_K.cmake -Dwith_MPI=yes -Dreal_type=float -Denable_LMR=no -Dwith_example=no -Dwith_TP=${CPM_HOME}/TextParser -Dwith_PM=${CPM_HOME}/PMlib ..
 ~~~
 
 

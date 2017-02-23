@@ -13,9 +13,15 @@
 #
 ###################################################################################
 
+# Use OpenMP for examples
+set(enable_OPENMP "${enable_OPENMP} ON")
+checkOpenMP()
+
+
 message(" ")
 message("Examples : ")
 message(STATUS "with_MPI           = " ${with_MPI})
+message(STATUS "CXX FLAGS          = " ${CMAKE_CXX_FLAGS})
 #message(STATUS "IMPLICIT_LINK_LIBS = " ${CMAKE_CXX_IMPLICIT_LINK_LIBRARIES})
 
 

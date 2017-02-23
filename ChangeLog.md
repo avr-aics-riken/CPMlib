@@ -3,6 +3,19 @@
 ## REVISION HISTORY
 
 ---
+- 2017-2-23 Version 2.3.0
+  - modify Toolchain_K.cmake so that user can build with cmake version 2.6 on K.
+  - suppress OpenMP option building for a CPMlib itself, but still enable for examples.
+  - Tested.
+
+  |Compiler|Serial|Ex.|MPI |Ex.|
+  |:--|:--:|:--:|:--:|:--:|
+  |Intel 17.0.1 |||ok|100%|
+  |GNU 6.2.0    |||ok|66%|
+  |fx10         |||ok|–|
+  |K            |||ok|–|
+  
+---
 - 2017-2-16 Version 2.2.4
   - enable CPM_VERSION
 
@@ -11,14 +24,6 @@
   - bug fix : error occurs when GNU compiler is used.
   	 - `src/cpm_ParaManager_frtIF.cpp`, remove arg `false` at lines 2066, 3138, 3277
   - If users employ openmpi-2.x.x, configure option `--enable-mpi-cxx` must be given to enable C++ binding.
-  - Tested
-
-  |Compiler|Serial|Ex.|MPI |Ex.|
-  |:--|:--:|:--:|:--:|:--:|
-  |Intel 17.0.1 |||ok|100%|
-  |GNU 6.2.0    |||ok|66%|
-  |fx10         |||ok|–|
-  |K            |||ok|–|
 
 ---
 - 2017-2-12 Version 2.2.2

@@ -22,7 +22,7 @@
 #
 # -D INSTALL_DIR=install_directory
 #
-# -D enable_OPENMP={yes|no}
+# -D enable_OPENMP={no|yes}
 #
 # -D real_type={float|double}
 #
@@ -37,14 +37,14 @@
 # -D with_PM=Installed_directory
 #
 
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.6)
 
 
 #######
 # Build options
 #######
 
-option (enable_OPENMP "Enable OpenMP" "ON")
+option (enable_OPENMP "Enable OpenMP" "OFF")
 option (real_type "Type of floating point" "float")
 option (enable_LMR "Enable LMR function" "OFF")
 option (with_MPI "Enable MPI" "ON")
@@ -70,8 +70,8 @@ set (CMAKE_INSTALL_PREFIX "${INSTALL_DIR}")
 
 
 #######
-set(PROJECT_VERSION "2.2.4")
-set(LIB_REVISION "20170216_2200")
+set(PROJECT_VERSION "2.3.0")
+set(LIB_REVISION "20170223_1200")
 #######
 
 
@@ -95,7 +95,7 @@ FreeForm()
 
 AddOptimizeOption()
 
-checkOpenMP()
+#checkOpenMP()
 
 # Real type
 precision()
