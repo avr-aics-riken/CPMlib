@@ -86,21 +86,19 @@ $ cmake -DINSTALL_DIR=${CPM_HOME}/CPMlib -Dwith_MPI=yes -Dreal_type=float -Denab
 ~~~
 
 
-### FUJITSU compiler / FX10 on login nodes (Cross compilation)
+### FUJITSU compiler / FX10, FX100, K on login nodes (Cross compilation)
 
 ~~~
 $ cmake -DINSTALL_DIR=${CPM_HOME}/CPMlib -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain_fx10.cmake -Dwith_MPI=yes -Dreal_type=float -Denable_LMR=no -Dwith_example=no -Dwith_TP=${CPM_HOME}/TextParser ..
-~~~
 
+$ cmake -DINSTALL_DIR=${CPM_HOME}/CPMlib -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain_fx100.cmake -Dwith_MPI=yes -Dreal_type=float -Denable_LMR=no -Dwith_example=no -Dwith_TP=${CPM_HOME}/TextParser ..
 
-### FUJITSU compiler / K computer on login nodes (Cross compilation)
-
-~~~
 $ cmake -DINSTALL_DIR=${CPM_HOME}/CPMlib -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain_K.cmake -Dwith_MPI=yes -Dreal_type=float -Denable_LMR=no -Dwith_example=no -Dwith_TP=${CPM_HOME}/TextParser ..
 ~~~
 
 
 ##### Note
+- On Fujitsu machines(fx10, K, fx100), confirm appropriate directrory path for compiler environment.
 - Before building, execute following command for clean. `$ make distclean`
 
 

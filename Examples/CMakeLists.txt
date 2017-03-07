@@ -22,7 +22,6 @@ message(" ")
 message("Examples : ")
 message(STATUS "with_MPI           = " ${with_MPI})
 message(STATUS "CXX FLAGS          = " ${CMAKE_CXX_FLAGS})
-#message(STATUS "IMPLICIT_LINK_LIBS = " ${CMAKE_CXX_IMPLICIT_LINK_LIBRARIES})
 
 
 include_directories(
@@ -81,7 +80,11 @@ endif()
 ### Test 3 : f90
 
 add_executable(example3 ./f90/mconvp_CPM.f90)
-set_target_properties(example3 PROPERTIES LINKER_LANGUAGE CXX)
+
+if(CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
+else()
+  set_target_properties(example3 PROPERTIES LINKER_LANGUAGE CXX)
+endif()
 
 if(with_MPI)
   target_link_libraries(example3 -lCPMmpi -lTPmpi)
