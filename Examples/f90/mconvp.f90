@@ -1,3 +1,18 @@
+!###################################################################################
+!
+! CPMlib - Computational space Partitioning Management library
+!
+! Copyright (c) 2012-2014 Institute of Industrial Science (IIS), The University of Tokyo.
+! All rights reserved.
+!
+! Copyright (c) 2014-2016 Advanced Institute for Computational Science (AICS), RIKEN.
+! All rights reserved.
+!
+! Copyright (c) 2016-2017 Research Institute for Information Technology (RIIT), Kyushu University.
+! All rights reserved.
+!
+!###################################################################################
+
 !   *********************************************************
 !   ***      Sample code of porting
 !   ***      2010 keno@VCAD, RIKEN
@@ -30,16 +45,16 @@
     write (*,*) '        1 --- Euler Explicit'
     write (*,*) '        2 --- Euler Implicit'
     read  (*,*) scheme
-    
+
     write (*,*) 'Time step max='
     read  (*,*) stpMax
-    
+
     write (*,*) 'Time increment='
     read  (*,*) dt
-    
+
     write (*,*) 'Coef. of diffusion='
     read  (*,*) cf
-      
+
     if ( scheme == 2 ) then
       write (*,*) 'Iteration max='
       read  (*,*) itrMax
@@ -53,18 +68,18 @@
     dy = 1.0/real(ny)
     dz = 1.0/real(nz)
 
-    write (*,*) 'nx, ny, nz = ', nx, ny, nz 
-    write (*,*) 'dx, dy, dz = ', dx, dy, dz 
+    write (*,*) 'nx, ny, nz = ', nx, ny, nz
+    write (*,*) 'dx, dy, dz = ', dx, dy, dz
     write (*,*) 'dt         = ', dt
     if ( scheme == 1 ) then
       write(*,*) 'Euler Explicit ftcs'
     else
       write(*,*) 'Euler Implicit jacobi'
     end if
-    
+
     call allocate_array (nx, ny, nz)
     call pbc (nx, ny, nz, p, dx, dy, dz)
-    
+
 !   time step loop
     do stp=1, stpMax
       if ( scheme == 1 ) then
@@ -97,7 +112,7 @@
     implicit none
     integer :: status
     integer :: nx, ny, nz
-    
+
     allocate ( p(0:nx+1, 0:ny+1, 0:nz+1) , stat=status )
     allocate ( w(0:nx+1, 0:ny+1, 0:nz+1) , stat=status )
     allocate ( q(0:nx+1, 0:ny+1, 0:nz+1) , stat=status )
@@ -109,20 +124,20 @@
 !   ****************************************************
     subroutine jacobi (nx, ny, nz, p, q, w, cf, dx, dy, dz, dt, omg, er)
     implicit none
-    integer                                 :: nx, ny, nz 
+    integer                                 :: nx, ny, nz
     real, dimension (0:nx+1,0:ny+1,0:nz+1)  :: p, q, w
     real                                    :: cf, dx, dy, dz, dt, omg, er
 
     integer                                 :: i, j, k
     real                                    :: ddx, ddy, ddz, cpd
     real                                    :: s0, ss, sx, sy, sz
-    
+
     er = 0.0
     ddx = cf*dt/(dx*dx)
     ddy = cf*dt/(dy*dy)
     ddz = cf*dt/(dz*dz)
     cpd=1.0/(1.0+2.0*ddx+2.0*ddy+2.0*ddz)
-    
+
     do k=1,nz
     do j=1,ny
     do i=1,nx
@@ -139,10 +154,10 @@
 
     p(1:nx, 1:ny, 1:nz) = q(1:nx, 1:ny, 1:nz)
     er = sqrt(er)
-    
+
     return
     end subroutine jacobi
-    
+
 !   ***************************************
     subroutine ftcs (nx, ny, nz, p, q, cf, dx, dy, dz, dt, er)
     implicit none
@@ -154,12 +169,12 @@
     integer                                 :: i, j, k
     real                                    :: ddx, ddy, ddz
     real                                    :: ss, sx, sy, sz
-    
+
     er = 0.0
     ddx=cf*dt/(dx*dx)
     ddy=cf*dt/(dy*dy)
     ddz=cf*dt/(dz*dz)
-    
+
     do k=1,nz
     do j=1,ny
     do i=1,nx
@@ -179,10 +194,10 @@
     p(1:nx, 1:ny, 1:nz) = q(1:nx, 1:ny, 1:nz)
 
     er = sqrt(er)
-    
+
     return
     end subroutine ftcs
-    
+
 !   **************************
     subroutine pbc (nx, ny, nz, p, dx, dy, dz)
     implicit none
@@ -203,7 +218,7 @@
       p(i,j,nz+1)=2.0*sin(pi*x)*sin(pi*y)-p(i,j,nz)
     end do
     end do
-    
+
     do k=1,nz
     do j=1,ny
       p(0,   j,k) = p(1, j,k)
@@ -217,7 +232,7 @@
       p(i,ny+1,k) = p(i,ny,k)
     end do
     end do
-    
+
     return
     end subroutine pbc
 
@@ -264,4 +279,3 @@
 
     return
     end subroutine fileout
-

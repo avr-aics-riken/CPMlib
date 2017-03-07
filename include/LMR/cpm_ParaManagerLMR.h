@@ -1,12 +1,18 @@
 /*
- * CPMlib - Cartesian Partition Manager Library
- *
- * Copyright (C) 2012-2014 Institute of Industrial Science, The University of Tokyo.
- * All rights reserved.
- *
- * Copyright (c) 2014-2015 Advanced Institute for Computational Science, RIKEN.
- * All rights reserved.
- *
+###################################################################################
+#
+# CPMlib - Computational space Partitioning Management library
+#
+# Copyright (c) 2012-2014 Institute of Industrial Science (IIS), The University of Tokyo.
+# All rights reserved.
+#
+# Copyright (c) 2014-2016 Advanced Institute for Computational Science (AICS), RIKEN.
+# All rights reserved.
+#
+# Copyright (c) 2016-2017 Research Institute for Information Technology (RIIT), Kyushu University.
+# All rights reserved.
+#
+###################################################################################
  */
 
 /**
@@ -303,7 +309,7 @@ public:
    *  @return バッファサイズ(byte)
    */
   virtual
-  size_t GetBndCommBufferSize( int procGrpNo=0 ); 
+  size_t GetBndCommBufferSize( int procGrpNo=0 );
 
   /** 袖通信バッファのセット(LMR用の袖通信情報も生成する)
    *  @param[in] maxVC     送受信バッファの最大袖数
@@ -328,7 +334,7 @@ public:
    */
   template<class T> CPM_INLINE
   cpm_ErrorCode BndCommS3D( T *array, int imax, int jmax, int kmax, int vc, int vc_comm
-                          , int procGrpNo=0 ); 
+                          , int procGrpNo=0 );
 
   /** 袖通信(Scalar3D版, MPI_Datatype指定)
    *  - (imax,jmax,kmax,nLeaf)の形式の配列の袖通信を行う
@@ -345,7 +351,7 @@ public:
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
   cpm_ErrorCode BndCommS3D( MPI_Datatype dtype, void *array, int imax, int jmax, int kmax
-                          , int vc, int vc_comm, int procGrpNo=0 ); 
+                          , int vc, int vc_comm, int procGrpNo=0 );
 
   /** 袖通信(Vector3D版)
    *  - (imax,jmax,kmax,3,nLeaf)の形式の配列の袖通信を行う
@@ -361,7 +367,7 @@ public:
    */
   template<class T> CPM_INLINE
   cpm_ErrorCode BndCommV3D( T *array, int imax, int jmax, int kmax, int vc, int vc_comm
-                          , int procGrpNo=0 ); 
+                          , int procGrpNo=0 );
 
   /** 袖通信(Vector3D版, MPI_Datatype指定)
    *  - (imax,jmax,kmax,3,nLeaf)の形式の配列の袖通信を行う
@@ -379,7 +385,7 @@ public:
    */
   cpm_ErrorCode BndCommV3D( MPI_Datatype dtype, void *array, int imax, int jmax, int kmax
                           , int vc, int vc_comm, int procGrpNo=0 );
- 
+
   /** 袖通信(Vector3DEx版)
    *  - (3,imax,jmax,kmax,nLeaf)の形式の配列の袖通信を行う
    *
@@ -393,7 +399,7 @@ public:
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
   template<class T> CPM_INLINE
-  cpm_ErrorCode BndCommV3DEx( T *array, int imax, int jmax, int kmax, int vc, int vc_comm, int procGrpNo=0 ); 
+  cpm_ErrorCode BndCommV3DEx( T *array, int imax, int jmax, int kmax, int vc, int vc_comm, int procGrpNo=0 );
 
   /** 袖通信(Vector3DEx版, MPI_Datatype指定)
    *  - (3,imax,jmax,kmax,nLeaf)の形式の配列の袖通信を行う
@@ -447,7 +453,7 @@ public:
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
   cpm_ErrorCode BndCommS3D_nowait( MPI_Datatype dtype, void *array, int imax, int jmax, int kmax
-                                 , int vc, int vc_comm, int procGrpNo=0 ); 
+                                 , int vc, int vc_comm, int procGrpNo=0 );
 
 
   /** 非同期版袖通信(Vector3D版)
@@ -466,7 +472,7 @@ public:
    */
   template<class T> CPM_INLINE
   cpm_ErrorCode BndCommV3D_nowait( T *array, int imax, int jmax, int kmax, int vc, int vc_comm
-                                 , int procGrpNo=0 ); 
+                                 , int procGrpNo=0 );
 
   /** 非同期版袖通信(Vector3D版, MPI_Datatype指定)
    *  - (imax,jmax,kmax,3,nLeaf)の形式の配列の非同期袖通信を行う
@@ -485,7 +491,7 @@ public:
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
   cpm_ErrorCode BndCommV3D_nowait( MPI_Datatype dtype, void *array, int imax, int jmax, int kmax
-                                 , int vc, int vc_comm, int procGrpNo=0 ); 
+                                 , int vc, int vc_comm, int procGrpNo=0 );
 
   /** 非同期版袖通信(Vector3DEx版)
    *  - (3,imax,jmax,kmax,nLeaf)の形式の配列の非同期袖通信を行う
@@ -555,7 +561,7 @@ public:
    */
   template<class T> CPM_INLINE
   cpm_ErrorCode wait_BndCommV3D( T *array, int imax, int jmax, int kmax, int vc, int vc_comm
-                               , int procGrpNo=0 ); 
+                               , int procGrpNo=0 );
 
  /** 非同期版袖通信のwait、展開(Vector3D版, MPI_Datatype指定)
   *  - (imax,jmax,kmax,3,nLeaf)の形式の配列の非同期版袖通信のwaitと展開を行う
@@ -572,7 +578,7 @@ public:
   *  @return 終了コード(CPM_SUCCESS=正常終了)
   */
   cpm_ErrorCode wait_BndCommV3D( MPI_Datatype dtype, void *array, int imax, int jmax, int kmax
-                               , int vc, int vc_comm, int procGrpNo=0 ); 
+                               , int vc, int vc_comm, int procGrpNo=0 );
 
   /** 非同期版袖通信のwait、展開(Vector3DEx版)
    *  - (3,imax,jmax,kmax,nLeaf)の形式の配列の非同期版袖通信のwaitと展開を行う
@@ -606,7 +612,7 @@ public:
    */
   template<class T> CPM_INLINE
   cpm_ErrorCode PeriodicCommS3D( T *array, int imax, int jmax, int kmax, int vc, int vc_comm
-                               , cpm_DirFlag dir, cpm_PMFlag pm, int procGrpNo=0 ); 
+                               , cpm_DirFlag dir, cpm_PMFlag pm, int procGrpNo=0 );
 
   /** 周期境界袖通信(Scalar3D版, MPI_Datatype指定)
    *  - (imax,jmax,kmax,nLeaf)の形式の配列の周期境界方向の袖通信を行う
@@ -625,7 +631,7 @@ public:
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
   cpm_ErrorCode PeriodicCommS3D( MPI_Datatype dtype, void *array, int imax, int jmax, int kmax
-                               , int vc, int vc_comm, cpm_DirFlag dir, cpm_PMFlag pm, int procGrpNo=0 ); 
+                               , int vc, int vc_comm, cpm_DirFlag dir, cpm_PMFlag pm, int procGrpNo=0 );
 
   /** 周期境界袖通信(Vector3D版)
    *  - (imax,jmax,kmax,3,nLeaf)の形式の配列の周期境界方向の袖通信を行う
@@ -643,7 +649,7 @@ public:
    */
   template<class T> CPM_INLINE
   cpm_ErrorCode PeriodicCommV3D( T *array, int imax, int jmax, int kmax, int vc, int vc_comm
-                               , cpm_DirFlag dir, cpm_PMFlag pm, int procGrpNo=0 ); 
+                               , cpm_DirFlag dir, cpm_PMFlag pm, int procGrpNo=0 );
 
   /** 周期境界袖通信(Vector3D版, MPI_Datatype指定)
    *  - (imax,jmax,kmax,3,nLeaf)の形式の配列の周期境界方向の袖通信を行う
@@ -662,7 +668,7 @@ public:
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
   cpm_ErrorCode PeriodicCommV3D( MPI_Datatype dtype, void *array, int imax, int jmax, int kmax
-                               , int vc, int vc_comm, cpm_DirFlag dir, cpm_PMFlag pm, int procGrpNo=0 ); 
+                               , int vc, int vc_comm, cpm_DirFlag dir, cpm_PMFlag pm, int procGrpNo=0 );
 
   /** 周期境界袖通信(Vector3DEx版)
    *  - (3,imax,jmax,kmax,nLeaf)の形式の配列の周期境界方向の袖通信を行う
@@ -680,7 +686,7 @@ public:
    */
   template<class T> CPM_INLINE
   cpm_ErrorCode PeriodicCommV3DEx( T *array, int imax, int jmax, int kmax, int vc, int vc_comm
-                                 , cpm_DirFlag dir, cpm_PMFlag pm, int procGrpNo=0 ); 
+                                 , cpm_DirFlag dir, cpm_PMFlag pm, int procGrpNo=0 );
 
   /** 周期境界袖通信(Vector3DEx版, MPI_Datatype指定)
    *  - (3,imax,jmax,kmax,nLeaf)の形式の配列の周期境界方向の袖通信を行う
@@ -700,10 +706,10 @@ public:
    */
   cpm_ErrorCode PeriodicCommV3DEx( MPI_Datatype dtype, void *array, int imax, int jmax, int kmax
                                  , int vc, int vc_comm, cpm_DirFlag dir, cpm_PMFlag pm, int procGrpNo=0 );
- 
 
-// 2016/01/22 FEAST add.e 
- 
+
+// 2016/01/22 FEAST add.e
+
 
   /** 袖通信(Scalar4D版)
    *  - (imax,jmax,kmax,nmax,nLeaf)の形式の配列の袖通信を行う
@@ -779,7 +785,7 @@ public:
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
   cpm_ErrorCode BndCommS4D_nowait( MPI_Datatype dtype, void *array, int imax, int jmax, int kmax, int nmax
-                                 , int vc, int vc_comm, int procGrpNo=0 ); 
+                                 , int vc, int vc_comm, int procGrpNo=0 );
 
 
   /** 非同期版袖通信のwait、展開(Scalar4D版)
@@ -836,7 +842,7 @@ public:
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
   cpm_ErrorCode PeriodicCommS4D( MPI_Datatype dtype, void *array, int imax, int jmax, int kmax, int nmax
-                               , int vc, int vc_comm, cpm_DirFlag dir, cpm_PMFlag pm, int procGrpNo=0 ); 
+                               , int vc, int vc_comm, cpm_DirFlag dir, cpm_PMFlag pm, int procGrpNo=0 );
 
   /** 袖通信(Scalar4DEx版)
    *  - (nmax,imax,jmax,kmax,nLeaf)の形式の配列の袖通信を行う
@@ -910,7 +916,7 @@ public:
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
   cpm_ErrorCode BndCommS4DEx_nowait( MPI_Datatype dtype, void *array, int nmax, int imax, int jmax, int kmax
-                                   , int vc, int vc_comm, int procGrpNo=0 ); 
+                                   , int vc, int vc_comm, int procGrpNo=0 );
 
   /** 非同期版袖通信のwait、展開(Scalar4DEx版)
    *  - (nmax,imax,jmax,kmax,nLeaf)の形式の配列の非同期版袖通信のwaitと展開を行う
@@ -1093,7 +1099,7 @@ protected:
    *  @param[in]  vc          仮想セル数
    *  @param[in]  vc_comm     通信する仮想セル数
    *  @param[in]  commInfo    リーフ間の通信情報
-   *  @param[out] sendbuf     送信バッファ 
+   *  @param[out] sendbuf     送信バッファ
    *  @param[in]  nw          送信バッファサイズ
    *  @param[in]  procGrpNo   プロセスグループ番号
    */
@@ -1111,7 +1117,7 @@ protected:
    *  @param[in]  vc          仮想セル数
    *  @param[in]  vc_comm     通信する仮想セル数
    *  @param[in]  commInfo    リーフ間の通信情報
-   *  @param[out] sendbuf     送信バッファ 
+   *  @param[out] sendbuf     送信バッファ
    *  @param[in]  nw          送信バッファサイズ
    *  @param[in]  procGrpNo   プロセスグループ番号
    */
@@ -1129,7 +1135,7 @@ protected:
    *  @param[in]  vc          仮想セル数
    *  @param[in]  vc_comm     通信する仮想セル数
    *  @param[in]  commInfo    リーフ間の通信情報
-   *  @param[out] sendbuf     送信バッファ 
+   *  @param[out] sendbuf     送信バッファ
    *  @param[in]  nw          送信バッファサイズ
    *  @param[in]  procGrpNo   プロセスグループ番号
    */
@@ -1147,7 +1153,7 @@ protected:
    *  @param[in]  vc          仮想セル数
    *  @param[in]  vc_comm     通信する仮想セル数
    *  @param[in]  commInfo    リーフ間の通信情報
-   *  @param[out] sendbuf     送信バッファ 
+   *  @param[out] sendbuf     送信バッファ
    *  @param[in]  nw          送信バッファサイズ
    *  @param[in]  procGrpNo   プロセスグループ番号
    */
@@ -1165,7 +1171,7 @@ protected:
    *  @param[in]  vc          仮想セル数
    *  @param[in]  vc_comm     通信する仮想セル数
    *  @param[in]  commInfo    リーフ間の通信情報
-   *  @param[out] sendbuf     送信バッファ 
+   *  @param[out] sendbuf     送信バッファ
    *  @param[in]  nw          送信バッファサイズ
    *  @param[in]  procGrpNo   プロセスグループ番号
    */
@@ -1183,7 +1189,7 @@ protected:
    *  @param[in]  vc          仮想セル数
    *  @param[in]  vc_comm     通信する仮想セル数
    *  @param[in]  commInfo    リーフ間の通信情報
-   *  @param[out] sendbuf     送信バッファ 
+   *  @param[out] sendbuf     送信バッファ
    *  @param[in]  nw          送信バッファサイズ
    *  @param[in]  procGrpNo   プロセスグループ番号
    */
@@ -1201,7 +1207,7 @@ protected:
    *  @param[in]    vc          仮想セル数
    *  @param[in]    vc_comm     通信する仮想セル数
    *  @param[in]    commInfo    リーフ間の通信情報
-   *  @param[in]    recvbuf     受信バッファ 
+   *  @param[in]    recvbuf     受信バッファ
    *  @param[in]    procGrpNo   プロセスグループ番号
    */
   template<class T>
@@ -1217,7 +1223,7 @@ protected:
    *  @param[in]    vc          仮想セル数
    *  @param[in]    vc_comm     通信する仮想セル数
    *  @param[in]    commInfo    リーフ間の通信情報
-   *  @param[in]    recvbuf     受信バッファ 
+   *  @param[in]    recvbuf     受信バッファ
    *  @param[in]    procGrpNo   プロセスグループ番号
    */
   template<class T>
@@ -1233,7 +1239,7 @@ protected:
    *  @param[in]    vc          仮想セル数
    *  @param[in]    vc_comm     通信する仮想セル数
    *  @param[in]    commInfo    リーフ間の通信情報
-   *  @param[in]    recvbuf     受信バッファ 
+   *  @param[in]    recvbuf     受信バッファ
    *  @param[in]    procGrpNo   プロセスグループ番号
    */
   template<class T>
@@ -1249,7 +1255,7 @@ protected:
    *  @param[in]    vc          仮想セル数
    *  @param[in]    vc_comm     通信する仮想セル数
    *  @param[in]    commInfo    リーフ間の通信情報
-   *  @param[in]    recvbuf     受信バッファ 
+   *  @param[in]    recvbuf     受信バッファ
    *  @param[in]    procGrpNo   プロセスグループ番号
    */
   template<class T>
@@ -1265,7 +1271,7 @@ protected:
    *  @param[in]    vc          仮想セル数
    *  @param[in]    vc_comm     通信する仮想セル数
    *  @param[in]    commInfo    リーフ間の通信情報
-   *  @param[in]    recvbuf     受信バッファ 
+   *  @param[in]    recvbuf     受信バッファ
    *  @param[in]    procGrpNo   プロセスグループ番号
    */
   template<class T>
@@ -1281,7 +1287,7 @@ protected:
    *  @param[in]    vc          仮想セル数
    *  @param[in]    vc_comm     通信する仮想セル数
    *  @param[in]    commInfo    リーフ間の通信情報
-   *  @param[in]    recvbuf     受信バッファ 
+   *  @param[in]    recvbuf     受信バッファ
    *  @param[in]    procGrpNo   プロセスグループ番号
    */
   template<class T>
@@ -1353,7 +1359,7 @@ protected:
    *  @param[in]  vc          仮想セル数
    *  @param[in]  vc_comm     通信する仮想セル数
    *  @param[in]  commInfo    リーフ間の通信情報
-   *  @param[out] sendbuf     送信バッファ 
+   *  @param[out] sendbuf     送信バッファ
    *  @param[in]  nw          送信バッファサイズ
    *  @param[in]  procGrpNo   プロセスグループ番号
    */
@@ -1371,7 +1377,7 @@ protected:
    *  @param[in]  vc          仮想セル数
    *  @param[in]  vc_comm     通信する仮想セル数
    *  @param[in]  commInfo    リーフ間の通信情報
-   *  @param[out] sendbuf     送信バッファ 
+   *  @param[out] sendbuf     送信バッファ
    *  @param[in]  nw          送信バッファサイズ
    *  @param[in]  procGrpNo   プロセスグループ番号
    */
@@ -1389,7 +1395,7 @@ protected:
    *  @param[in]  vc          仮想セル数
    *  @param[in]  vc_comm     通信する仮想セル数
    *  @param[in]  commInfo    リーフ間の通信情報
-   *  @param[out] sendbuf     送信バッファ 
+   *  @param[out] sendbuf     送信バッファ
    *  @param[in]  nw          送信バッファサイズ
    *  @param[in]  procGrpNo   プロセスグループ番号
    */
@@ -1407,7 +1413,7 @@ protected:
    *  @param[in]  vc          仮想セル数
    *  @param[in]  vc_comm     通信する仮想セル数
    *  @param[in]  commInfo    リーフ間の通信情報
-   *  @param[out] sendbuf     送信バッファ 
+   *  @param[out] sendbuf     送信バッファ
    *  @param[in]  nw          送信バッファサイズ
    *  @param[in]  procGrpNo   プロセスグループ番号
    */
@@ -1425,7 +1431,7 @@ protected:
    *  @param[in]  vc          仮想セル数
    *  @param[in]  vc_comm     通信する仮想セル数
    *  @param[in]  commInfo    リーフ間の通信情報
-   *  @param[out] sendbuf     送信バッファ 
+   *  @param[out] sendbuf     送信バッファ
    *  @param[in]  nw          送信バッファサイズ
    *  @param[in]  procGrpNo   プロセスグループ番号
    */
@@ -1443,7 +1449,7 @@ protected:
    *  @param[in]  vc          仮想セル数
    *  @param[in]  vc_comm     通信する仮想セル数
    *  @param[in]  commInfo    リーフ間の通信情報
-   *  @param[out] sendbuf     送信バッファ 
+   *  @param[out] sendbuf     送信バッファ
    *  @param[in]  nw          送信バッファサイズ
    *  @param[in]  procGrpNo   プロセスグループ番号
    */
@@ -1461,7 +1467,7 @@ protected:
    *  @param[in]    vc          仮想セル数
    *  @param[in]    vc_comm     通信する仮想セル数
    *  @param[in]    commInfo    リーフ間の通信情報
-   *  @param[in]    recvbuf     受信バッファ 
+   *  @param[in]    recvbuf     受信バッファ
    *  @param[in]    procGrpNo   プロセスグループ番号
    */
   template<class T>
@@ -1477,7 +1483,7 @@ protected:
    *  @param[in]    vc          仮想セル数
    *  @param[in]    vc_comm     通信する仮想セル数
    *  @param[in]    commInfo    リーフ間の通信情報
-   *  @param[in]    recvbuf     受信バッファ 
+   *  @param[in]    recvbuf     受信バッファ
    *  @param[in]    procGrpNo   プロセスグループ番号
    */
   template<class T>
@@ -1493,7 +1499,7 @@ protected:
    *  @param[in]    vc          仮想セル数
    *  @param[in]    vc_comm     通信する仮想セル数
    *  @param[in]    commInfo    リーフ間の通信情報
-   *  @param[in]    recvbuf     受信バッファ 
+   *  @param[in]    recvbuf     受信バッファ
    *  @param[in]    procGrpNo   プロセスグループ番号
    */
   template<class T>
@@ -1509,7 +1515,7 @@ protected:
    *  @param[in]    vc          仮想セル数
    *  @param[in]    vc_comm     通信する仮想セル数
    *  @param[in]    commInfo    リーフ間の通信情報
-   *  @param[in]    recvbuf     受信バッファ 
+   *  @param[in]    recvbuf     受信バッファ
    *  @param[in]    procGrpNo   プロセスグループ番号
    */
   template<class T>
@@ -1525,7 +1531,7 @@ protected:
    *  @param[in]    vc          仮想セル数
    *  @param[in]    vc_comm     通信する仮想セル数
    *  @param[in]    commInfo    リーフ間の通信情報
-   *  @param[in]    recvbuf     受信バッファ 
+   *  @param[in]    recvbuf     受信バッファ
    *  @param[in]    procGrpNo   プロセスグループ番号
    */
   template<class T>
@@ -1541,7 +1547,7 @@ protected:
    *  @param[in]    vc          仮想セル数
    *  @param[in]    vc_comm     通信する仮想セル数
    *  @param[in]    commInfo    リーフ間の通信情報
-   *  @param[in]    recvbuf     受信バッファ 
+   *  @param[in]    recvbuf     受信バッファ
    *  @param[in]    procGrpNo   プロセスグループ番号
    */
   template<class T>

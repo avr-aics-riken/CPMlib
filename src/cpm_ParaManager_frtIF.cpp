@@ -1,12 +1,18 @@
 /*
- * CPMlib - Cartesian Partition Manager Library
- *
- * Copyright (C) 2012-2014 Institute of Industrial Science, The University of Tokyo.
- * All rights reserved.
- *
- * Copyright (c) 2014-2015 Advanced Institute for Computational Science, RIKEN.
- * All rights reserved.
- *
+###################################################################################
+#
+# CPMlib - Computational space Partitioning Management library
+#
+# Copyright (c) 2012-2014 Institute of Industrial Science (IIS), The University of Tokyo.
+# All rights reserved.
+#
+# Copyright (c) 2014-2016 Advanced Institute for Computational Science (AICS), RIKEN.
+# All rights reserved.
+#
+# Copyright (c) 2016-2017 Research Institute for Information Technology (RIIT), Kyushu University.
+# All rights reserved.
+#
+###################################################################################
  */
 
 /**
@@ -103,23 +109,23 @@
   #define cpm_VoxelInit_             CPM_VOXELINIT
   #define cpm_VoxelInit_nodiv_       CPM_VOXELINIT_NODIV
 // 2016/01/22 FEAST add.s
-  #define cpm_NodeInit_              CPM_NODEINIT 
-  #define cpm_NodeInit_nodiv_        CPM_NODEINIT_NODIV  
+  #define cpm_NodeInit_              CPM_NODEINIT
+  #define cpm_NodeInit_nodiv_        CPM_NODEINIT_NODIV
 // 2016/01/22 FEAST add.e
   #define cpm_IsParallel_            CPM_ISPARALLEL
   #define cpm_GetDivNum_             CPM_GETDIVNUM
   #define cpm_GetPitch_              CPM_GETPITCH
   #define cpm_GetGlobalVoxelSize_    CPM_GETGLOBALVOXELSIZE
 // 2016/01/22 FEAST add.s
-  #define cpm_GetGlobalNodeSize_     CPM_GETGLOBALNODESIZE 
-  #define cpm_GetGlobalArraySize_    CPM_GETGLOBALARRAYSIZE 
+  #define cpm_GetGlobalNodeSize_     CPM_GETGLOBALNODESIZE
+  #define cpm_GetGlobalArraySize_    CPM_GETGLOBALARRAYSIZE
 // 2016/01/22 FEAST add.e
   #define cpm_GetGlobalOrigin_       CPM_GETGLOBALORIGIN
   #define cpm_GetGlobalRegion_       CPM_GETGLOBALREGION
   #define cpm_GetLocalVoxelSize_     CPM_GETLOCALVOXELSIZE
 // 2016/01/22 FEAST add.s
-  #define cpm_GetLocalNodeSize_      CPM_GETLOCALNODESIZE 
-  #define cpm_GetLocalArraySize_     CPM_GETLOCALARRAYSIZE 
+  #define cpm_GetLocalNodeSize_      CPM_GETLOCALNODESIZE
+  #define cpm_GetLocalArraySize_     CPM_GETLOCALARRAYSIZE
 // 2016/01/22 FEAST add.e
   #define cpm_GetLocalOrigin_        CPM_GETLOCALORIGIN
   #define cpm_GetLocalRegion_        CPM_GETLOCALREGION
@@ -127,11 +133,11 @@
   #define cpm_GetVoxelHeadIndex_     CPM_GETVOXELHEADINDEX
   #define cpm_GetVoxelTailIndex_     CPM_GETVOXELTAILINDEX
 // 2016/01/22 FEAST add.s
-  #define cpm_GetNodeHeadIndex_      CPM_GETNODEHEADINDEX 
-  #define cpm_GetNodeTailIndex_      CPM_GETNODETAILINDEX 
-  #define cpm_GetArrayHeadIndex_     CPM_GETARRAYHEADINDEX 
-  #define cpm_GetArrayTailIndex_     CPM_GETARRAYTAILINDEX 
-  #define cpm_GetDefPointType_       CPM_GETDEFPOINTTYPE 
+  #define cpm_GetNodeHeadIndex_      CPM_GETNODEHEADINDEX
+  #define cpm_GetNodeTailIndex_      CPM_GETNODETAILINDEX
+  #define cpm_GetArrayHeadIndex_     CPM_GETARRAYHEADINDEX
+  #define cpm_GetArrayTailIndex_     CPM_GETARRAYTAILINDEX
+  #define cpm_GetDefPointType_       CPM_GETDEFPOINTTYPE
 // 2016/01/22 FEAST add.e
   #define cpm_GetNeighborRankID_     CPM_GETNEIGHBORRANKID
   #define cpm_GetPeriodicRankID_     CPM_GETPERIODICRANKID
@@ -2057,7 +2063,7 @@ cpm_BndCommS4D_( void *array, int *imax, int *jmax, int *kmax, int *nmax, int *v
   }
 
   // BndCommS4D
-   *ierr = paraMngr->BndCommS4D( dtype, array, *imax, *jmax, *kmax, *nmax, *vc, *vc_comm, false, *procGrpNo );
+   *ierr = paraMngr->BndCommS4D( dtype, array, *imax, *jmax, *kmax, *nmax, *vc, *vc_comm, *procGrpNo );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -3129,8 +3135,7 @@ cpm_ParaManager::cpm_BndCommS4D_nowait( void *array, int imax, int jmax, int kma
   MPI_Request req[12];
 
   // BndCommS4D_nowait
-  cpm_ErrorCode ret = BndCommS4D_nowait( dtype, array, imax, jmax, kmax, nmax
-                                       , vc, vc_comm, req, false, procGrpNo );
+  cpm_ErrorCode ret = BndCommS4D_nowait( dtype, array, imax, jmax, kmax, nmax, vc, vc_comm, req, procGrpNo );
   if( ret != CPM_SUCCESS )
   {
     return ret;
@@ -3268,8 +3273,7 @@ cpm_ParaManager::cpm_wait_BndCommS4D( void *array, int imax, int jmax, int kmax,
   }
 
   // wait_BndCommS4D
-  cpm_ErrorCode ret = wait_BndCommS4D( dtype, array, imax, jmax, kmax, nmax
-                                     , vc, vc_comm, req, false, procGrpNo );
+  cpm_ErrorCode ret = wait_BndCommS4D( dtype, array, imax, jmax, kmax, nmax, vc, vc_comm, req, procGrpNo );
   if( ret != CPM_SUCCESS )
   {
     return ret;
@@ -3451,8 +3455,3 @@ cpm_ParaManager::cpm_wait_BndCommS4DEx( void *array, int nmax, int imax, int jma
 
   return CPM_SUCCESS;
 }
-
-
-
-
-

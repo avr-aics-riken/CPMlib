@@ -1,12 +1,18 @@
 /*
- * CPMlib - Cartesian Partition Manager Library
- *
- * Copyright (C) 2012-2014 Institute of Industrial Science, The University of Tokyo.
- * All rights reserved.
- *
- * Copyright (c) 2014-2015 Advanced Institute for Computational Science, RIKEN.
- * All rights reserved.
- *
+###################################################################################
+#
+# CPMlib - Computational space Partitioning Management library
+#
+# Copyright (c) 2012-2014 Institute of Industrial Science (IIS), The University of Tokyo.
+# All rights reserved.
+#
+# Copyright (c) 2014-2016 Advanced Institute for Computational Science (AICS), RIKEN.
+# All rights reserved.
+#
+# Copyright (c) 2016-2017 Research Institute for Information Technology (RIIT), Kyushu University.
+# All rights reserved.
+#
+###################################################################################
  */
 
 /**
@@ -43,7 +49,7 @@ public:
 
   /** 初期化処理(MPI_Initは実行済みの場合)
    *  - MPI_Initは既に実行済みである必要がある
-   *  - 並列数、自ランク番号を取得 
+   *  - 並列数、自ランク番号を取得
    *
    *  @return 終了コード(CPM_SUCCESS=正常終了)
    */
@@ -101,7 +107,7 @@ public:
    *  @param[in] procGrpNo プロセスグループ番号(省略時=0)
    *  @return 定義点情報(enum)
    */
-  cpm_DefPointType GetDefPointType( int procGrpNo=0 ); 
+  cpm_DefPointType GetDefPointType( int procGrpNo=0 );
 
   /** VOXEL空間マップを検索 \n
    *  (LMRのときは自プロセス内先頭リーフのVoxelInfoを返す)
@@ -227,7 +233,7 @@ public:
    *    のいずれか
    *
    *  @param[in] procGrpNo プロセスグループ番号(省略時=0)
-   *  @return MPIコミュニケータ 
+   *  @return MPIコミュニケータ
    */
   MPI_Comm GetMPI_Comm( int procGrpNo=0 );
 
@@ -810,7 +816,7 @@ public:
    *  @return バッファサイズ(byte)
    */
   virtual
-  size_t GetBndCommBufferSize( int procGrpNo=0 ) = 0; 
+  size_t GetBndCommBufferSize( int procGrpNo=0 ) = 0;
 
 #if 0
   /** 袖通信(Scalar3D版)

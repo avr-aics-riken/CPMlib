@@ -1,12 +1,18 @@
 /*
- * CPMlib - Cartesian Partition Manager Library
- *
- * Copyright (C) 2012-2014 Institute of Industrial Science, The University of Tokyo.
- * All rights reserved.
- *
- * Copyright (c) 2014-2015 Advanced Institute for Computational Science, RIKEN.
- * All rights reserved.
- *
+###################################################################################
+#
+# CPMlib - Computational space Partitioning Management library
+#
+# Copyright (c) 2012-2014 Institute of Industrial Science (IIS), The University of Tokyo.
+# All rights reserved.
+#
+# Copyright (c) 2014-2016 Advanced Institute for Computational Science (AICS), RIKEN.
+# All rights reserved.
+#
+# Copyright (c) 2016-2017 Research Institute for Information Technology (RIIT), Kyushu University.
+# All rights reserved.
+#
+###################################################################################
  */
 
 /**
@@ -43,7 +49,7 @@ public:
    *  @param[out] errorcode CPMエラーコード
    *  @return 領域情報ポインタ
    */
-  static cpm_GlobalDomainInfo* Read( std::string filename, int &errorcode ); 
+  static cpm_GlobalDomainInfo* Read( std::string filename, int &errorcode );
 
 
 private:
@@ -55,7 +61,7 @@ private:
    *  @param[out] errorcode CPMエラーコード
    *  @return 領域情報ポインタ
    */
-  cpm_GlobalDomainInfo* ReadMain( std::string filename, int &errorcode ); 
+  cpm_GlobalDomainInfo* ReadMain( std::string filename, int &errorcode );
 
   /** DomainInfoの読み込み
    *  @param[inout] dInfo 領域情報
@@ -83,4 +89,3 @@ private:
 };
 
 #endif /* _CPM_TEXTPARSER_DOMAIN_H_ */
-

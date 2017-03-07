@@ -1,12 +1,18 @@
 /*
- * CPMlib - Cartesian Partition Manager Library
- *
- * Copyright (C) 2012-2014 Institute of Industrial Science, The University of Tokyo.
- * All rights reserved.
- *
- * Copyright (c) 2014-2015 Advanced Institute for Computational Science, RIKEN.
- * All rights reserved.
- *
+###################################################################################
+#
+# CPMlib - Computational space Partitioning Management library
+#
+# Copyright (c) 2012-2014 Institute of Industrial Science (IIS), The University of Tokyo.
+# All rights reserved.
+#
+# Copyright (c) 2014-2016 Advanced Institute for Computational Science (AICS), RIKEN.
+# All rights reserved.
+#
+# Copyright (c) 2016-2017 Research Institute for Information Technology (RIIT), Kyushu University.
+# All rights reserved.
+#
+###################################################################################
  */
 
 /**
@@ -198,7 +204,7 @@
  */
 #define _IDX_V3DEX_PAD(_N,_I,_J,_K,_NI,_NJ,_NK,_VC,_NP,_IP,_JP,_KP) (_IDX_S4DEX_PAD(_N,_I,_J,_K,3,_NI,_NJ,_NK,_VC,_NP,_IP,_JP,_KP))
 
-// 2016/01/22 FESAT add.s 
+// 2016/01/22 FESAT add.s
 /** 定義点タイプ */
 enum cpm_DefPointType
 {
@@ -301,7 +307,7 @@ enum cpm_ErrorCode
 , CPM_ERROR_MISMATCH_DIV_SUBDOMAIN = 3018 ///< 領域分割数がActiveSubdomainファイルと一致していない
 , CPM_ERROR_DECIDE_DIV_PATTERN    = 3019 ///< 自動領域分割が不可能なパターン
 
-// 2016/01/22 FEAST add.s 
+// 2016/01/22 FEAST add.s
 , CPM_ERROR_ALREADY_NODEINIT         = 3020 ///< 指定されたプロセスグループが既に領域分割済み:
 , CPM_ERROR_INVALID_NODESIZE         = 3021 ///< 頂点数が不正
 , CPM_ERROR_INSERT_DEFPOINTTYPEMAP   = 3022 ///< 定義点管理のマップへの登録失敗
@@ -323,7 +329,7 @@ enum cpm_ErrorCode
 
 , CPM_ERROR_GET_INFO              = 4000 ///< 情報取得系関数でエラー
 , CPM_ERROR_GET_DIVNUM            = 4001 ///< 領域分割数の取得エラー
-, CPM_ERROR_GET_PITCH             = 4002 ///< ピッチの取得エラー 
+, CPM_ERROR_GET_PITCH             = 4002 ///< ピッチの取得エラー
 , CPM_ERROR_GET_GLOBALVOXELSIZE   = 4003 ///< 全体ボクセル数の取得エラー
 , CPM_ERROR_GET_GLOBALORIGIN      = 4004 ///< 全体空間の原点の取得エラー
 , CPM_ERROR_GET_GLOBALREGION      = 4005 ///< 全体空間サイズの取得エラー

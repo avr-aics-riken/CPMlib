@@ -1,3 +1,18 @@
+!###################################################################################
+!
+! CPMlib - Computational space Partitioning Management library
+!
+! Copyright (c) 2012-2014 Institute of Industrial Science (IIS), The University of Tokyo.
+! All rights reserved.
+!
+! Copyright (c) 2014-2016 Advanced Institute for Computational Science (AICS), RIKEN.
+! All rights reserved.
+!
+! Copyright (c) 2016-2017 Research Institute for Information Technology (RIIT), Kyushu University.
+! All rights reserved.
+!
+!###################################################################################
+
 !   *********************************************************
 !   ***      Sample code of porting
 !   ***      2010 keno@VCAD, RIKEN
@@ -29,6 +44,7 @@
     integer            :: sz(3), head(0:2), nID(0:5)
     real               :: org(3), pch(3), rgn(3)
     real*8             :: org8(3), rgn8(3)
+    character*256 filename
 
     ! MPI_Init
     call MPI_Init(ierr)
@@ -44,47 +60,52 @@
 
 !   Initialize
 
+    call getarg(1,filename)
+
     ! user input for rank 0
     if( myrank == 0 ) then
     write (*,*) 'number of process=', nrank
 
+    open(unit=9, FILE=filename)
     write (*,*) 'Dimension size'
     write (*,*) 'Input dimension x size ='
-    read  (*,*)  nx
+    read  (9,*)  nx
     write (*,*) 'Input dimension y size ='
-    read  (*,*)  ny
+    read  (9,*)  ny
     write (*,*) 'Input dimension z size ='
-    read  (*,*)  nz
+    read  (9,*)  nz
 
     write (*,*) 'SELECT time integration method'
     write (*,*) '        1 --- Euler Explicit'
     write (*,*) '        2 --- Euler Implicit'
-    read  (*,*) scheme
-    
+    read  (9,*) scheme
+
     write (*,*) 'Time step max='
-    read  (*,*) stpMax
-    
+    read  (9,*) stpMax
+
     write (*,*) 'Time increment='
-    read  (*,*) dt
-    
+    read  (9,*) dt
+
     write (*,*) 'Coef. of diffusion='
-    read  (*,*) cf
-     
+    read  (9,*) cf
+
     if ( scheme == 2 ) then
       write (*,*) 'Iteration max='
-      read  (*,*) itrMax
+      read  (9,*) itrMax
       write (*,*) 'Epsilon ='
-      read  (*,*) eps
+      read  (9,*) eps
       write (*,*) 'Relazation coef. ='
-      read  (*,*) omg
+      read  (9,*) omg
     end if
+
+    close(unit=9)
 
     dx = 1.0/real(nx)
     dy = 1.0/real(ny)
     dz = 1.0/real(nz)
 
-    write (*,*) 'nx, ny, nz = ', nx, ny, nz 
-    write (*,*) 'dx, dy, dz = ', dx, dy, dz 
+    write (*,*) 'nx, ny, nz = ', nx, ny, nz
+    write (*,*) 'dx, dy, dz = ', dx, dy, dz
     write (*,*) 'dt         = ', dt
     if ( scheme == 1 ) then
       write(*,*) 'Euler Explicit ftcs'
@@ -166,7 +187,7 @@
 
     call pbc (nx, ny, nz, p, dx, dy, dz, head, nID)
 
-    
+
 !   time step loop
     do stp=1, stpMax
       if ( scheme == 1 ) then
@@ -210,7 +231,7 @@
     implicit none
     integer :: status
     integer :: nx, ny, nz
-    
+
     allocate ( p(0:nx+1, 0:ny+1, 0:nz+1) , stat=status )
     allocate ( w(0:nx+1, 0:ny+1, 0:nz+1) , stat=status )
     allocate ( q(0:nx+1, 0:ny+1, 0:nz+1) , stat=status )
@@ -225,7 +246,7 @@
 
     include 'cpm_fparam.fi'
 
-    integer                                 :: nx, ny, nz 
+    integer                                 :: nx, ny, nz
     real, dimension (0:nx+1,0:ny+1,0:nz+1)  :: p, q, w
     real                                    :: cf, dx, dy, dz, dt, omg, er
 
@@ -235,13 +256,13 @@
     integer, parameter                      :: pg=0
     integer                                 :: ierr
     real                                    :: er_buf
-    
+
     er = 0.0
     ddx = cf*dt/(dx*dx)
     ddy = cf*dt/(dy*dy)
     ddz = cf*dt/(dz*dz)
     cpd=1.0/(1.0+2.0*ddx+2.0*ddy+2.0*ddz)
-    
+
     do k=1,nz
     do j=1,ny
     do i=1,nx
@@ -261,10 +282,10 @@
     er_buf = er
     call cpm_Allreduce(er_buf,er,1,CPM_REAL,CPM_SUM,pg,ierr)
     er = sqrt(er)
-    
+
     return
     end subroutine jacobi
-    
+
 !   ***************************************
     subroutine ftcs (nx, ny, nz, p, q, cf, dx, dy, dz, dt, er)
     implicit none
@@ -285,7 +306,7 @@
     ddx=cf*dt/(dx*dx)
     ddy=cf*dt/(dy*dy)
     ddz=cf*dt/(dz*dz)
-    
+
     do k=1,nz
     do j=1,ny
     do i=1,nx
@@ -310,10 +331,10 @@
     call cpm_Allreduce(er_buf,er,1,CPM_REAL,CPM_SUM,pg,ierr)
 
     er = sqrt(er)
-    
+
     return
     end subroutine ftcs
-    
+
 !   **************************
     subroutine pbc (nx, ny, nz, p, dx, dy, dz, head, nID)
 
@@ -382,7 +403,7 @@
       end do
     endif
 
-    
+
     return
     end subroutine pbc
 
@@ -437,4 +458,3 @@
 
     return
     end subroutine fileout
-

@@ -1,12 +1,18 @@
 /*
- * CPMlib - Cartesian Partition Manager Library
- *
- * Copyright (C) 2012-2014 Institute of Industrial Science, The University of Tokyo.
- * All rights reserved.
- *
- * Copyright (c) 2014-2015 Advanced Institute for Computational Science, RIKEN.
- * All rights reserved.
- *
+###################################################################################
+#
+# CPMlib - Computational space Partitioning Management library
+#
+# Copyright (c) 2012-2014 Institute of Industrial Science (IIS), The University of Tokyo.
+# All rights reserved.
+#
+# Copyright (c) 2014-2016 Advanced Institute for Computational Science (AICS), RIKEN.
+# All rights reserved.
+#
+# Copyright (c) 2016-2017 Research Institute for Information Technology (RIIT), Kyushu University.
+# All rights reserved.
+#
+###################################################################################
  */
 
 /**
@@ -269,7 +275,7 @@ cpm_ParaManager::NodeInit ( int div[3], int nod[3], double origin[3], double reg
   cpm_ErrorCode ret;
 
   // 定義点管理マップに登録
-  if( !m_defPointMap.insert(std::make_pair(procGrpNo, CPM_DEFPOINTTYPE_FDM)).second ) 
+  if( !m_defPointMap.insert(std::make_pair(procGrpNo, CPM_DEFPOINTTYPE_FDM)).second )
   {
     return CPM_ERROR_INSERT_DEFPOINTTYPEMAP;
   }
@@ -286,7 +292,7 @@ cpm_ParaManager::NodeInit ( int div[3], int nod[3], double origin[3], double reg
     }
     else if( ret == CPM_ERROR_INVALID_VOXELSIZE  )  {
       return CPM_ERROR_INVALID_NODESIZE;
-    } 
+    }
     return ret;
   }
 
@@ -304,7 +310,7 @@ cpm_ParaManager::NodeInit ( int nod[3], double origin[3], double region[3]
   // 領域分割
   int div[3] = {0, 0, 0};
   return NodeInit( div, nod, origin, region, maxVC, maxN, divPolicy, procGrpNo );
- 
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -411,7 +417,7 @@ cpm_ParaManager::NodeInit_Subdomain( int div[3], int nod[3], double origin[3], d
   cpm_ErrorCode ret;
 
   // 定義点管理マップに登録
-  if( !m_defPointMap.insert(std::make_pair(procGrpNo, CPM_DEFPOINTTYPE_FDM)).second ) 
+  if( !m_defPointMap.insert(std::make_pair(procGrpNo, CPM_DEFPOINTTYPE_FDM)).second )
   {
     return CPM_ERROR_INSERT_DEFPOINTTYPEMAP;
   }
@@ -853,7 +859,7 @@ cpm_ParaManager::GetBndIndexExtGc( int id, int *array, int vc
   GetPaddingSize(CPM_ARRAY_S3D, sz, vc, pad_size);
 
   // 共有関数
-  return GetBndIndexExtGc( id, array  
+  return GetBndIndexExtGc( id, array
                          , imax, jmax, kmax, vc
                          , ista, jsta, ksta, ilen, jlen, klen, pad_size, procGrpNo );
 }
@@ -1076,4 +1082,3 @@ cpm_ParaManager::GetBndCommBufferSize( int procGrpNo )
 
   return mem;
 }
-

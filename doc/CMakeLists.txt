@@ -1,4 +1,3 @@
-/*
 ###################################################################################
 #
 # CPMlib - Computational space Partitioning Management library
@@ -13,17 +12,9 @@
 # All rights reserved.
 #
 ###################################################################################
- */
 
-/**
- * @file   cpm_Version.h
- * CPMバージョン情報のヘッダーファイル
- */
+# Install files
 
-#ifndef _CPM_VERSION_H_
-#define _CPM_VERSION_H_
-
-/** CPMライブラリのバージョン */
-#define CPM_VERSION  "@PROJECT_VERSION@"
-
-#endif /* _CPM_VERSION_H_ */
+install(FILES  CPMlib.pdf
+               reference.pdf
+        DESTINATION doc)

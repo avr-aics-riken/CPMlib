@@ -1,12 +1,18 @@
 /*
- * CPMlib - Cartesian Partition Manager Library
- *
- * Copyright (C) 2012-2014 Institute of Industrial Science, The University of Tokyo.
- * All rights reserved.
- *
- * Copyright (c) 2014-2015 Advanced Institute for Computational Science, RIKEN.
- * All rights reserved.
- *
+###################################################################################
+#
+# CPMlib - Computational space Partitioning Management library
+#
+# Copyright (c) 2012-2014 Institute of Industrial Science (IIS), The University of Tokyo.
+# All rights reserved.
+#
+# Copyright (c) 2014-2016 Advanced Institute for Computational Science (AICS), RIKEN.
+# All rights reserved.
+#
+# Copyright (c) 2016-2017 Research Institute for Information Technology (RIIT), Kyushu University.
+# All rights reserved.
+#
+###################################################################################
  */
 
 /**
@@ -49,7 +55,7 @@ cpm_VoxelInfoCART::Init( MPI_Comm comm, cpm_GlobalDomainInfo* dInfo )
   // 入力をコピー
   m_comm = comm;
   m_globalDomainInfo = *dInfo;
-   
+
   // ランク数、ランク番号をセット
   MPI_Comm_size(m_comm, &m_nRank);
   MPI_Comm_rank(m_comm, &m_rankNo);
@@ -134,7 +140,7 @@ cpm_VoxelInfoCART::CreateRankMap()
   // ランクマップをセット
   if( m_rankMap ) delete [] m_rankMap;
   m_rankMap = rankMap;
-  
+
   return true;
 }
 
@@ -335,7 +341,7 @@ cpm_VoxelInfoCART::CreateLocalDomainInfo()
 // 2016/01/22 FEAST add.s
   // 頂点のHeadIndexとTailindexをセット
   for( int n=0;n<3;n++ )
-  { 
+  {
     m_nodeHeadIndex[n] = m_voxelHeadIndex[n];
     m_nodeTailIndex[n] = m_voxelTailIndex[n] + 1;
   }
@@ -360,4 +366,3 @@ cpm_VoxelInfoCART::CreateLocalDomainInfo()
   delete [] nvZ;
   return true;
 }
-

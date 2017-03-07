@@ -1,12 +1,18 @@
 /*
- * CPMlib - Cartesian Partition Manager Library
- *
- * Copyright (C) 2012-2014 Institute of Industrial Science, The University of Tokyo.
- * All rights reserved.
- *
- * Copyright (c) 2014-2015 Advanced Institute for Computational Science, RIKEN.
- * All rights reserved.
- *
+###################################################################################
+#
+# CPMlib - Computational space Partitioning Management library
+#
+# Copyright (c) 2012-2014 Institute of Industrial Science (IIS), The University of Tokyo.
+# All rights reserved.
+#
+# Copyright (c) 2014-2016 Advanced Institute for Computational Science (AICS), RIKEN.
+# All rights reserved.
+#
+# Copyright (c) 2016-2017 Research Institute for Information Technology (RIIT), Kyushu University.
+# All rights reserved.
+#
+###################################################################################
  */
 
 /**
@@ -137,7 +143,7 @@ if( rankNo==0 )
   {
     int BlockID = leafNodeArray[i]->getBlockID();
     Vec3d org = octree->getOrigin(leafNodeArray[i]);
-    std::cout << leafNodeArray[i]->getPedigree() << " , " 
+    std::cout << leafNodeArray[i]->getPedigree() << " , "
               << "org=(" <<org[0] << "," << org[1] << "," << org[2] << ")" << " , "
               << "blocID=" << BlockID
               << std::endl;
@@ -192,7 +198,7 @@ std::cout << "*** Node @ " << rankNo << node->getPedigree() << std::endl;
     }
   }
 #endif
-  
+
 
   return ret;
 }
@@ -626,7 +632,7 @@ cpm_VoxelInfoLMR::IsOuterBoundary( cpm_FaceFlag face ) const
   if( face == Z_PLUS  && pos[2] == div[2]-1 ) return true;
 
   // ここに到達した場合は内部境界
-  return false; 
+  return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -657,4 +663,3 @@ cpm_VoxelInfoLMR::IsInnerBoundary( cpm_FaceFlag face ) const
   // ここに到達した場合は内部境界
   return true;
 }
-

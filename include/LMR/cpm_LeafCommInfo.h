@@ -1,12 +1,18 @@
 /*
- * CPMlib - Cartesian Partition Manager Library
- *
- * Copyright (C) 2012-2014 Institute of Industrial Science, The University of Tokyo.
- * All rights reserved.
- *
- * Copyright (c) 2014-2015 Advanced Institute for Computational Science, RIKEN.
- * All rights reserved.
- *
+###################################################################################
+#
+# CPMlib - Computational space Partitioning Management library
+#
+# Copyright (c) 2012-2014 Institute of Industrial Science (IIS), The University of Tokyo.
+# All rights reserved.
+#
+# Copyright (c) 2014-2016 Advanced Institute for Computational Science (AICS), RIKEN.
+# All rights reserved.
+#
+# Copyright (c) 2016-2017 Research Institute for Information Technology (RIIT), Kyushu University.
+# All rights reserved.
+#
+###################################################################################
  */
 
 /**
@@ -102,7 +108,7 @@ public:
 
     /** 必要な受信バッファサイズを計算
      *  @param[in] sz_face   1リーフの格子数(平面内２軸)
-     *  @param[in] vc_comm   通信する仮想セル数 
+     *  @param[in] vc_comm   通信する仮想セル数
      *  @param[in] nmax      受信バッファの最大成分数
      */
     size_t CalcRecvBufferSize(size_t sz_face[2], size_t vc_comm, size_t nmax)
@@ -182,7 +188,7 @@ public:
 
 protected:
 
-  
+
   /** CommInfoリストのクイックソート
    *  @param[in]    type        ソートタイプ(0:自身のリーフ番号でソート, 1:相手のリーフ番号でソート)
    *  @param[inout] vecCommInfo ソート対象の配列
@@ -228,5 +234,4 @@ protected:
 
 };
 
-#endif _CPM_LEAFCOMMINFO_H_
-
+#endif // _CPM_LEAFCOMMINFO_H_

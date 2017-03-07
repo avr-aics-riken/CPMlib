@@ -1,12 +1,18 @@
 /*
- * CPMlib - Cartesian Partition Manager Library
- *
- * Copyright (C) 2012-2014 Institute of Industrial Science, The University of Tokyo.
- * All rights reserved.
- *
- * Copyright (c) 2014-2015 Advanced Institute for Computational Science, RIKEN.
- * All rights reserved.
- *
+###################################################################################
+#
+# CPMlib - Computational space Partitioning Management library
+#
+# Copyright (c) 2012-2014 Institute of Industrial Science (IIS), The University of Tokyo.
+# All rights reserved.
+#
+# Copyright (c) 2014-2016 Advanced Institute for Computational Science (AICS), RIKEN.
+# All rights reserved.
+#
+# Copyright (c) 2016-2017 Research Institute for Information Technology (RIIT), Kyushu University.
+# All rights reserved.
+#
+###################################################################################
  */
 
 /**
@@ -1910,7 +1916,7 @@ protected:
     return it->second;
   }
 
-  /** 袖通信(Scalar3D,4D,Vector3D版)のX方向送信バッファのセット 
+  /** 袖通信(Scalar3D,4D,Vector3D版)のX方向送信バッファのセット
    *  @param[in]  array    袖通信をする配列の先頭ポインタ
    *  @param[in]  imax     配列サイズ(I方向)
    *  @param[in]  jmax     配列サイズ(J方向)
@@ -1952,7 +1958,7 @@ protected:
   cpm_ErrorCode unpackX( T *array, int imax, int jmax, int kmax, int nmax, int vc, int vc_comm, int pad_size[4]
                        , T *recvm, T *recvp, int nIDm, int nIDp );
 
-  /** 袖通信(Scalar3D,4D,Vector3D版)のY方向送信バッファのセット 
+  /** 袖通信(Scalar3D,4D,Vector3D版)のY方向送信バッファのセット
    *  @param[in]  array    袖通信をする配列の先頭ポインタ
    *  @param[in]  imax     配列サイズ(I方向)
    *  @param[in]  jmax     配列サイズ(J方向)
@@ -1994,7 +2000,7 @@ protected:
   cpm_ErrorCode unpackY( T *array, int imax, int jmax, int kmax, int nmax, int vc, int vc_comm, int pad_size[4]
                        , T *recvm, T *recvp, int nIDm, int nIDp );
 
-  /** 袖通信(Scalar3D,4D,Vector3D版)のZ方向送信バッファのセット 
+  /** 袖通信(Scalar3D,4D,Vector3D版)のZ方向送信バッファのセット
    *  @param[in]  array    袖通信をする配列の先頭ポインタ
    *  @param[in]  imax     配列サイズ(I方向)
    *  @param[in]  jmax     配列サイズ(J方向)
@@ -2036,7 +2042,7 @@ protected:
   cpm_ErrorCode unpackZ( T *array, int imax, int jmax, int kmax, int nmax, int vc, int vc_comm, int pad_size[4]
                        , T *recvm, T *recvp, int nIDm, int nIDp );
 
-  /** 袖通信(Scalar4DEx,Vector3DEx版)のX方向送信バッファのセット 
+  /** 袖通信(Scalar4DEx,Vector3DEx版)のX方向送信バッファのセット
    *  @param[in]  array   袖通信をする配列の先頭ポインタ
    *  @param[in]  nmax    配列サイズ(成分数)
    *  @param[in]  imax    配列サイズ(I方向)
@@ -2078,7 +2084,7 @@ protected:
   cpm_ErrorCode unpackXEx( T *array, int nmax, int imax, int jmax, int kmax, int vc, int vc_comm, int pad_size[4]
                          , T *recvm, T *recvp, int nIDm, int nIDp );
 
-  /** 袖通信(Scalar4DEx,Vector3DEx版)のY方向送信バッファのセット 
+  /** 袖通信(Scalar4DEx,Vector3DEx版)のY方向送信バッファのセット
    *  @param[in]  array   袖通信をする配列の先頭ポインタ
    *  @param[in]  nmax    配列サイズ(成分数)
    *  @param[in]  imax    配列サイズ(I方向)
@@ -2120,7 +2126,7 @@ protected:
   cpm_ErrorCode unpackYEx( T *array, int nmax, int imax, int jmax, int kmax, int vc, int vc_comm, int pad_size[4]
                          , T *recvm, T *recvp, int nIDm, int nIDp );
 
-  /** 袖通信(Scalar4DEx,Vector3DEx版)のZ方向送信バッファのセット 
+  /** 袖通信(Scalar4DEx,Vector3DEx版)のZ方向送信バッファのセット
    *  @param[in]  array   袖通信をする配列の先頭ポインタ
    *  @param[in]  nmax    配列サイズ(成分数)
    *  @param[in]  imax    配列サイズ(I方向)

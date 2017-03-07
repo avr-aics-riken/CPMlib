@@ -1,12 +1,18 @@
 /*
- * CPMlib - Cartesian Partition Manager Library
- *
- * Copyright (C) 2012-2014 Institute of Industrial Science, The University of Tokyo.
- * All rights reserved.
- *
- * Copyright (c) 2014-2015 Advanced Institute for Computational Science, RIKEN.
- * All rights reserved.
- *
+###################################################################################
+#
+# CPMlib - Computational space Partitioning Management library
+#
+# Copyright (c) 2012-2014 Institute of Industrial Science (IIS), The University of Tokyo.
+# All rights reserved.
+#
+# Copyright (c) 2014-2016 Advanced Institute for Computational Science (AICS), RIKEN.
+# All rights reserved.
+#
+# Copyright (c) 2016-2017 Research Institute for Information Technology (RIIT), Kyushu University.
+# All rights reserved.
+#
+###################################################################################
  */
 
 #include "cpm_ParaManager.h"
@@ -49,7 +55,7 @@ int main( int argc, char **argv )
 
   if( paraMngr->GetMyRankID() == 0 )
   {
-    cout << "CPMlib Version " << 
+    cout << "CPMlib Version " <<
     cpm_Base::getVersionInfo() << endl;
   }
 
@@ -93,7 +99,7 @@ int main( int argc, char **argv )
       cerr << "TextParser error : " << ret << endl;
       return ret;
     }
-   
+
     //リストに追加
     domainInfo.push_back(dInfo);
 
@@ -158,4 +164,3 @@ int main( int argc, char **argv )
 
   return CPM_SUCCESS;
 }
-
