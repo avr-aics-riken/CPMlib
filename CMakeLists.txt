@@ -43,7 +43,7 @@ cmake_minimum_required(VERSION 2.6)
 #######
 
 option (enable_OPENMP "Enable OpenMP" "OFF")
-option (real_type "Type of floating point" "float")
+option (real_type "Type of floating point" "OFF")
 option (enable_LMR "Enable LMR function" "OFF")
 option (with_MPI "Enable MPI" "ON")
 option (with_example "Compiling examples" "OFF")
@@ -68,8 +68,8 @@ set (CMAKE_INSTALL_PREFIX "${INSTALL_DIR}")
 
 
 #######
-set(PROJECT_VERSION "2.3.2")
-set(LIB_REVISION "20170307_1000")
+set(PROJECT_VERSION "2.3.3")
+set(LIB_REVISION "20170308_2100")
 #######
 
 
@@ -117,11 +117,11 @@ if(enable_Fortran)
 endif()
 
 message(" ")
-message( STATUS "Type of floating point: "         ${real_type})
-message( STATUS "LMR support: "                    ${enable_LMR})
-message( STATUS "OpenMP support: "                 ${enable_OPENMP})
-message( STATUS "MPI support: "                    ${with_MPI})
-message( STATUS "Example: "                        ${with_example})
+message( STATUS "Type of floating point : "       ${real_type})
+message( STATUS "LMR support            : "       ${enable_LMR})
+message( STATUS "OpenMP support         : "       ${enable_OPENMP})
+message( STATUS "MPI support            : "       ${with_MPI})
+message( STATUS "Example                : "       ${with_example})
 message(" ")
 
 if(CMAKE_CXX_COMPILER MATCHES ".*FCCpx$")

@@ -3,6 +3,11 @@
 ## REVISION HISTORY
 
 ---
+- 2017-03-07 Version 2.3.3
+  - modify implementation of 'real_type'
+
+
+---
 - 2017-03-07 Version 2.3.2
   - add fx100 entry
   - In case of Intel compiler, change linker  from CXX to Fortran for f90 example

@@ -32,6 +32,7 @@ src/              Source codes
 ### Build
 
 ~~~
+$ export CC=c_compiler CXX=c++_compiler F90=fortran_compiler FC=fortran_compiler
 $ export PM_HOME=/hogehoge
 $ mkdir BUILD
 $ cd BUILD
@@ -45,7 +46,7 @@ $ sudo make install
 
 `-D INSTALL_DIR=install_directory`
 
->  Specify the directory that this library will be installed. Built library is installed at `install_directory/lib` and the header files are placed at `install_directory/include`. The default install directory is `/usr/local/PMlib`.
+>  Specify the directory that this library will be installed. Built library is installed at `install_directory/lib` and the header files are placed at `install_directory/include`. The default install directory is `/usr/local/CPMlib`.
 
 `-D real_type=` {float | double}
 
@@ -89,24 +90,35 @@ $ cmake -DINSTALL_DIR=${CPM_HOME}/CPMlib -Dwith_MPI=yes -Dreal_type=float -Denab
 ### FUJITSU compiler / FX10, FX100, K on login nodes (Cross compilation)
 
 ~~~
-$ cmake -DINSTALL_DIR=${CPM_HOME}/CPMlib -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain_fx10.cmake -Dwith_MPI=yes -Dreal_type=float -Denable_LMR=no -Dwith_example=no -Dwith_TP=${CPM_HOME}/TextParser ..
+$ cmake -DINSTALL_DIR=${CPM_HOME}/CPMlib \
+        -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain_fx10.cmake \
+        -Dwith_MPI=yes \
+        -Dreal_type=float \
+				-Denable_LMR=no \
+				-Dwith_example=no \
+				-Dwith_TP=${CPM_HOME}/TextParser ..
 
-$ cmake -DINSTALL_DIR=${CPM_HOME}/CPMlib -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain_fx100.cmake -Dwith_MPI=yes -Dreal_type=float -Denable_LMR=no -Dwith_example=no -Dwith_TP=${CPM_HOME}/TextParser ..
+$ cmake -DINSTALL_DIR=${CPM_HOME}/CPMlib \
+        -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain_fx100.cmake \
+				-Dwith_MPI=yes \
+				-Dreal_type=float \
+				-Denable_LMR=no \
+				-Dwith_example=no \
+				-Dwith_TP=${CPM_HOME}/TextParser ..
 
-$ cmake -DINSTALL_DIR=${CPM_HOME}/CPMlib -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain_K.cmake -Dwith_MPI=yes -Dreal_type=float -Denable_LMR=no -Dwith_example=no -Dwith_TP=${CPM_HOME}/TextParser ..
+$ cmake -DINSTALL_DIR=${CPM_HOME}/CPMlib \
+        -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain_K.cmake \
+				-Dwith_MPI=yes \
+				-Dreal_type=float \
+				-Denable_LMR=no \
+				-Dwith_example=no \
+				-Dwith_TP=${CPM_HOME}/TextParser ..
 ~~~
 
 
 ##### Note
 - On Fujitsu machines(fx10, K, fx100), confirm appropriate directrory path for compiler environment.
 - Before building, execute following command for clean. `$ make distclean`
-
-
-### Other platforms
-
-Refer to `Makefile_hand` hand for manually prepare the Makefiles for
-a system not covered in the previous sections.
-Edit environmental variables in a `Makefile_hand` file for a target machine.
 
 
 ## EXAMPLES
