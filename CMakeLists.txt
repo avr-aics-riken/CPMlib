@@ -68,8 +68,8 @@ set (CMAKE_INSTALL_PREFIX "${INSTALL_DIR}")
 
 
 #######
-set(PROJECT_VERSION "2.3.3")
-set(LIB_REVISION "20170308_2100")
+set(PROJECT_VERSION "2.3.4")
+set(LIB_REVISION "20170321_1800")
 #######
 
 
@@ -239,6 +239,7 @@ configure_file( include/cpm_Version.h.in ${PROJECT_BINARY_DIR}/include/cpm_Versi
 install(FILES  ChangeLog.md
                Readme.md
                License.txt
+               ${PROJECT_BINARY_DIR}/CMakeCache.txt
         DESTINATION share)
 
 

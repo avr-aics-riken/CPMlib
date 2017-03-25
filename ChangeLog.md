@@ -3,6 +3,10 @@
 ## REVISION HISTORY
 
 ---
+- 2017-03-21 Version 2.3.4
+  - install CMakeCache.txt into ${INSTALL_DIR}/share for install memo.
+
+---
 - 2017-03-07 Version 2.3.3
   - modify implementation of 'real_type'
 
@@ -10,7 +14,7 @@
 ---
 - 2017-03-07 Version 2.3.2
   - add fx100 entry
-  - In case of Intel compiler, change linker  from CXX to Fortran for f90 example
+  - In case of Intel compiler, change linker from CXX to Fortran for f90 example
   - Tested.
 
   |Compiler|Serial|Ex.|MPI |Ex.|
@@ -24,7 +28,7 @@
 
 ---
 - 2017-2-23 Version 2.3.1
-  - remove direction that relates PMlib for a CPMlib.
+  - remove direction that relates PMlib.
 
 
 ---
