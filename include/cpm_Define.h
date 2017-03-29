@@ -23,7 +23,11 @@
 #ifndef _CPM_DEFINE_H_
 #define _CPM_DEFINE_H_
 
+#ifndef DISABLE_MPI
 #include "mpi.h"
+#else
+#include "cpm_mpistub.h"
+#endif
 
 #if defined(_BUFSIZE_LONG_DOUBLE_)
   #define REAL_BUF_TYPE long double

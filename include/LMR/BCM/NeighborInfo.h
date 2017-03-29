@@ -17,8 +17,13 @@
 #ifndef NEIGHBOR_INFO_H
 #define NEIGHBOR_INFO_H
 
-#include "BCMTools.h"
+#ifndef DISABLE_MPI
 #include "mpi.h"
+#else
+#include "cpm_mpistub.h"
+#endif
+
+#include "BCMTools.h"
 
 #include <iostream>
 
@@ -28,7 +33,7 @@ namespace BCMT_NAMESPACE {
 
 /// 隣接情報クラス.
 class NeighborInfo {
-  
+
   /// 隣接ブロックID.
   /// (隣接ブロックが存在しない場合は-1を入れる)
   int neighborID[NUM_SUBFACE];
@@ -82,13 +87,13 @@ public:
   int getLevelDifference() const { return levelDiffarence; }
 
   /// 隣接ブロックIDを設定.
-  void setID(int id) { 
+  void setID(int id) {
     assert(levelDiffarence == 0 || levelDiffarence == -1);
     neighborID[0] = id;
   }
 
   /// 隣接ブロックIDを設定.
-  void setID(Subface subface, int id) { 
+  void setID(Subface subface, int id) {
     assert(levelDiffarence == 1);
     neighborID[subface] = id;
   }
@@ -105,13 +110,13 @@ public:
   }
 
   /// 隣接ブロックランクを設定.
-  void setRank(int rank) { 
+  void setRank(int rank) {
     assert(levelDiffarence == 0 || levelDiffarence == -1);
     neighborRank[0] = rank;
   }
 
   /// 隣接ブロックランクを設定.
-  void setRank(Subface subface, int rank) { 
+  void setRank(Subface subface, int rank) {
     assert(levelDiffarence == 1);
     neighborRank[subface] = rank;
   }
@@ -146,7 +151,7 @@ public:
 
   /// 外部境界であるか確認.
   bool isOuterBoundary() const {
-    return outerBoundary; 
+    return outerBoundary;
   }
 
   /// 隣接ブロックが存在するか(内部境界or周期境界)確認.
@@ -156,7 +161,7 @@ public:
 
   /// デバッグ情報出力.
   void print() const {
-    std::cout << "levelDIff=" << levelDiffarence 
+    std::cout << "levelDIff=" << levelDiffarence
               << ", neighborSubface=" << neighborSubface << std::endl;
     std::cout << "  (ID,rank)=";
     for (int i = 0; i < NUM_SUBFACE; i++) {

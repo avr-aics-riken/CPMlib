@@ -17,7 +17,11 @@
 #ifndef BCM_TOOLS_H
 #define BCM_TOOLS_H
 
+#ifndef DISABLE_MPI
 #include "mpi.h"
+#else
+#include "cpm_mpistub.h"
+#endif
 
 #include<cstdio>
 #include<cstdlib>

@@ -58,7 +58,7 @@ $ sudo make install
 
 `-D with_MPI=` {yes | no}
 
->  If you use an MPI library, specify `with_MPI=yes`, the default is yes.
+>  If you use an MPI library, specify `with_MPI=yes`, the default is yes. If 'no', `-DDISABLE_MPI` is added to compile option.
 
 `-D with_example=` {no | yes}
 

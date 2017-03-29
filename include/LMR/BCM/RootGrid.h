@@ -12,14 +12,20 @@
 ///
 /// @file RootGrid.h
 /// @brief マルチルートOctree用のルートブロック配置管理クラス
-/// 
+///
 
 #ifndef ROOT_GRID_H
 #define ROOT_GRID_H
 
+#ifndef DISABLE_MPI
+#include "mpi.h"
+#else
+#include "cpm_mpistub.h"
+#endif
+
 #include "BCMTools.h"
 #include "Vec3.h"
-#include "mpi.h"
+
 
 using namespace Vec3class;
 

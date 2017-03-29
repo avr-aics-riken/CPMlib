@@ -99,11 +99,11 @@
   #define cpm_BndCommS4DEx_nowait_   cpm_bndcomms4dex_nowait_
   #define cpm_wait_BndCommV3DEx_     cpm_wait_bndcommv3dex_
   #define cpm_wait_BndCommS4DEx_     cpm_wait_bndcomms4dex_
-  #define cpm_PeriodicCommS3D        cpm_periodiccomms3d_
-  #define cpm_PeriodicCommV3D        cpm_periodiccommv3d_
-  #define cpm_PeriodicCommS4D        cpm_periodiccomms4d_
-  #define cpm_PeriodicCommV3DEx      cpm_periodiccommv3dex_
-  #define cpm_PeriodicCommS4DEx      cpm_periodiccomms4dex_
+  #define cpm_PeriodicCommS3D_       cpm_periodiccomms3d_
+  #define cpm_PeriodicCommV3D_       cpm_periodiccommv3d_
+  #define cpm_PeriodicCommS4D_       cpm_periodiccomms4d_
+  #define cpm_PeriodicCommV3DEx_     cpm_periodiccommv3dex_
+  #define cpm_PeriodicCommS4DEx_     cpm_periodiccomms4dex_
 #else
   #define cpm_Initialize_            CPM_INITIALIZE
   #define cpm_VoxelInit_             CPM_VOXELINIT
@@ -173,11 +173,11 @@
   #define cpm_BndCommS4DEx_nowait_   CPM_BNDCOMMS4DEX_NOWAIT
   #define cpm_wait_BndCommV3DEx_     CPM_WAIT_BNDCOMMV3DEX
   #define cpm_wait_BndCommS4DEx_     CPM_WAIT_BNDCOMMS4DEX
-  #define cpm_PeriodicCommS3D        CPM_PERIODICCOMMS3D
-  #define cpm_PeriodicCommV3D        CPM_PERIODICCOMMV3D
-  #define cpm_PeriodicCommS4D        CPM_PERIODICCOMMS4D
-  #define cpm_PeriodicCommV3DEx      CPM_PERIODICCOMMV3DEX
-  #define cpm_PeriodicCommS4DEx      CPM_PERIODICCOMMS4DEX
+  #define cpm_PeriodicCommS3D_       CPM_PERIODICCOMMS3D
+  #define cpm_PeriodicCommV3D_       CPM_PERIODICCOMMV3D
+  #define cpm_PeriodicCommS4D_       CPM_PERIODICCOMMS4D
+  #define cpm_PeriodicCommV3DEx_     CPM_PERIODICCOMMV3DEX
+  #define cpm_PeriodicCommS4DEx_     CPM_PERIODICCOMMS4DEX
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////

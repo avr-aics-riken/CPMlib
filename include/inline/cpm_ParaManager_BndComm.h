@@ -921,7 +921,7 @@ cpm_ParaManager::sendrecv( T *sendm, T *recvm, T *sendp, T *recvp, size_t nw, MP
 
   if( !IsRankNull(nIDrm) )
   {
-    if( (ret = Irecv( recvm, nw, nIDrm, &r1, procGrpNo )) != CPM_SUCCESS )
+    if( (ret = Irecv( recvm, nw, nIDrm, &r0, procGrpNo )) != CPM_SUCCESS )
     {
       return ret;
     }
@@ -929,7 +929,7 @@ cpm_ParaManager::sendrecv( T *sendm, T *recvm, T *sendp, T *recvp, size_t nw, MP
 
   if( !IsRankNull(nIDrp) )
   {
-    if( (ret = Irecv( recvp, nw, nIDrp, &r3, procGrpNo )) != CPM_SUCCESS )
+    if( (ret = Irecv( recvp, nw, nIDrp, &r1, procGrpNo )) != CPM_SUCCESS )
     {
       return ret;
     }
@@ -945,7 +945,7 @@ cpm_ParaManager::sendrecv( T *sendm, T *recvm, T *sendp, T *recvp, size_t nw, MP
 
   if( !IsRankNull(nIDsm) )
   {
-    if( (ret = Isend( sendm, nw, nIDsm, &r0, procGrpNo )) != CPM_SUCCESS )
+    if( (ret = Isend( sendm, nw, nIDsm, &r3, procGrpNo )) != CPM_SUCCESS )
     {
       return ret;
     }

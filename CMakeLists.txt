@@ -68,8 +68,8 @@ set (CMAKE_INSTALL_PREFIX "${INSTALL_DIR}")
 
 
 #######
-set(PROJECT_VERSION "2.3.4")
-set(LIB_REVISION "20170321_1800")
+set(PROJECT_VERSION "2.4.0")
+set(LIB_REVISION "20170329_1100")
 #######
 
 
@@ -98,6 +98,12 @@ AddOptimizeOption()
 # Real type
 precision()
 
+
+# Serial
+if(NOT with_MPI)
+  SET(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -DDISABLE_MPI")
+  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DDISABLE_MPI")
+endif()
 
 
 #######

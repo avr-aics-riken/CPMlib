@@ -12,16 +12,22 @@
 ///
 /// @file Partition.h
 /// @brief 1次元ブロック領域分割用ユーティリティクラス
-/// 
+///
 
 #ifndef PARTITION_H
 #define PARTITION_H
+
+#ifndef DISABLE_MPI
+#include "mpi.h"
+#else
+#include "cpm_mpistub.h"
+#endif
 
 #include <vector>
 #include <algorithm>
 #include <iostream>
 #include <cassert>
-#include "mpi.h"
+
 
 /// 1次元ブロック領域分割用ユーティリティクラス.
 class Partition {

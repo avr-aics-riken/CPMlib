@@ -1,6 +1,18 @@
 # CPMlib - Computaional space Partitioning Management library
 
+## TODO
+- serial examples
+
+
 ## REVISION HISTORY
+
+---
+- 2017-03-29 Version 2.4.0
+  - Serial version : add cpm_mpistub.h, -DDISABLE_MPI
+    - ~/CMakeLists.txt, cpm_Define.h, BCMTools.h, Neighborinfo.h, Partition.h, RootGrid.h
+  - change the request order in include/inline/cpm_ParaManager_BndComm.h
+  - bug fix : define the name of function in src/cpm_ParaManager_frtIF.cpp
+
 
 ---
 - 2017-03-21 Version 2.3.4

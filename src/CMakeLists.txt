@@ -75,6 +75,13 @@ install(FILES
         DESTINATION include
 )
 
+if(NOT with_MPI)
+install(FILES
+        ${PROJECT_SOURCE_DIR}/include/cpm_mpistub.h
+        DESTINATION include
+)
+endif()
+
 install(FILES
         ${PROJECT_SOURCE_DIR}/include/inline/cpm_ParaManager_BndComm.h
         ${PROJECT_SOURCE_DIR}/include/inline/cpm_ParaManager_BndCommEx.h

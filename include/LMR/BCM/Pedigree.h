@@ -12,14 +12,16 @@
 ///
 /// @file Pedigree.h
 /// @brief Octree用Pedigreeクラス
-/// 
+///
 
 #ifndef PEDIGREE_H
 #define PEDIGREE_H
 
+#include "BCMTools.h"
+
 #include <stdint.h>  /* for uint64_t */
 #include <iostream>
-#include "BCMTools.h"
+
 
 
 /// Pedigreeクラス.

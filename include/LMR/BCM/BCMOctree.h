@@ -12,13 +12,14 @@
 /**
  *  @file BCMOctree.h
  *  @brief BCM用マルチルートOCtreeクラス
- */ 
+ */
 
 #ifndef BCM_OCTREE_H
 #define BCM_OCTREE_H
 
-#include <vector>
 #include "BCMTools.h"
+
+#include <vector>
 #include "Vec3.h"
 #include "RootGrid.h"
 #include "Divider.h"
