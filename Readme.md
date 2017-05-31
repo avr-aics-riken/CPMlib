@@ -87,7 +87,7 @@ $ cmake -DINSTALL_DIR=${CPM_HOME}/CPMlib -Dwith_MPI=yes -Dreal_type=float -Denab
 ~~~
 
 
-### FUJITSU compiler / FX10, FX100, K on login nodes (Cross compilation)
+### FUJITSU compiler / FX10, FX100, K on login nodes (Cross compilation) and Fujitsu TCS environment for intel PC
 
 ~~~
 $ cmake -DINSTALL_DIR=${CPM_HOME}/CPMlib \
@@ -108,6 +108,14 @@ $ cmake -DINSTALL_DIR=${CPM_HOME}/CPMlib \
 
 $ cmake -DINSTALL_DIR=${CPM_HOME}/CPMlib \
         -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain_K.cmake \
+				-Dwith_MPI=yes \
+				-Dreal_type=float \
+				-Denable_LMR=no \
+				-Dwith_example=no \
+				-Dwith_TP=${CPM_HOME}/TextParser ..
+
+$ cmake -DINSTALL_DIR=${CPM_HOME}/CPMlib \
+        -DCMAKE_TOOLCHAIN_FILE=../cmake/Toolchain_intel_F_TCS.cmake \
 				-Dwith_MPI=yes \
 				-Dreal_type=float \
 				-Denable_LMR=no \

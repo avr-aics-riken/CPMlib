@@ -93,7 +93,7 @@ else()
 endif()
 
 # In the case of Fujitsu--linkfortran is mandatory
-if(CMAKE_CXX_COMPILER MATCHES ".*FCCpx$")
+if(USE_F_TCS STREQUAL "YES")
   target_link_libraries(example3 ${CMAKE_CXX_IMPLICIT_LINK_LIBRARIES} "--linkfortran")
 else()
   target_link_libraries(example3 ${CMAKE_CXX_IMPLICIT_LINK_LIBRARIES})
@@ -161,7 +161,7 @@ if(enable_LMR)
   endif()
 
   # In the case of Fujitsu--linkfortran is mandatory
-  if(CMAKE_CXX_COMPILER MATCHES ".*FCCpx$")
+  if(USE_F_TCS STREQUAL "YES")
     target_link_libraries(example5 ${CMAKE_CXX_IMPLICIT_LINK_LIBRARIES} "--linkfortran")
   else()
     target_link_libraries(example5 ${CMAKE_CXX_IMPLICIT_LINK_LIBRARIES})

@@ -68,8 +68,8 @@ set (CMAKE_INSTALL_PREFIX "${INSTALL_DIR}")
 
 
 #######
-set(PROJECT_VERSION "2.4.0")
-set(LIB_REVISION "20170329_1100")
+set(PROJECT_VERSION "2.4.1")
+set(LIB_REVISION "20170601_0730")
 #######
 
 
@@ -130,7 +130,7 @@ message( STATUS "MPI support            : "       ${with_MPI})
 message( STATUS "Example                : "       ${with_example})
 message(" ")
 
-if(CMAKE_CXX_COMPILER MATCHES ".*FCCpx$")
+if(USE_F_TCS STREQUAL "YES")
 else()
   if(with_MPI)
     include(FindMPI)

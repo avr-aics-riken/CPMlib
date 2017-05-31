@@ -7,6 +7,11 @@
 ## REVISION HISTORY
 
 ---
+- 2017-06-01 Version 2.4.1
+  - Add INTEL_F_TCS environment to cmake
+
+
+---
 - 2017-03-29 Version 2.4.0
   - Serial version : add cpm_mpistub.h, -DDISABLE_MPI
     - ~/CMakeLists.txt, cpm_Define.h, BCMTools.h, Neighborinfo.h, Partition.h, RootGrid.h
