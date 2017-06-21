@@ -7,6 +7,11 @@
 ## REVISION HISTORY
 
 ---
+- 2017-06-21 Version 2.4.3
+  - bug fix at cpm_TextParserDomain.cpp, "SubdomainInfo" >> "/SubdomainInfo"
+
+
+---
 - 2017-06-02 Version 2.4.2
   - change order .*frtpx$ > INTEL_F_TCS > GNU > Intel > PGI in FreeForm MACRO
 

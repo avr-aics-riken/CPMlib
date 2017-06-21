@@ -273,7 +273,7 @@ cpm_TextParserDomain::ReadSubdomainInfo( cpm_GlobalDomainInfo* dInfo, std::strin
   {
     return ret;
   }
-  if( (ret = m_tp->changeNode( "SubdomainInfo" )) != TP_NO_ERROR )
+  if( (ret = m_tp->changeNode( "/SubdomainInfo" )) != TP_NO_ERROR )
   {
     return ret;
   }
