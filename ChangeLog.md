@@ -7,6 +7,11 @@
 ## REVISION HISTORY
 
 ---
+- 2017-07-05 Version 2.4.4
+  - set(CMAKE_FIND_ROOT_PATH   /opt/FJSVtclang/1.2.0) in Toolchain_K.cmake
+
+
+---
 - 2017-06-21 Version 2.4.3
   - bug fix at cpm_TextParserDomain.cpp, "SubdomainInfo" >> "/SubdomainInfo"
 
