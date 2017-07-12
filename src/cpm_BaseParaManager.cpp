@@ -53,11 +53,13 @@ cpm_BaseParaManager::~cpm_BaseParaManager()
   // 定義点管理マップのクリア
   m_defPointMap.clear();
 
+  // TODO: Temporary Fix (Integration with HIVE)
+  //       Duplicated call of MPI_Finalize
   // MPIのFinalize
-  int flag1, flag2;
-  MPI_Initialized(&flag1);
-  MPI_Finalized(&flag2);
-  if( flag1==true && flag2==false ) MPI_Finalize();
+  // int flag1, flag2;
+  // MPI_Initialized(&flag1);
+  // MPI_Finalized(&flag2);
+  // if( flag1==true && flag2==false ) MPI_Finalize();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
