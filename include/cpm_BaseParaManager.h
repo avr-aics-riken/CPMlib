@@ -2132,6 +2132,9 @@ protected:
   /** MPI_COMM_WORLDでの自ランク番号 */
   int m_rankNo;
 
+  /** MPI_Init() from CPMlib */
+  int m_mpi_init_from_cpmlib;
+
   /** 領域分割タイプ */
   cpm_DomainType m_domainType;
 
