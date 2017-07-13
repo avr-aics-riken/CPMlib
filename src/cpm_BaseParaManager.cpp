@@ -53,13 +53,10 @@ cpm_BaseParaManager::~cpm_BaseParaManager()
   // 定義点管理マップのクリア
   m_defPointMap.clear();
 
-  // TODO: Temporary Fix (Integration with HIVE)
-  //       Duplicated call of MPI_Finalize
   // MPIのFinalize
-  // int flag1, flag2;
-  // MPI_Initialized(&flag1);
-  // MPI_Finalized(&flag2);
-  // if( flag1==true && flag2==false ) MPI_Finalize();
+  // Check Flag: if (MPI_Init() from CPMlib == true)
+  if( m_mpi_init_from_cpmlib == 1 )
+	MPI_Finalize();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -69,6 +66,7 @@ cpm_BaseParaManager::Initialize()
 {
   m_nRank  = 1;
   m_rankNo = 0;
+  m_mpi_init_from_cpmlib = 0;
 
   // MPI_Init実行済みかチェック
   int flag1;
@@ -119,6 +117,7 @@ cpm_BaseParaManager::Initialize( int &argc, char**& argv )
 {
   m_nRank  = 1;
   m_rankNo = 0;
+  m_mpi_init_from_cpmlib = 0;
 
   // MPI_Init
   int flag1;
@@ -130,7 +129,9 @@ cpm_BaseParaManager::Initialize( int &argc, char**& argv )
       std::cerr << "MPI_Init error." << std::endl;
       return CPM_ERROR_MPI;
     }
-  }
+    // Flag (MPI_Init() from CPMlib = true)
+    m_mpi_init_from_cpmlib = 1;
+}
 
   // initialize
   return Initialize();
