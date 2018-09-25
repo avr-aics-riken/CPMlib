@@ -18,7 +18,12 @@
 ##
 
 macro (AddOptimizeOption)
-  if (USE_F_TCS STREQUAL "YES")
+  if (TARGET_ARCH STREQUAL "INTEL_F_TCS")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Kfast,parallel,optmsg=2 -V -Xg")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Kfast,parallel,optmsg=2 -Xg")
+    set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -Kfast,parallel,optmsg=2 -V")
+
+  elseif (USE_F_TCS STREQUAL "YES")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Kfast,ocl,preex,simd=2,array_private,parallel,optmsg=2 -V -Nsrc -x0 -Xg")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Kfast,ocl,preex,simd=2,array_private,parallel,optmsg=2 -V -Nsrc -x0 -Xg")
     set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -Cpp -Kfast,ocl,preex,simd=2,array_private,parallel,optmsg=2 -V -Nsrc")
@@ -30,14 +35,14 @@ macro (AddOptimizeOption)
     set(CMAKE_Fortran_FLAGS "-cpp -O3 -Wall")
 
   elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3")
-    set(CMAKE_Fortran_FLAGS "-fpp -O3")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -xHOST -O3 -qopt-report=3")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -xHOST -O3 -qopt-report=3")
+    set(CMAKE_Fortran_FLAGS "-fpp -xHOST -O3 -qopt-report=3")
 
   elseif(CMAKE_CXX_COMPILER_ID STREQUAL "PGI")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fastsse")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fastsse")
-    set(CMAKE_Fortran_FLAGS "-O3")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fast -O3 -Minfo=intensity,vect")
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fast -O3 -Minfo=intensity,vect")
+  set(CMAKE_Fortran_FLAGS "-fast -O3 -Minfo=intensity,vect")
 
   else()
     message("using default option")
@@ -51,10 +56,13 @@ macro (AddSSE)
     else()
       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
     endif()
+
   elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -xHost")
+
   elseif(CMAKE_CXX_COMPILER_ID STREQUAL "PGI")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fastsse")
+
   endif()
 endmacro()
 
@@ -100,6 +108,18 @@ macro(checkOpenMP)
       set(OpenMP_C_FLAGS "-Kopenmp")
       set(OpenMP_CXX_FLAGS "-Kopenmp")
       set(OpenMP_Fortran_FLAGS "-Kopenmp")
+    elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+      set(OpenMP_C_FLAGS "-fopenmp")
+      set(OpenMP_CXX_FLAGS "-fopenmp")
+      set(OpenMP_Fortran_FLAGS "-fopenmp")
+    elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
+      set(OpenMP_C_FLAGS "-qopenmp")
+      set(OpenMP_CXX_FLAGS "-qopenmp")
+      set(OpenMP_Fortran_FLAGS "-qopenmp")
+    elseif(CMAKE_CXX_COMPILER_ID STREQUAL "PGI")
+      set(OpenMP_C_FLAGS "-mp")
+      set(OpenMP_CXX_FLAGS "-mp")
+      set(OpenMP_Fortran_FLAGS "-mp")
     else()
       find_package(OpenMP REQUIRED)
     endif()
@@ -131,13 +151,13 @@ macro(precision)
       set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -CcdRR8")
 
     elseif(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
-      set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fdefault-real-8")
+      set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fdefault-real-8 -fdefault-double-8")
 
     elseif(CMAKE_Fortran_COMPILER_ID STREQUAL "Intel")
       set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -r8")
 
     elseif(CMAKE_Fortran_COMPILER_ID STREQUAL "PGI")
-
+      set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -r8")
     endif()
 
   else() # neither 'float' nor 'double'

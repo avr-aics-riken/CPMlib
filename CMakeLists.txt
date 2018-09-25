@@ -65,11 +65,16 @@ set (CMAKE_INSTALL_PREFIX "${INSTALL_DIR}")
 
 #set(CMAKE_BUILD_TYPE Release)
 
+#######
+# Policy setting
+#######
+
+cmake_policy(SET CMP0012 NEW)
 
 
 #######
-set(PROJECT_VERSION "2.4.4")
-set(LIB_REVISION "20170705_2230")
+set(PROJECT_VERSION "2.4.5")
+set(LIB_REVISION "20170925_1930")
 #######
 
 

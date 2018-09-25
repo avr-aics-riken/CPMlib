@@ -7,6 +7,11 @@
 ## REVISION HISTORY
 
 ---
+- 2018-09-25 Version 2.4.5
+  - checkOpenMPマクロを明示的に変更
+
+  
+---
 - 2017-07-05 Version 2.4.4
   - set(CMAKE_FIND_ROOT_PATH   /opt/FJSVtclang/1.2.0) in Toolchain_K.cmake
 
